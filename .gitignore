@@ -1,2 +1,4 @@
 example_client.py
 private_key_client.pem
+sdk-venv
+setup.py

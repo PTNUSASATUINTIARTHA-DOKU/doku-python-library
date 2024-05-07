@@ -12,7 +12,7 @@ class DokuSNAP :
         self.private_key = private_key
         self.client_id = client_id
         self.is_production = is_production
-        self.token = self._get_token()
+        self.token: TokenB2BResponse = self._get_token()
         
     def _get_token(self) -> TokenB2BResponse:
         try:

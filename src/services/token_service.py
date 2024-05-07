@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -6,8 +6,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 import base64
-import jwt
 from src.model.token.token_b2b_response import TokenB2BResponse
+from datetime import datetime
 
 class TokenService:
 
@@ -36,8 +36,7 @@ class TokenService:
 
     @staticmethod
     def check_token_expired(token_b2b: TokenB2BResponse) -> bool:
-        try:
-            payload: dict = jwt.decode(token_b2b.access_token, verify=False, algorithms = ['HS256'])
-            return False
-        except jwt.ExpiredSignatureError:
-            return True
+        generated_time = datetime.strptime(token_b2b.generated_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+        expired_date = generated_time + timedelta(seconds=token_b2b.expires_in)
+        date_now = datetime.strptime(TokenService.get_timestamp(), "%Y-%m-%dT%H:%M:%SZ")
+        return expired_date > date_now
