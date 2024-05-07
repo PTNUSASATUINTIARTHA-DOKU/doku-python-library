@@ -1,2 +1,2 @@
-example.py
-private_key.pem
+example_client.py
+private_key_client.pem
