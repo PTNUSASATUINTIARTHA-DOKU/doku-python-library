@@ -1,7 +1,7 @@
-from src.commons.config import Config
-from src.services.token_service import TokenService
-from src.model.va.create_va_request import CreateVARequest
-from src.model.va.create_va_response import CreateVAResponse
+from doku_python_library.src.commons.config import Config
+from doku_python_library.src.services.token_service import TokenService
+from doku_python_library.src.model.va.create_va_request import CreateVARequest
+from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 import requests
 
 class VaController:

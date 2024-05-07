@@ -1,10 +1,10 @@
-from src.commons.config import *
-from src.controller.token_controller import TokenController
-from src.model.token.token_b2b_response import TokenB2BResponse
-from src.services.token_service import TokenService
-from src.controller.va_controller import VaController
-from src.model.va.create_va_request import CreateVARequest
-from src.model.va.create_va_response import CreateVAResponse
+from doku_python_library.src.commons.config import *
+from doku_python_library.src.controller.token_controller import TokenController
+from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
+from doku_python_library.src.services.token_service import TokenService
+from doku_python_library.src.controller.va_controller import VaController
+from doku_python_library.src.model.va.create_va_request import CreateVARequest
+from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 
 class DokuSNAP :
 

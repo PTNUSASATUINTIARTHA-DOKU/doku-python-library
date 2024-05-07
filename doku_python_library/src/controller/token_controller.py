@@ -1,9 +1,9 @@
-from src.model.token.token_b2b_response import TokenB2BResponse
-from src.commons.config import Config
-from src.model.token.token_b2b_request import TokenB2BRequest
+from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
+from doku_python_library.src.commons.config import Config
+from doku_python_library.src.model.token.token_b2b_request import TokenB2BRequest
 import requests
 
-from src.services.token_service import TokenService
+from doku_python_library.src.services.token_service import TokenService
 
 
 class TokenController:

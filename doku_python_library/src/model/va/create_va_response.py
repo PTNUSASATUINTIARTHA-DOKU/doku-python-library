@@ -1,5 +1,5 @@
-from src.model.va.total_amount import TotalAmount
-from src.model.va.additional_info_response import AdditionalInfoResponse
+from doku_python_library.src.model.va.total_amount import TotalAmount
+from doku_python_library.src.model.va.additional_info_response import AdditionalInfoResponse
 
 class VirtualAccountData:
 

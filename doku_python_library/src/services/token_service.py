@@ -6,7 +6,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 import base64
-from src.model.token.token_b2b_response import TokenB2BResponse
+from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
 from datetime import datetime
 
 class TokenService:
