@@ -2,3 +2,5 @@ example_client.py
 private_key_client.pem
 sdk-venv
 setup.py
+dist
+doku_python_library.egg-info
