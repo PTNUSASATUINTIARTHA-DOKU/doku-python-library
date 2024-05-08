@@ -4,3 +4,4 @@ sdk-venv
 setup.py
 dist
 doku_python_library.egg-info
+build
