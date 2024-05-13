@@ -8,6 +8,8 @@ from cryptography.hazmat.primitives.asymmetric import padding
 import base64
 from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
 from datetime import datetime
+import hmac
+import hashlib
 
 class TokenService:
 
@@ -40,3 +42,7 @@ class TokenService:
         expired_date = generated_time + timedelta(seconds=token_b2b.expires_in)
         date_now = datetime.strptime(TokenService.get_timestamp(), "%Y-%m-%dT%H:%M:%SZ")
         return expired_date > date_now
+    
+    @staticmethod
+    def create_signature_hmac512(secret_key: str, text: str):
+        return base64.b64encode(hmac.new(secret_key.encode("utf-8"), msg=text.encode("utf-8"), digestmod=hashlib.sha512).digest()).decode()      

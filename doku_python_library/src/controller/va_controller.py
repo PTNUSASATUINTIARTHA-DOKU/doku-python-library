@@ -10,10 +10,11 @@ class VaController:
     def createVa(is_production: bool, client_id: str, access_token: str, create_va_request: CreateVARequest) -> CreateVAResponse:
         url: str = Config.get_base_url(is_production=is_production) + "/virtual-accounts/bi-snap-va/v1/transfer-va/create-va"
         date_now = TokenService.get_timestamp()
-
+        signature = TokenService.create_signature_hmac512("1234567", "hello world")
+        print(signature)
         headers: dict = {
             "X-TIMESTAMP": date_now,
-            "X-SIGNATURE": "",
+            "X-SIGNATURE": signature,
             "X-PARTNER-ID": client_id,
             "X-EXTERNAL-ID": create_va_request.external_id,
             "CHANNEL-ID": create_va_request.channel_id,
