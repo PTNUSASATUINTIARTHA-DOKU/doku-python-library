@@ -2,27 +2,12 @@ from doku_python_library.src.commons.config import Config
 from doku_python_library.src.services.token_service import TokenService
 from doku_python_library.src.model.va.create_va_request import CreateVARequest
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
-import requests
+from doku_python_library.src.services.va_service import VaService
 
 class VaController:
 
     @staticmethod
     def createVa(is_production: bool, client_id: str, access_token: str, create_va_request: CreateVARequest) -> CreateVAResponse:
-        url: str = Config.get_base_url(is_production=is_production) + "/virtual-accounts/bi-snap-va/v1/transfer-va/create-va"
-        date_now = TokenService.get_timestamp()
-        signature = TokenService.create_signature_hmac512("1234567", "hello world")
-        print(signature)
-        headers: dict = {
-            "X-TIMESTAMP": date_now,
-            "X-SIGNATURE": signature,
-            "X-PARTNER-ID": client_id,
-            "X-EXTERNAL-ID": create_va_request.external_id,
-            "CHANNEL-ID": create_va_request.channel_id,
-            "Authorization": access_token
-        }
-
-        response = requests.post(url=url, json=create_va_request.create_request_body(), headers=headers)
-        response_json = response.json()
-        print(response_json)
+        return VaService.createVa(create_va_request=create_va_request, is_production=is_production, client_id=client_id, access_token=access_token)
 
     

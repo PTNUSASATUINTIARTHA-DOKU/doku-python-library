@@ -27,7 +27,7 @@ class CreateVAResponse:
     def __init__(self, 
                  responseCode: str, 
                  responseMessage: str, 
-                 virtualAccountData: VirtualAccountData
+                 virtualAccountData: VirtualAccountData = None
                  ) -> None:
         self.response_code = responseCode
         self.response_message =responseMessage

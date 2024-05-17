@@ -9,9 +9,6 @@ class CreateVARequest:
                  trx_id: str,
                  virtual_acc_trx_type: str,
                  total_amount: TotalAmount,
-                 partner_id: str,
-                 external_id: str,
-                 channel_id: str,
                  customer_no: str = None,
                  virtual_acc_email: str = None,
                  virtual_acc_phone: str = None,
@@ -27,9 +24,6 @@ class CreateVARequest:
         self.virtual_acc_phone = virtual_acc_phone
         self.additional_info = additional_info
         self.expired_date = expired_date
-        self.partner_id = partner_id
-        self.external_id = external_id
-        self.channel_id = channel_id
         self.customer_no = customer_no
 
     def create_request_body(self) -> dict:

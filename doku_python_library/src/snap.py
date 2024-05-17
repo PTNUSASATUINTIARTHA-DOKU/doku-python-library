@@ -31,7 +31,12 @@ class DokuSNAP :
                 self.token = self._get_token()
         else:
             self.token = self._get_token()
-        return VaController.createVa(is_production=self.is_production, client_id=self.client_id, access_token=self.token.access_token, create_va_request=create_va_request)
+        return VaController.createVa(
+            is_production=self.is_production, 
+            client_id=self.client_id, 
+            access_token=self.token.access_token, 
+            create_va_request=create_va_request,
+            )
             
 
     
