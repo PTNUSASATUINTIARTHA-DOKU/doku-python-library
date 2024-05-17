@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta
 import pytz
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 import base64
 from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
+from doku_python_library.src.model.token.token_b2b_request import TokenB2BRequest
+from doku_python_library.src.commons.config import Config
 from datetime import datetime
-import hmac
+import hmac, requests
 import hashlib
 
 class TokenService:
@@ -46,3 +46,23 @@ class TokenService:
     @staticmethod
     def create_signature_hmac512(secret_key: str, text: str):
         return base64.b64encode(hmac.new(secret_key.encode("utf-8"), msg=text.encode("utf-8"), digestmod=hashlib.sha512).digest()).decode()      
+    
+    @staticmethod
+    def create_token_b2b_request(signature: str, timestamp: str, client_id: str) -> TokenB2BRequest:
+        token_b2b_request: TokenB2BRequest = TokenB2BRequest(
+            signature=signature,
+            timestamp=timestamp,
+            client_id=client_id
+        )
+        return token_b2b_request
+
+    @staticmethod
+    def create_token_b2b(token_b2b_request: TokenB2BRequest, is_production: bool, headers: dict) -> TokenB2BResponse:
+        url: str = Config.get_base_url(is_production=is_production) + "/authorization/v1/access-token/b2b"
+        response = requests.post(url=url, json=token_b2b_request.create_request_body(), headers=headers)
+        response_json = response.json()
+        token_response: TokenB2BResponse = TokenB2BResponse(**response_json)
+        if(token_response.response_code == "2007300"):
+            token_response.generated_timestamp = token_b2b_request.timestamp
+            token_response.expires_in = token_response.expires_in - 10
+        return token_response
