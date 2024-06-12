@@ -23,11 +23,10 @@ class TokenService:
     
     @staticmethod
     def create_signature(private_key: str, text: str) -> str:
-        with open(private_key, "rb") as key_file:
-            priv_key = serialization.load_pem_private_key(
-                key_file.read(),
-                password=None,
-            )
+        priv_key = serialization.load_pem_private_key(
+            private_key.encode('utf-8'),
+            password=None,
+        )
         signature = priv_key.sign(
             text.encode('utf-8'),
             padding=padding.PKCS1v15(),
@@ -58,7 +57,7 @@ class TokenService:
 
     @staticmethod
     def create_token_b2b(token_b2b_request: TokenB2BRequest, is_production: bool, headers: dict) -> TokenB2BResponse:
-        url: str = Config.get_base_url(is_production=is_production) + "/authorization/v1/access-token/b2b"
+        url: str = Config.get_base_url(is_production=is_production) + Config.ACCESS_TOKEN
         response = requests.post(url=url, json=token_b2b_request.create_request_body(), headers=headers)
         response_json = response.json()
         token_response: TokenB2BResponse = TokenB2BResponse(**response_json)
