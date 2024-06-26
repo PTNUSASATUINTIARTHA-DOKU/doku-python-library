@@ -25,3 +25,6 @@ class TokenController:
         )
         return TokenService.create_token_b2b(token_b2b_request=token_b2b_request, is_production=is_production, headers=headers)
     
+    @staticmethod
+    def is_token_invalid(token_b2b: TokenB2BResponse, token_expires_in: int, token_generated_timestamp: str) -> bool:
+        return TokenService.is_token_empty(token_b2b) or TokenService.is_token_expired(token_expires_in, token_generated_timestamp)

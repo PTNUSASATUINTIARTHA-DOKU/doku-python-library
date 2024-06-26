@@ -13,7 +13,7 @@ class DokuSNAP :
         self.client_id = client_id
         self.is_production = is_production
         self.public_key = public_key
-        self._get_token()
+        self.token_b2b = self._get_token()
         self.token: str = None
         self.token_expires_in: int = None
         self.token_generate_timestamp: str = None
@@ -37,12 +37,9 @@ class DokuSNAP :
         self.token_generate_timestamp = token_b2b_response.generated_timestamp
 
     def createVA(self, create_va_request: CreateVARequest) -> CreateVAResponse:
-        if(self.token is not None):
-            is_token_expired: bool = TokenService.check_token_expired(self.token)
-            if is_token_expired:
-                self.token = self._get_token()
-        else:
-            self.token = self._get_token()
+        is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+        if is_token_invalid:
+            self._get_token()
         return VaController.createVa(
             is_production=self.is_production, 
             client_id=self.client_id, 

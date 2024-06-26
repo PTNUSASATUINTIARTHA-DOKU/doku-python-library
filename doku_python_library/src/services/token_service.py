@@ -34,13 +34,6 @@ class TokenService:
         )
         decode_signature = base64.encodebytes(signature).decode()
         return decode_signature.replace('\n', '')
-
-    @staticmethod
-    def check_token_expired(token_b2b: TokenB2BResponse) -> bool:
-        generated_time = datetime.strptime(token_b2b.generated_timestamp, "%Y-%m-%dT%H:%M:%SZ")
-        expired_date = generated_time + timedelta(seconds=token_b2b.expires_in)
-        date_now = datetime.strptime(TokenService.get_timestamp(), "%Y-%m-%dT%H:%M:%SZ")
-        return expired_date > date_now
     
     @staticmethod
     def create_signature_hmac512(secret_key: str, text: str):
@@ -65,3 +58,14 @@ class TokenService:
             token_response.generated_timestamp = token_b2b_request.timestamp
             token_response.expires_in = token_response.expires_in - 10
         return token_response
+    
+    @staticmethod
+    def is_token_expired(token_expires_in: int, token_generated_timestamp: str) -> bool:
+        generated_time = datetime.strptime(token_generated_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+        expired_date = generated_time + timedelta(seconds=token_expires_in)
+        date_now = datetime.strptime(TokenService.get_timestamp(), "%Y-%m-%dT%H:%M:%SZ")
+        return expired_date > date_now
+    
+    @staticmethod
+    def is_token_empty(token_b2b: TokenB2BResponse) -> bool:
+        return token_b2b is None
