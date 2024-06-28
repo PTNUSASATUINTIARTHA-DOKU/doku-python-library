@@ -13,10 +13,11 @@ class DokuSNAP :
         self.client_id = client_id
         self.is_production = is_production
         self.public_key = public_key
-        self.token_b2b = self._get_token()
-        self.token: str = None
-        self.token_expires_in: int = None
-        self.token_generate_timestamp: str = None
+        self._get_token()
+        self.token_b2b: TokenB2BResponse
+        self.token: str
+        self.token_expires_in: int
+        self.token_generate_timestamp: str
 
         
     def _get_token(self) -> TokenB2BResponse:
@@ -26,26 +27,32 @@ class DokuSNAP :
             client_id=self.client_id, 
             is_production=self.is_production
             )
-            self._set_token_b2b(token_b2b_response)
+            if token_b2b_response is not None:
+                self._set_token_b2b(token_b2b_response)
             return token_b2b_response
         except Exception as e:
             print("Error occured when get token "+str(e))
     
     def _set_token_b2b(self, token_b2b_response: TokenB2BResponse) -> None:
+        self.token_b2b = token_b2b_response
         self.token = token_b2b_response.access_token
         self.token_expires_in = token_b2b_response.expires_in
         self.token_generate_timestamp = token_b2b_response.generated_timestamp
 
     def createVA(self, create_va_request: CreateVARequest) -> CreateVAResponse:
-        is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
-        if is_token_invalid:
-            self._get_token()
-        return VaController.createVa(
-            is_production=self.is_production, 
-            client_id=self.client_id, 
-            access_token=self.token.access_token, 
-            create_va_request=create_va_request,
-            )
+        try:
+            create_va_request.validate_va_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            if is_token_invalid:
+                self._get_token()
+            return VaController.createVa(
+                is_production=self.is_production, 
+                client_id=self.client_id, 
+                access_token=self.token, 
+                create_va_request=create_va_request,
+                )
+        except Exception as e:
+            print("• Exception --> "+str(e))
             
 
     
