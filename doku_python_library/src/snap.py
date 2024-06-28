@@ -39,18 +39,19 @@ class DokuSNAP :
         self.token_expires_in = token_b2b_response.expires_in
         self.token_generate_timestamp = token_b2b_response.generated_timestamp
 
-    def createVA(self, create_va_request: CreateVARequest) -> CreateVAResponse:
+    def create_va(self, create_va_request: CreateVARequest, secret_key: str) -> CreateVAResponse:
         try:
             create_va_request.validate_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
                 self._get_token()
-            return VaController.createVa(
-                is_production=self.is_production, 
-                client_id=self.client_id, 
-                access_token=self.token, 
-                create_va_request=create_va_request,
-                )
+            return VaController.create_va(
+                is_production= self.is_production,
+                client_id= self.client_id,
+                token_b2b= self.token,
+                create_va_request= create_va_request,
+                secret_key= secret_key
+            )
         except Exception as e:
             print("• Exception --> "+str(e))
             

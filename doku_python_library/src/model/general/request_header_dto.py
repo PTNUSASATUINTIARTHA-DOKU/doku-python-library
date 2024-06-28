@@ -7,3 +7,14 @@ class RequestHeaderDto:
         self.x_external_id = x_external_id
         self.channel_id = channel_id
         self.authorization = authorization
+    
+    def to_json(self) -> dict:
+        headers: dict = {
+            "X-TIMESTAMP": self.x_timestamp,
+            "X-SIGNATURE": self.x_signature,
+            "X-PARTNER-ID": self.x_partner_id,
+            "X-EXTERNAL-ID": self.x_external_id,
+            "CHANNEL-ID": self.channel_id,
+            "Authorization": self.authorization
+        }
+        return headers
