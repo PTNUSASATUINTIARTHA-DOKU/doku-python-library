@@ -8,7 +8,7 @@ class VaService:
 
     @staticmethod
     def createVa(create_va_request: CreateVARequest, is_production: bool, client_id: str, access_token: str) -> CreateVAResponse:
-        url: str = Config.get_base_url(is_production=is_production) + "/virtual-accounts/bi-snap-va/v1/transfer-va/create-va"
+        url: str = Config.get_base_url(is_production=is_production) + Config.CREATE_VA
         timestamp = TokenService.get_timestamp()
 
         request_body_minify = str(create_va_request.create_request_body())
