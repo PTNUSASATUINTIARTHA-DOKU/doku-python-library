@@ -57,8 +57,8 @@ class CreateVARequest:
         self._validate_partner_service_id()
         if self.customer_no is not None:
             self._validate_customer_no()
-        self._validate_virtual_acc_name()
-        self._validate_virtual_acc_name()
+        if self.virtual_acc_name is not None:
+            self._validate_virtual_acc_name()
         if self.virtual_acc_email is not None:
             self._validate_virtual_acc_email()
         if self.virtual_acc_phone is not None:
