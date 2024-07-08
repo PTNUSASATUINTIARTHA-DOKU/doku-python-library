@@ -8,7 +8,7 @@ from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 
 class DokuSNAP :
 
-    def __init__(self, private_key: str, client_id: str, is_production: bool, public_key: str) -> None:
+    def __init__(self, private_key: str, client_id: str, is_production: bool, public_key: str, secret_key: str) -> None:
         self.private_key = private_key
         self.client_id = client_id
         self.is_production = is_production
@@ -18,6 +18,7 @@ class DokuSNAP :
         self.token: str
         self.token_expires_in: int
         self.token_generate_timestamp: str
+        self.secret_key = secret_key
 
         
     def _get_token(self) -> TokenB2BResponse:
@@ -39,7 +40,7 @@ class DokuSNAP :
         self.token_expires_in = token_b2b_response.expires_in
         self.token_generate_timestamp = token_b2b_response.generated_timestamp
 
-    def create_va(self, create_va_request: CreateVARequest, secret_key: str) -> CreateVAResponse:
+    def create_va(self, create_va_request: CreateVARequest) -> CreateVAResponse:
         try:
             create_va_request.validate_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
@@ -50,7 +51,7 @@ class DokuSNAP :
                 client_id= self.client_id,
                 token_b2b= self.token,
                 create_va_request= create_va_request,
-                secret_key= secret_key
+                secret_key= self.secret_key
             )
         except Exception as e:
             print("• Exception --> "+str(e))
