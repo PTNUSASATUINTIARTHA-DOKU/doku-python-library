@@ -32,13 +32,15 @@ class UpdateVADto:
         if(self.virtual_acc_phone is not None):
             self._validate_virtual_acc_phone()
         self._validate_trx_id()
-        if(self.total_amount.value is not None):
-            self._validate_amount_value()
-        if(self.total_amount.currency is not None):
-            self._validate_amount_currency()
+        if self.total_amount is not None:
+            if(self.total_amount.value is not None):
+                self._validate_amount_value()
+            if(self.total_amount.currency is not None):
+                self._validate_amount_currency()
         self._validate_info_channel()
         self._validate_config_status()
-        self._validate_va_trx_type()
+        if self.virtual_acc_trx_type is not None:
+            self._validate_va_trx_type()
         if(self.expired_date is not None):
             self._validate_expired_date()
 
