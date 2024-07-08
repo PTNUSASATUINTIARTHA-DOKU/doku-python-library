@@ -8,6 +8,7 @@ class _Development:
 class Config:
     ACCESS_TOKEN: str = "/authorization/v1/access-token/b2b"
     CREATE_VA: str = "/virtual-accounts/bi-snap-va/v1/transfer-va/create-va"
+    UPDATE_VA: str = "/virtual-accounts/bi-snap-va/v1/transfer-va/update-va"
     @staticmethod
     def get_base_url(is_production: bool) -> str:
         return _config_by_name["prod" if is_production else "dev"].BASE_URL
