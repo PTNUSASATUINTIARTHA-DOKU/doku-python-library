@@ -36,8 +36,16 @@ class TokenService:
         return decode_signature.replace('\n', '')
     
     @staticmethod
-    def create_signature_hmac512(secret_key: str, text: str):
-        return base64.b64encode(hmac.new(secret_key.encode("utf-8"), msg=text.encode("utf-8"), digestmod=hashlib.sha512).digest()).decode()      
+    def generate_symmetric_signature(http_method: str, endpoint: str, token_b2b: str, 
+                                     request: dict, timestamp: str, secret_key: str):
+        request_body_minify = str(request)
+        hash_object = hashlib.sha256()
+        hash_object.update(request_body_minify.encode('utf-8'))
+        data_hex = hash_object.hexdigest()
+        data_hex_lower = data_hex.lower()
+        
+        string_to_sign = "{method}:{url}:{token}:{request_body}:{timestamp}".format(method=http_method, url=endpoint, token=token_b2b, request_body=data_hex_lower, timestamp=timestamp)
+        return base64.b64encode(hmac.new(secret_key.encode("utf-8"), msg=string_to_sign.encode("utf-8"), digestmod=hashlib.sha512).digest()).decode()      
     
     @staticmethod
     def create_token_b2b_request(signature: str, timestamp: str, client_id: str) -> TokenB2BRequest:
