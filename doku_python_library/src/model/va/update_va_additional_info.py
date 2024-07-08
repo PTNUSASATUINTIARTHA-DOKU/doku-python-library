@@ -5,3 +5,9 @@ class UpdateVAAdditionalInfo:
     def __init__(self, channel: str, virtualAccountConfig: UpdateVAConfig):
         self.channel = channel
         self.virtual_account_config = virtualAccountConfig
+    
+    def create_request_body(self) -> dict:
+        return {
+            "channel": self.channel,
+            "virtualAccountConfig": self.virtual_account_config.create_request_body()
+        }
