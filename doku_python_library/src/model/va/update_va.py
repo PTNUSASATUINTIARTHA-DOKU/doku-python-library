@@ -6,9 +6,10 @@ from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 class UpdateVADto:
 
     def __init__(self, partnerServiceId: str, customerNo: str, virtualAccountNo: str, 
-                 virtualAccountName: str, virtualAccountEmail: str, virtualAccountPhone: str,
-                 trxId: str, totalAmount: TotalAmount, additionalInfo: UpdateVAAdditionalInfo, virtualAccountTrxType: str ,
-                 expiredDate: str):
+                 trxId: str, additionalInfo: UpdateVAAdditionalInfo, virtualAccountName: str = None, 
+                 virtualAccountEmail: str = None, virtualAccountPhone: str = None,
+                 totalAmount: TotalAmount = None, virtualAccountTrxType: str = None,
+                 expiredDate: str = None):
         self.partner_service_id = partnerServiceId
         self.customer_no = customerNo
         self.virtual_acc_no = virtualAccountNo
@@ -31,13 +32,15 @@ class UpdateVADto:
         if(self.virtual_acc_phone is not None):
             self._validate_virtual_acc_phone()
         self._validate_trx_id()
-        if(self.total_amount.value is not None):
-            self._validate_amount_value()
-        if(self.total_amount.currency is not None):
-            self._validate_amount_currency()
+        if self.total_amount is not None:
+            if(self.total_amount.value is not None):
+                self._validate_amount_value()
+            if(self.total_amount.currency is not None):
+                self._validate_amount_currency()
         self._validate_info_channel()
         self._validate_config_status()
-        self._validate_va_trx_type()
+        if self.virtual_acc_trx_type is not None:
+            self._validate_va_trx_type()
         if(self.expired_date is not None):
             self._validate_expired_date()
 
@@ -66,7 +69,7 @@ class UpdateVADto:
         self._validate_virtual_acc_no()
     
     def _validate_virtual_acc_no(self):
-        va_no: str = self.virtual_account_no
+        va_no: str = self.virtual_acc_no
         value: str = self.customer_no
         if va_no is None:
             raise Exception("virtualAccountNo cannot be null. Please provide a virtualAccountNo. Example: ' 88899400000000000000000001'.")
@@ -157,15 +160,15 @@ class UpdateVADto:
     def _validate_config_status(self) -> None:
         value: str = self.additional_info.virtual_account_config.status
         if value is None:
-            raise Exception("additionalInfo.config.status is not valid")
+            raise Exception("additionalInfo.config.status is not valid 1")
         elif not isinstance(value, str):
-            raise Exception("additionalInfo.config.status is not valid")
+            raise Exception("additionalInfo.config.status is not valid 2")
         elif len(value) < 1:
-            raise Exception("additionalInfo.config.status is not valid")
+            raise Exception("additionalInfo.config.status is not valid 3")
         elif len(value) > 20:
-            raise Exception("additionalInfo.config.status is not valid")
-        elif value != "ACTIVE" or value != "INACTIVE":
-            raise Exception("additionalInfo.config.status is not valid")
+            raise Exception("additionalInfo.config.status is not valid 4")
+        elif value not in ["ACTIVE", "INACTIVE"]:
+            raise Exception("additionalInfo.config.status is not valid 5")
     
     def _validate_va_trx_type(self) -> None:
         value: str = self.virtual_acc_trx_type
@@ -188,3 +191,25 @@ class UpdateVADto:
             datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
         except ValueError:
             raise Exception("expiredDate must be in ISO-8601 format. Ensure that expiredDate follows the correct format. Example: '2023-01-01T10:55:00+07:00'.") 
+    
+    def create_request_body(self) -> dict:
+        request: dict = {
+            "partnerServiceId": self.partner_service_id,
+            "customerNo": self.customer_no,
+            "trxId": self.trx_id,
+            "virtualAccountNo": self.virtual_acc_no,
+            "additionalInfo": self.additional_info.create_request_body()
+        }
+        if self.virtual_acc_name is not None:
+            request["virtualAccountName"] = self.virtual_acc_name
+        if self.virtual_acc_email is not None:
+            request["virtualAccountEmail"] = self.virtual_acc_email
+        if self.virtual_acc_phone is not None:
+            request["virtualAccountPhone"] = self.virtual_acc_phone
+        if self.total_amount is not None:
+            request["totalAmount"] = self.total_amount.json()
+        if self.virtual_acc_trx_type is not None:
+            request["virtualAccountTrxType"] = self.virtual_acc_trx_type
+        if self.expired_date is not None:
+            request["expiredDate"] = self.expired_date
+        return request

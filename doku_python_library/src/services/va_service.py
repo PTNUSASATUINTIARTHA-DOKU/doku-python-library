@@ -4,6 +4,8 @@ from doku_python_library.src.services.token_service import TokenService
 import requests, uuid
 from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
+from doku_python_library.src.model.va.update_va import UpdateVADto
+from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 
 class VaService:
 
@@ -33,4 +35,15 @@ class VaService:
         response = requests.post(url=url, json=create_va_request.create_request_body(), headers=headers)
         response_json = response.json()
         va_response: CreateVAResponse = CreateVAResponse(**response_json) 
+        return va_response
+    
+    @staticmethod
+    def do_update_va(request_header: RequestHeaderDto, update_va_request: UpdateVADto, is_production: bool) -> UpdateVAResponse:
+        url: str = Config.get_base_url(is_production=is_production) + Config.UPDATE_VA
+
+        headers: RequestHeaderDto = request_header.to_json()
+
+        response = requests.put(url=url, json=update_va_request.create_request_body(), headers=headers)
+        response_json = response.json()
+        va_response: UpdateVAResponse = UpdateVAResponse(**response_json) 
         return va_response
