@@ -6,6 +6,8 @@ from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
 from doku_python_library.src.model.va.update_va import UpdateVADto
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
+from doku_python_library.src.model.va.check_status_va import CheckStatusDto
+from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 
 class VaService:
 
@@ -28,22 +30,42 @@ class VaService:
 
     @staticmethod
     def creat_va(create_va_request: CreateVARequest, request_header: RequestHeaderDto, is_production: bool) -> CreateVAResponse:
-        url: str = Config.get_base_url(is_production=is_production) + Config.CREATE_VA
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.CREATE_VA
 
-        headers: RequestHeaderDto = request_header.to_json()
+            headers: RequestHeaderDto = request_header.to_json()
 
-        response = requests.post(url=url, json=create_va_request.create_request_body(), headers=headers)
-        response_json = response.json()
-        va_response: CreateVAResponse = CreateVAResponse(**response_json) 
-        return va_response
+            response = requests.post(url=url, json=create_va_request.create_request_body(), headers=headers)
+            response_json = response.json()
+            va_response: CreateVAResponse = CreateVAResponse(**response_json) 
+            return va_response
+        except Exception as e:
+            print("Failed Parse Response "+str(e))
     
     @staticmethod
     def do_update_va(request_header: RequestHeaderDto, update_va_request: UpdateVADto, is_production: bool) -> UpdateVAResponse:
-        url: str = Config.get_base_url(is_production=is_production) + Config.UPDATE_VA
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.UPDATE_VA
 
-        headers: RequestHeaderDto = request_header.to_json()
+            headers: RequestHeaderDto = request_header.to_json()
 
-        response = requests.put(url=url, json=update_va_request.create_request_body(), headers=headers)
-        response_json = response.json()
-        va_response: UpdateVAResponse = UpdateVAResponse(**response_json) 
-        return va_response
+            response = requests.put(url=url, json=update_va_request.create_request_body(), headers=headers)
+            response_json = response.json()
+            va_response: UpdateVAResponse = UpdateVAResponse(**response_json) 
+            return va_response
+        except Exception as e:
+            print("Failed Parse Response "+str(e))
+    
+    @staticmethod
+    def do_check_status_va(request_header: RequestHeaderDto, check_status_request: CheckStatusDto, is_production: bool) -> CheckStatusVAResponse:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.CHECK_STATUS_VA
+
+            headers: RequestHeaderDto = request_header.to_json()
+
+            response = requests.post(url=url, json=check_status_request.create_request_body(), headers=headers)
+            response_json = response.json()
+            va_response: CheckStatusVAResponse = CheckStatusVAResponse(**response_json) 
+            return va_response
+        except Exception as e:
+            print("Failed Parse Response "+str(e))
