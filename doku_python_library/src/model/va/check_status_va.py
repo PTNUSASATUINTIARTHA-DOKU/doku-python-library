@@ -57,13 +57,13 @@ class CheckStatusDto:
     def _validate_inquiry_request_id(self) -> None:
         value: str = self.inquiry_request_id
         if not isinstance(value, str):
-            raise Exception("inquiry request id is not valid string")
+            raise Exception("inquiryRequestId must be a string. Ensure that inquiryRequestId is enclosed in quotes. Example: ‘abcdef-123456-abcdef’")
         elif len(value) > 128:
-            raise Exception("inquiry request id is not valid length")
+            raise Exception("inquiryRequestId must be 128 characters or fewer. Ensure that inquiryRequestId is no longer than 128 characters. Example: ‘abcdef-123456-abcdef’.")
     
     def _validate_payment_request_id(self) -> None:
         value: str = self.payment_request_id
         if not isinstance(value, str):
-            raise Exception("payment request id is not valid string")
+            raise Exception("paymentRequestId must be a string. Ensure that paymentRequestId is enclosed in quotes. Example: ‘abcdef-123456-abcdef’.")
         elif len(value) > 128:
-            raise Exception("payment request id is not valid length")
+            raise Exception("paymentRequestId must be 128 characters or fewer. Ensure that paymentRequestId is no longer than 128 characters. Example: ‘abcdef-123456-abcdef’.")

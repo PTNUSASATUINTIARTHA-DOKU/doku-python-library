@@ -160,15 +160,15 @@ class UpdateVADto:
     def _validate_config_status(self) -> None:
         value: str = self.additional_info.virtual_account_config.status
         if value is None:
-            raise Exception("additionalInfo.config.status is not valid 1")
+            raise Exception("additionalInfo.config.status must be not null")
         elif not isinstance(value, str):
-            raise Exception("additionalInfo.config.status is not valid 2")
+            raise Exception("additionalInfo.config.“status must be a string. Ensure that status is enclosed in quotes. Example: ‘INACTIVE’.”")
         elif len(value) < 1:
-            raise Exception("additionalInfo.config.status is not valid 3")
+            raise Exception("additionalInfo.config.“status must be at least 1 character long. Ensure that status is not empty. Example: ‘INACTIVE’.”")
         elif len(value) > 20:
-            raise Exception("additionalInfo.config.status is not valid 4")
+            raise Exception("additionalInfo.config.“status must be 20 characters or fewer. Ensure that status is no longer than 20 characters. Example: ‘INACTIVE’.”")
         elif value not in ["ACTIVE", "INACTIVE"]:
-            raise Exception("additionalInfo.config.status is not valid 5")
+            raise Exception("additionalInfo.config.“status must be either ‘ACTIVE’ or ‘INACTIVE’. Ensure that status is one of these values. Example: ‘INACTIVE’.”")
     
     def _validate_va_trx_type(self) -> None:
         value: str = self.virtual_acc_trx_type
@@ -181,9 +181,9 @@ class UpdateVADto:
         
         if value == "2":
             if self.total_amount.value != "0":
-                raise Exception("virtualAccountTrxType is not valid")
+                raise Exception("“value must be a string, 1-16 characters, with up to 2 decimal places, in ISO 4217 format, and greater than 0. Example: ‘11500.00’.”")
             elif self.total_amount.currency != "IDR":
-                raise Exception("virtualAccountTrxType is not valid")
+                raise Exception("“currency must be a string, exactly 3 characters long, and a valid ISO 4217 currency code. Ensure that currency is enclosed in quotes, exactly 3 characters, and valid. Example: ‘IDR’.”")
             
     def _validate_expired_date(self) -> None:
         value: str = self.expired_date
