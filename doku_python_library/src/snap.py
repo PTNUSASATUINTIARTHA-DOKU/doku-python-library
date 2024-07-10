@@ -6,6 +6,8 @@ from doku_python_library.src.model.va.create_va_request import CreateVARequest
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 from doku_python_library.src.model.va.update_va import UpdateVADto
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
+from doku_python_library.src.model.va.check_status_va import CheckStatusDto
+from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 
 class DokuSNAP :
 
@@ -73,5 +75,20 @@ class DokuSNAP :
         except Exception as e:
             print("• Exception --> "+str(e)) 
             
-
+    
+    def check_status_va(self, check_status_request: CheckStatusDto) -> CheckStatusVAResponse:
+        try:
+            check_status_request.validate_check_status_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            if is_token_invalid:
+                self._get_token()
+            return VaController.do_check_status_va(
+                check_status_request= check_status_request,
+                secret_key= self.secret_key,
+                client_id= self.client_id,
+                token_b2b= self.token,
+                is_production= self.is_production
+            )
+        except Exception as e:
+            print("• Exception --> "+str(e))
     

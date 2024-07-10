@@ -6,6 +6,8 @@ from doku_python_library.src.services.token_service import TokenService
 from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.va.update_va import UpdateVADto
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
+from doku_python_library.src.model.va.check_status_va import CheckStatusDto
+from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 
 class VaController:
     
@@ -22,7 +24,7 @@ class VaController:
             secret_key= secret_key
         )
         request_header: RequestHeaderDto = VaService.generate_request_header(
-            channel_id= create_va_request.additional_info.channel,
+            channel_id= "SDK",
             client_id= client_id,
             token_b2b= token_b2b,
             timestamp= timestamp,
@@ -46,7 +48,7 @@ class VaController:
         )
         external_id: str = VaService.generate_external_id()
         request_header: RequestHeaderDto = VaService.generate_request_header(
-            channel_id= update_va_request.additional_info.channel,
+            channel_id= "SDK",
             client_id= client_id,
             token_b2b= token_b2b,
             timestamp= timestamp,
@@ -54,3 +56,27 @@ class VaController:
             signature= signature
         )
         return VaService.do_update_va(request_header= request_header, update_va_request= update_va_request, is_production=is_production)
+    
+    @staticmethod
+    def do_check_status_va(check_status_request: CheckStatusDto, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> CheckStatusVAResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.CHECK_STATUS_VA
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method= method,
+            endpoint= endpoint,
+            token_b2b= token_b2b,
+            request= check_status_request.create_request_body(),
+            timestamp= timestamp,
+            secret_key= secret_key
+        )
+        external_id: str = VaService.generate_external_id()
+        request_header: RequestHeaderDto = VaService.generate_request_header(
+            channel_id= "SDK",
+            client_id= client_id,
+            token_b2b= token_b2b,
+            timestamp= timestamp,
+            external_id= external_id,
+            signature= signature
+        )
+        return VaService.do_check_status_va(request_header= request_header, check_status_request= check_status_request, is_production= is_production)

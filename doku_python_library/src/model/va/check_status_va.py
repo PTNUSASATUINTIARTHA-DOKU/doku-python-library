@@ -3,7 +3,7 @@ import re
 class CheckStatusDto:
 
     def __init__(self, partner_service_id: str, customer_no: str, virtual_acc_no: str,
-                 virtual_acc_name: str, inquiry_request_id: str = None, payment_request_id: str = None,
+                 virtual_acc_name: str = None, inquiry_request_id: str = None, payment_request_id: str = None,
                  additional_info: any = None):
         self.partner_service_id = partner_service_id
         self.customer_no = customer_no
@@ -67,3 +67,20 @@ class CheckStatusDto:
             raise Exception("paymentRequestId must be a string. Ensure that paymentRequestId is enclosed in quotes. Example: ‘abcdef-123456-abcdef’.")
         elif len(value) > 128:
             raise Exception("paymentRequestId must be 128 characters or fewer. Ensure that paymentRequestId is no longer than 128 characters. Example: ‘abcdef-123456-abcdef’.")
+        
+    
+    def create_request_body(self) -> dict:
+        request: dict = {
+            "partnerServiceId": self.partner_service_id,
+            "customerNo": self.customer_no,
+            "virtualAccountNo": self.virtual_acc_no
+        }
+        if self.virtual_acc_name is not None:
+            request["virtualAccountName"] = self.virtual_acc_name
+        if self.inquiry_request_id is not None:
+            request["inquiryRequestId"] = self.inquiry_request_id
+        if self.payment_request_id is not None:
+            request["paymentRequestId"] = self.payment_request_id
+        if self.additional_info is not None:
+            request["additionalInfo"] = self.additional_info
+        return request
