@@ -3,6 +3,7 @@ from doku_python_library.src.model.va.additional_info import AdditionalInfo
 import re
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 import datetime
+from doku_python_library.src.model.va.origin import Origin
 
 class CreateVARequest:
 
@@ -51,6 +52,7 @@ class CreateVARequest:
             request["expiredDate"] = self.expired_date
         if self.virtual_account_no is not None:
             request["virtualAccountNo"] = self.virtual_account_no
+        request["origin"] = Origin.create_request_body()
         return request
     
     def validate_va_request(self) -> None:
