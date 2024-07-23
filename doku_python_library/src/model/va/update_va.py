@@ -39,6 +39,8 @@ class UpdateVADto:
                 self._validate_amount_currency()
         self._validate_info_channel()
         self._validate_config_status()
+        if self.additional_info.virtual_account_config.max_amount is not None and self.additional_info.virtual_account_config.min_amount is not None:
+            self._validate_config_amount()
         if self.virtual_acc_trx_type is not None:
             self._validate_va_trx_type()
         if(self.expired_date is not None):
@@ -126,7 +128,7 @@ class UpdateVADto:
         
     def _validate_amount_value(self) -> None:
         value: str = self.total_amount.value
-        pattern = r'^(0|[1-9]\d{0,15})(\.\d{2})?$'
+        pattern = r'^\d{1,16}\.\d{2}$'
         if not isinstance(value, str):
             raise Exception("totalAmount.value must be a string. Ensure that totalAmount.value is enclosed in quotes. Example: '11500.00'.")
         elif len(value) < 4:
@@ -170,20 +172,35 @@ class UpdateVADto:
         elif value not in ["ACTIVE", "INACTIVE"]:
             raise Exception("additionalInfo.config.“status must be either ‘ACTIVE’ or ‘INACTIVE’. Ensure that status is one of these values. Example: ‘INACTIVE’.”")
     
+    def _validate_config_amount(self) -> None:
+        max_value: str = self.additional_info.virtual_account_config.max_amount
+        min_value: str = self.additional_info.virtual_account_config.min_amount
+        trx_type: str = self.virtual_acc_trx_type
+        pattern = r'^\d{1,16}\.\d{2}$'
+        if max_value is not None and min_value is not None:
+            if trx_type == "C":
+                raise Exception("minAmount and maxAmount only supported for virtualAccountTrxType O and V")
+            elif not re.match(pattern, max_value):
+                raise Exception("maxAmount is not valid format. Example: 10000.00")
+            elif not re.match(pattern, min_value):
+                raise Exception("minAmount is not valid format. Example: 10000.00")
+            elif float(max_value) < float(min_value):
+                raise Exception("maxAmount cannot be lesser than minAmount")
+
     def _validate_va_trx_type(self) -> None:
         value: str = self.virtual_acc_trx_type
         if not value.isascii():
             raise Exception("virtualAccountTrxType must be a string. Ensure that virtualAccountTrxType is enclosed in quotes. Example: '1'.")
         elif len(value) != 1:
             raise Exception("virtualAccountTrxType must be exactly 1 character long. Ensure that virtualAccountTrxType is either '1' or '2'. Example: '1'.")
-        elif value not in ["1", "2"]:
+        elif value not in ["C", "V", "O"]:
             raise Exception("virtualAccountTrxType must be either '1' or '2'. Ensure that virtualAccountTrxType is one of these values. Example: '1'.")
         
-        if value == "2":
-            if self.total_amount.value != "0":
-                raise Exception("“value must be a string, 1-16 characters, with up to 2 decimal places, in ISO 4217 format, and greater than 0. Example: ‘11500.00’.”")
-            elif self.total_amount.currency != "IDR":
-                raise Exception("“currency must be a string, exactly 3 characters long, and a valid ISO 4217 currency code. Ensure that currency is enclosed in quotes, exactly 3 characters, and valid. Example: ‘IDR’.”")
+        # if value == "2":
+        #     if self.total_amount.value != "0":
+        #         raise Exception("“value must be a string, 1-16 characters, with up to 2 decimal places, in ISO 4217 format, and greater than 0. Example: ‘11500.00’.”")
+        #     elif self.total_amount.currency != "IDR":
+        #         raise Exception("“currency must be a string, exactly 3 characters long, and a valid ISO 4217 currency code. Ensure that currency is enclosed in quotes, exactly 3 characters, and valid. Example: ‘IDR’.”")
             
     def _validate_expired_date(self) -> None:
         value: str = self.expired_date

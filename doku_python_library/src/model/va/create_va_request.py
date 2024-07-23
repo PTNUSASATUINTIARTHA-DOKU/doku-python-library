@@ -13,12 +13,12 @@ class CreateVARequest:
                  trx_id: str,
                  virtual_acc_trx_type: str,
                  total_amount: TotalAmount,
-                 customer_no: str = None,
+                 customer_no: str,
+                 virtual_account_no: str,
                  virtual_acc_email: str = None,
                  virtual_acc_phone: str = None,
                  additional_info: AdditionalInfo = None,
                  expired_date: str = None,
-                 virtual_account_no: str = None
                  ) -> None:
         self.partner_service_id = partner_service_id
         self.virtual_acc_name = virtual_acc_name
@@ -38,10 +38,10 @@ class CreateVARequest:
             "virtualAccountName": self.virtual_acc_name,
             "trxId": self.trx_id,
             "totalAmount": self.total_amount.json(),
-            "virtualAccountTrxType": self.virtual_acc_trx_type
+            "virtualAccountTrxType": self.virtual_acc_trx_type,
+            "customerNo": self.customer_no,
+            "virtualAccountNo": self.virtual_account_no
         }
-        if self.customer_no is not None:
-            request["customerNo"] = self.customer_no
         if self.virtual_acc_email is not None:
             request["virtualAccountEmail"] = self.virtual_acc_email
         if self.virtual_acc_phone is not None:
@@ -50,8 +50,7 @@ class CreateVARequest:
             request["additionalInfo"] = self.additional_info.json()
         if self.expired_date is not None:
             request["expiredDate"] = self.expired_date
-        if self.virtual_account_no is not None:
-            request["virtualAccountNo"] = self.virtual_account_no
+
         request["origin"] = Origin.create_request_body()
         return request
     
@@ -72,6 +71,8 @@ class CreateVARequest:
         self._validate_info_reusable()
         self._validate_va_trx_type()
         self._validate_expired_date()
+        if self.additional_info.virtual_account_config.max_amount is not None and self.additional_info.virtual_account_config.min_amount is not None:
+            self._validate_config_amount()
 
     def _validate_partner_service_id(self) -> None:
         pattern = r'^\s{0,7}\d{1,8}$' 
@@ -154,7 +155,7 @@ class CreateVARequest:
     
     def _validate_amount_value(self) -> None:
         value: str = self.total_amount.value
-        pattern = r'^(0|[1-9]\d{0,15})(\.\d{2})?$'
+        pattern = r'^\d{1,16}\.\d{2}$'
         if not value.isascii():
             raise Exception("totalAmount.value must be a string. Ensure that totalAmount.value is enclosed in quotes. Example: '11500.00'.")
         elif len(value) < 4:
@@ -186,9 +187,25 @@ class CreateVARequest:
             raise Exception("additionalInfo.channel is not valid. Ensure that additionalInfo.channel is one of the valid channels. Example: 'VIRTUAL_ACCOUNT_MANDIRI'.")
         
     def _validate_info_reusable(self) -> None:
-        value: str = self.additional_info.reusable   
+        value = self.additional_info.virtual_account_config.reusable_status   
         if not isinstance(value, bool):
             raise Exception("reusableStatus must be a boolean. Example: 'true' or 'false'.")
+    
+    def _validate_config_amount(self) -> None:
+        max_value: str = self.additional_info.virtual_account_config.max_amount
+        min_value: str = self.additional_info.virtual_account_config.min_amount
+        trx_type: str = self.virtual_acc_trx_type
+        pattern = r'^\d{1,16}\.\d{2}$'
+        if max_value is not None and min_value is not None:
+            if trx_type == "C":
+                raise Exception("minAmount and maxAmount only supported for virtualAccountTrxType O and V")
+            elif not re.match(pattern, max_value):
+                raise Exception("maxAmount is not valid format. Example: 10000.00")
+            elif not re.match(pattern, min_value):
+                raise Exception("minAmount is not valid format. Example: 10000.00")
+            elif float(max_value) < float(min_value):
+                raise Exception("maxAmount cannot be lesser than minAmount")
+
         
     def _validate_va_trx_type(self) -> None:
         value: str = self.virtual_acc_trx_type
@@ -196,7 +213,7 @@ class CreateVARequest:
             raise Exception("virtualAccountTrxType must be a string. Ensure that virtualAccountTrxType is enclosed in quotes. Example: '1'.")
         elif len(value) != 1:
             raise Exception("virtualAccountTrxType must be exactly 1 character long. Ensure that virtualAccountTrxType is either '1' or '2'. Example: '1'.")
-        elif value not in ["1", "2"]:
+        elif value not in ["C", "V", "O"]:
             raise Exception("virtualAccountTrxType must be either '1' or '2'. Ensure that virtualAccountTrxType is one of these values. Example: '1'.")
         
     def _validate_expired_date(self) -> None:

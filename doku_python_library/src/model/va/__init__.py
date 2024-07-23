@@ -5,6 +5,7 @@ from doku_python_library.src.model.va.create_va_response import *
 from doku_python_library.src.model.va.origin import *
 from doku_python_library.src.model.va.total_amount import *
 from doku_python_library.src.model.va.virtual_account_data import *
+from doku_python_library.src.model.va.virtual_account_config import *
 from doku_python_library.src.model.va.update_va import *
 from doku_python_library.src.model.va.update_va_additional_info import *
 from doku_python_library.src.model.va.update_va_config import *
