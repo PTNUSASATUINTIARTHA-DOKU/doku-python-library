@@ -10,6 +10,12 @@ from doku_python_library.src.commons.config import Config
 from datetime import datetime
 import hmac, requests
 import hashlib
+import jwt
+from jwt.exceptions import InvalidTokenError
+import time
+from doku_python_library.src.model.notification.notification_token import NotificationToken
+from doku_python_library.src.model.notification.notification_token_header import NotificationTokenHeader
+from doku_python_library.src.model.notification.notification_token_body import NotificationTokenBody
 
 class TokenService:
 
@@ -77,3 +83,45 @@ class TokenService:
     @staticmethod
     def is_token_empty(token_b2b: TokenB2BResponse) -> bool:
         return token_b2b is None
+    
+    @staticmethod
+    def validate_token_b2b(token: str, public_key: str) -> dict:
+        try:
+            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
+            return decoded_token
+        except InvalidTokenError as e:
+            return None
+        
+    @staticmethod
+    def generate_token(expired_in: int, issuer: str, private_key: str, client_id: str) -> str:
+        expires: int = int(time.time()) + expired_in
+        payload: dict = {
+            "exp": expires,
+            "issuer": issuer,
+            "clientId": client_id
+        }
+        token = jwt.encode(payload= payload, key=private_key, algorithm='RS256')
+        return token
+    
+    @staticmethod
+    def generate_notification_token(token: str, timestamp: str, client_id: str, expires_in: int) -> NotificationToken:
+        header: NotificationTokenHeader = NotificationTokenHeader(
+            client_id= client_id, timestamp= timestamp
+        )
+        body: NotificationTokenBody = NotificationTokenBody(
+            responseCode= "2007300",
+            responseMessage= "Successful",
+            accessToken= token,
+            tokenType= "Bearer",
+            expiresIn= expires_in,
+            additionalInfo= ""
+        )
+        response: NotificationToken = NotificationToken(
+            header= header,
+            body= body
+        )
+        return response
+    
+    @staticmethod
+    def compare_signature(request_signature: str, new_signature: str) -> bool:
+        return request_signature == new_signature
