@@ -125,3 +125,18 @@ class TokenService:
     @staticmethod
     def compare_signature(request_signature: str, new_signature: str) -> bool:
         return request_signature == new_signature
+    
+    @staticmethod
+    def generate_invalid_signature(timestamp: str) -> NotificationToken:
+        header: NotificationTokenHeader = NotificationTokenHeader(
+            client_id= None, timestamp= timestamp
+        )
+        body: NotificationTokenBody = NotificationTokenBody(
+            responseCode= "4017300",
+            responseMessage= "Unauthorized.Invalid Signature",
+            accessToken= None,
+            tokenType= None,
+            expiresIn= None,
+            additionalInfo= None
+        )
+        return NotificationToken(header= header, body= body)

@@ -3,6 +3,7 @@ from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.token.token_b2b_request import TokenB2BRequest
 from doku_python_library.src.services.token_service import TokenService
 from flask import request
+from doku_python_library.src.model.notification import NotificationToken
 
 class TokenController:
 
@@ -11,9 +12,9 @@ class TokenController:
         timestamp = TokenService.get_timestamp()
         signature = TokenService.create_signature(private_key=private_key, text="{client_id}|{date}".format(client_id=client_id, date=timestamp))
         headers: dict = {
-            "X-Signature": signature,
-            "X-Timestamp": timestamp,
-            "X-Client-Key": client_id,
+            "X-SIGNATURE": signature,
+            "X-TIMESTAMP": timestamp,
+            "X-CLIENT-KEY": client_id,
             "content-type": "application/json"
         }
 
@@ -50,10 +51,15 @@ class TokenController:
     
     @staticmethod
     def validate_signature(private_key: str, client_id: str) -> bool:
-        timestamp: str = request.headers.get("x-timetamp")
-        request_signature: str = request.headers.get("x-signature")
+        timestamp: str = request.headers.get("X-TIMESTAMP")
+        request_signature: str = request.headers.get("X-SIGNATURE")
         signature: str = TokenService.create_signature(
             private_key= private_key,
             text= "{client_id}{timestamp}".format(client_id=client_id, timestamp=timestamp)
         )   
         return TokenService.compare_signature(request_signature= request_signature, signature= signature)
+    
+    @staticmethod
+    def generate_invalid_signature_response() -> NotificationToken:
+        timestamp: str = TokenService.get_timestamp()
+        return TokenService.generate_invalid_signature(timestamp= timestamp)
