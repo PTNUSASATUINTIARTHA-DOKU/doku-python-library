@@ -8,14 +8,16 @@ from doku_python_library.src.model.va.update_va import UpdateVADto
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 from doku_python_library.src.model.va.check_status_va import CheckStatusDto
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
+from doku_python_library.src.model.notification.notification_token import NotificationToken
 
 class DokuSNAP :
 
-    def __init__(self, private_key: str, client_id: str, is_production: bool, public_key: str, secret_key: str) -> None:
+    def __init__(self, private_key: str, client_id: str, is_production: bool, public_key: str, issuer: str, secret_key: str) -> None:
         self.private_key = private_key
         self.client_id = client_id
         self.is_production = is_production
         self.public_key = public_key
+        self.issuer = issuer
         self._get_token()
         self.token_b2b: TokenB2BResponse
         self.token: str
@@ -91,4 +93,26 @@ class DokuSNAP :
             )
         except Exception as e:
             print("• Exception --> "+str(e))
+        
+    def validate_signature(self) -> bool:
+        return TokenController.validate_signature(
+            private_key= self.private_key,
+            client_id= self.client_id
+        )
     
+    def generate_token_b2b(self, is_signature_valid: bool) -> NotificationToken:
+        if is_signature_valid:
+            return TokenController.generate_token_b2b(
+                expire_in= self.token_expires_in,
+                issuer= self.issuer,
+                private_key= self.private_key,
+                client_id=  self.client_id
+            )
+        return TokenController.generate_invalid_signature_response()
+    
+    def validate_token_b2b(self, request_token: str) -> bool:
+        return TokenController.validate_token_b2b(token= request_token, public_key= self.public_key)
+    
+    def validate_signature_and_generate_token(self) -> NotificationToken:
+        is_signature_valid: bool = self.validate_signature()
+        return self.generate_token_b2b(is_signature_valid= is_signature_valid)
