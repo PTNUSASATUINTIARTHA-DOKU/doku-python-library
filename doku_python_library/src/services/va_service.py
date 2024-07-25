@@ -1,13 +1,15 @@
 from doku_python_library.src.model.va.create_va_request import CreateVARequest
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 from doku_python_library.src.services.token_service import TokenService
-import requests, uuid
+import requests, uuid, json, xmltodict
 from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
 from doku_python_library.src.model.va.update_va import UpdateVADto
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 from doku_python_library.src.model.va.check_status_va import CheckStatusDto
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
+import xml.etree.ElementTree as ET
+from doku_python_library.src.model.va.virtual_account_data import VirtualAccountData
 
 class VaService:
 
@@ -69,3 +71,52 @@ class VaService:
             return va_response
         except Exception as e:
             print("Failed Parse Response "+str(e))
+
+    @staticmethod
+    def snap_v1_converter(snap_format: dict, tag: str) -> str:
+        element = ET.Element(tag)
+    
+        key_mall_id = ET.Element("MALLID")
+        key_mall_id.text = snap_format["partnerServiceId"]
+        element.append(key_mall_id)
+
+        key_channel = ET.Element("PAYMENTCHANNEL")
+        key_channel.text = snap_format["additionalInfo"]["channel"]
+        element.append(key_channel)
+
+        key_payment_code = ET.Element("PAYMENTCODE")
+        key_payment_code.text = snap_format["virtualAccountNo"]
+        element.append(key_payment_code)
+
+        key_status_type = ET.Element("STATUSTYPE")
+        key_status_type.text = "/"
+        element.append(key_status_type)
+
+        key_oco_id = ET.Element("OCOID")
+        key_oco_id.text = snap_format["inquiryRequestId"]
+        element.append(key_oco_id)
+
+        return element
+    
+    @staticmethod
+    def v1_snap_converter(v1_data: str) -> dict:
+        dict_response = xmltodict.parse(v1_data)
+        remove_key = dict_response["INQUIRY_RESPONSE"]
+
+        snap_format = {}
+        virtual_account_data = {
+            "virtualAccountName": remove_key["NAME"] if remove_key["NAME"] is not None else None,
+            "virtualAccountEmail": remove_key["EMAIL"] if remove_key["EMAIL"] is not None else None,
+            "virtualAccountNo": remove_key["PAYMENTCODE"] if remove_key["PAYMENTCODE"] is not None else None,
+            "totalAmount": {
+                "value": remove_key["AMOUNT"] if remove_key["AMOUNT"] is not None else None,
+                "currency": remove_key["CURRENCY"] if remove_key["CURRENCY"] is not None else None if remove_key["PURCHASECURRENCY"] is not None else None
+            },
+            "additionalInfo": {
+                "trxId": remove_key["TRANSIDMERCHANT"] if remove_key["TRANSIDMERCHANT"] is not None else None,
+                "minAmount": remove_key["MINAMOUNT"] if remove_key["MINAMOUNT"] is not None else None,
+                "maxAmount": remove_key["MAXAMOUNT"] if remove_key["MAXAMOUNT"] is not None else None,
+            }
+        }
+        snap_format["virtualAccountData"] = virtual_account_data
+        return snap_format
