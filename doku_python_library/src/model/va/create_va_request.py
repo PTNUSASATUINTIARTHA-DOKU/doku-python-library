@@ -99,13 +99,10 @@ class CreateVARequest:
 
     def _validate_virtual_acc_no(self):
         va_no: str = self.virtual_account_no
-        value: str = self.customer_no
         if va_no is None:
             raise Exception("virtualAccountNo cannot be null. Please provide a virtualAccountNo. Example: ' 88899400000000000000000001'.")
         elif not va_no.isascii():
             raise Exception("virtualAccountNo must be a string. Ensure that virtualAccountNo is enclosed in quotes. Example: ' 88899400000000000000000001'.")
-        elif va_no != (self.partner_service_id + value):
-            raise Exception("virtualAccountNo must be the concatenation of partnerServiceId and customerNo. Example: ' 88899400000000000000000001' (where partnerServiceId is ' 888994' and customerNo is '00000000000000000001').")
     
     def _validate_virtual_acc_name(self) -> None:
         value: str = self.virtual_acc_name
