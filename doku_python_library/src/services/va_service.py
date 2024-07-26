@@ -73,30 +73,16 @@ class VaService:
             print("Failed Parse Response "+str(e))
 
     @staticmethod
-    def snap_v1_converter(snap_format: dict, tag: str) -> str:
-        element = ET.Element(tag)
-    
-        key_mall_id = ET.Element("MALLID")
-        key_mall_id.text = snap_format["partnerServiceId"]
-        element.append(key_mall_id)
-
-        key_channel = ET.Element("PAYMENTCHANNEL")
-        key_channel.text = snap_format["additionalInfo"]["channel"]
-        element.append(key_channel)
-
-        key_payment_code = ET.Element("PAYMENTCODE")
-        key_payment_code.text = snap_format["virtualAccountNo"]
-        element.append(key_payment_code)
-
-        key_status_type = ET.Element("STATUSTYPE")
-        key_status_type.text = "/"
-        element.append(key_status_type)
-
-        key_oco_id = ET.Element("OCOID")
-        key_oco_id.text = snap_format["inquiryRequestId"]
-        element.append(key_oco_id)
-
-        return element
+    def snap_v1_converter(snap_format: dict,) -> dict:
+       v1_form_data: dict = {
+        "MALLID": snap_format["partnerServiceId"],
+        "PAYMENTCHANNEL": snap_format["additionalInfo"]["channel"],
+        "PAYMENTCODE": snap_format["virtualAccountNo"],
+        "STATUSTYPE": "/",
+        "OCOID": snap_format["inquiryRequestId"]
+        }
+       
+       return v1_form_data
     
     @staticmethod
     def v1_snap_converter(v1_data: str) -> dict:
