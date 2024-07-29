@@ -10,6 +10,7 @@ from doku_python_library.src.model.va.check_status_va import CheckStatusDto
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 import xml.etree.ElementTree as ET
 from doku_python_library.src.model.va.virtual_account_data import VirtualAccountData
+from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 
 class VaService:
 
@@ -74,9 +75,39 @@ class VaService:
 
     @staticmethod
     def snap_v1_converter(snap_format: dict,) -> dict:
+       v1_channel_id = ""
+       channel = snap_format["additionalInfo"]["channel"]
+       if channel == VaChannelEnum.VIRTUAL_ACCOUNT_BCA.value:
+           v1_channel_id = "29"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BANK_MANDIRI.value:
+           v1_channel_id = "08"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BRI.value:
+           v1_channel_id = "34"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BNI.value:
+           v1_channel_id = "38"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BANK_DANAMON.value:
+           v1_channel_id = "33"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BANK_PERMATA.value:
+           v1_channel_id = "05"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_MAYBANK.value:
+           v1_channel_id = "44"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BNC.value:
+           v1_channel_id = "-"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BTN.value:
+           v1_channel_id = "43"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BSI.value:
+           v1_channel_id = "-"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BANK_CIMB.value:
+           v1_channel_id = "32"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_SINARMAS.value:
+           v1_channel_id = "21"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_DOKU.value:
+           v1_channel_id = "47"
+       elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BSS.value:
+           v1_channel_id = "-"
        v1_form_data: dict = {
         "MALLID": snap_format["partnerServiceId"],
-        "PAYMENTCHANNEL": snap_format["additionalInfo"]["channel"],
+        "PAYMENTCHANNEL": v1_channel_id,
         "PAYMENTCODE": snap_format["virtualAccountNo"],
         "STATUSTYPE": "/",
         "OCOID": snap_format["inquiryRequestId"]
