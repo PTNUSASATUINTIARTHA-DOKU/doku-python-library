@@ -119,8 +119,18 @@ class VaService:
     def v1_snap_converter(v1_data: str) -> dict:
         dict_response = xmltodict.parse(v1_data)
         remove_key = dict_response["INQUIRY_RESPONSE"]
-
+        v1_rc = remove_key["RESPONSECODE"]
         snap_format = {}
+        if v1_rc == "0000":
+            snap_format["responseCode"] = "2002400"
+        elif v1_rc == "3000" or v1_rc == "3001" or v1_rc == "3006":
+            snap_format["responseCode"] = "4042412"
+        elif v1_rc == "3002":
+            snap_format["responseCode"] = "4042414"
+        elif v1_rc == "3004":
+            snap_format["responseCode"] = "4032400"
+        elif v1_rc == "9999":
+            snap_format["responseCode"] = "5002401"
         virtual_account_data = {
             "virtualAccountName": remove_key["NAME"] if remove_key["NAME"] is not None else None,
             "virtualAccountEmail": remove_key["EMAIL"] if remove_key["EMAIL"] is not None else None,
