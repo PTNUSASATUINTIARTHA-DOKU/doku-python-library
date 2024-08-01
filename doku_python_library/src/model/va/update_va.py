@@ -190,11 +190,11 @@ class UpdateVADto:
     def _validate_va_trx_type(self) -> None:
         value: str = self.virtual_acc_trx_type
         if not value.isascii():
-            raise Exception("virtualAccountTrxType must be a string. Ensure that virtualAccountTrxType is enclosed in quotes. Example: '1'.")
+            raise Exception("virtualAccountTrxType must be a string. Ensure that virtualAccountTrxType is enclosed in quotes. Example: 'C'.")
         elif len(value) != 1:
-            raise Exception("virtualAccountTrxType must be exactly 1 character long. Ensure that virtualAccountTrxType is either '1' or '2'. Example: '1'.")
+            raise Exception("virtualAccountTrxType must be exactly 1 character long. Ensure that virtualAccountTrxType is either 'V' or 'O' and 'C. Example: 'C'.")
         elif value not in ["C", "V", "O"]:
-            raise Exception("virtualAccountTrxType must be either '1' or '2'. Ensure that virtualAccountTrxType is one of these values. Example: '1'.")
+            raise Exception("virtualAccountTrxType must be either 'V' or 'C' and 'O. Ensure that virtualAccountTrxType is one of these values. Example: 'C'.")
         
         # if value == "2":
         #     if self.total_amount.value != "0":
