@@ -3,7 +3,7 @@ from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 from doku_python_library.src.services.token_service import TokenService
 import requests, uuid, json, xmltodict
 from doku_python_library.src.commons.config import Config
-from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
+from doku_python_library.src.model.general.request_header import RequestHeader
 from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
@@ -22,8 +22,8 @@ class VaService:
 
     @staticmethod
     def generate_request_header(channel_id: str, client_id: str, 
-                                 token_b2b: str, timestamp: str, external_id: str, signature: str) -> RequestHeaderDto:
-        header: RequestHeaderDto = RequestHeaderDto(
+                                 token_b2b: str, timestamp: str, external_id: str, signature: str) -> RequestHeader:
+        header: RequestHeader = RequestHeader(
             x_timestamp= timestamp,
             x_signature= signature,
             x_partner_id= client_id,
@@ -34,11 +34,11 @@ class VaService:
         return header
 
     @staticmethod
-    def creat_va(create_va_request: CreateVARequest, request_header: RequestHeaderDto, is_production: bool) -> CreateVAResponse:
+    def creat_va(create_va_request: CreateVARequest, request_header: RequestHeader, is_production: bool) -> CreateVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.CREATE_VA
 
-            headers: RequestHeaderDto = request_header.to_json()
+            headers: RequestHeader = request_header.to_json()
 
             response = requests.post(url=url, json=create_va_request.create_request_body(), headers=headers)
             response_json = response.json()
@@ -48,11 +48,11 @@ class VaService:
             print("Failed Parse Response "+str(e))
     
     @staticmethod
-    def do_update_va(request_header: RequestHeaderDto, update_va_request: UpdateVaRequest, is_production: bool) -> UpdateVAResponse:
+    def do_update_va(request_header: RequestHeader, update_va_request: UpdateVaRequest, is_production: bool) -> UpdateVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.UPDATE_VA
 
-            headers: RequestHeaderDto = request_header.to_json()
+            headers: RequestHeader = request_header.to_json()
 
             response = requests.put(url=url, json=update_va_request.create_request_body(), headers=headers)
             response_json = response.json()
@@ -62,11 +62,11 @@ class VaService:
             print("Failed Parse Response "+str(e))
     
     @staticmethod
-    def do_check_status_va(request_header: RequestHeaderDto, check_status_request: CheckStatusRequest, is_production: bool) -> CheckStatusVAResponse:
+    def do_check_status_va(request_header: RequestHeader, check_status_request: CheckStatusRequest, is_production: bool) -> CheckStatusVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.CHECK_STATUS_VA
 
-            headers: RequestHeaderDto = request_header.to_json()
+            headers: RequestHeader = request_header.to_json()
 
             response = requests.post(url=url, json=check_status_request.create_request_body(), headers=headers)
             response_json = response.json()
@@ -76,11 +76,11 @@ class VaService:
             print("Failed Parse Response "+str(e))
 
     @staticmethod
-    def do_delete_payment_code(request_header: RequestHeaderDto, delete_va_request: DeleteVARequest, is_production: bool) -> DeleteVAResponse:
+    def do_delete_payment_code(request_header: RequestHeader, delete_va_request: DeleteVARequest, is_production: bool) -> DeleteVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DELETE_VA
 
-            headers: RequestHeaderDto = request_header.to_json()
+            headers: RequestHeader = request_header.to_json()
 
             response = requests.delete(url=url, json=delete_va_request.create_request_body(), headers=headers)
             response_json = response.json()

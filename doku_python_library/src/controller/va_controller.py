@@ -1,7 +1,7 @@
 from doku_python_library.src.model.va.create_va_request import CreateVARequest
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 from doku_python_library.src.services.va_service import VaService
-from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
+from doku_python_library.src.model.general.request_header import RequestHeader
 from doku_python_library.src.services.token_service import TokenService
 from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
@@ -25,7 +25,7 @@ class VaController:
             timestamp= timestamp,
             secret_key= secret_key
         )
-        request_header: RequestHeaderDto = VaService.generate_request_header(
+        request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
             token_b2b= token_b2b,
@@ -49,7 +49,7 @@ class VaController:
             secret_key= secret_key
         )
         external_id: str = VaService.generate_external_id()
-        request_header: RequestHeaderDto = VaService.generate_request_header(
+        request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
             token_b2b= token_b2b,
@@ -73,7 +73,7 @@ class VaController:
             secret_key= secret_key
         )
         external_id: str = VaService.generate_external_id()
-        request_header: RequestHeaderDto = VaService.generate_request_header(
+        request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
             token_b2b= token_b2b,
@@ -97,7 +97,7 @@ class VaController:
             secret_key= secret_key
         )
         external_id: str = VaService.generate_external_id()
-        request_header: RequestHeaderDto = VaService.generate_request_header(
+        request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
             token_b2b= token_b2b,

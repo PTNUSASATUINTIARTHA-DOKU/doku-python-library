@@ -11,6 +11,10 @@ from doku_python_library.src.model.va.check_status_va_response import CheckStatu
 from doku_python_library.src.model.notification.notification_token import NotificationToken
 from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
 from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
+from doku_python_library.src.model.notification.notification_payment_request import PaymentNotificationRequest
+from doku_python_library.src.model.notification.notification_payment_body_response import PaymentNotificationResponseBody
+from doku_python_library.src.model.general.request_header import RequestHeader
+from doku_python_library.src.controller.notification_controler import NotificationController
 
 class DokuSNAP :
 
@@ -134,3 +138,16 @@ class DokuSNAP :
     def validate_signature_and_generate_token(self) -> NotificationToken:
         is_signature_valid: bool = self.validate_signature()
         return self.generate_token_b2b(is_signature_valid= is_signature_valid)
+    
+    def generate_notification_response(self, is_token_valid: bool, request: PaymentNotificationRequest) -> PaymentNotificationResponseBody:
+        try:
+            if is_token_valid:
+                if request is not None:
+                    NotificationController.generate_notification_response(request=request)
+            
+            return NotificationController.generate_invalid_token_response(request=request)
+        except Exception as e:
+            print("• Exception --> "+str(e))
+    
+    def validate_token_and_generate_notification_response(self, header: RequestHeader, request: PaymentNotificationRequest) -> PaymentNotificationResponseBody:
+        is_token_valid: bool = self.validate_token_b2b(request_token= header.authorization)
