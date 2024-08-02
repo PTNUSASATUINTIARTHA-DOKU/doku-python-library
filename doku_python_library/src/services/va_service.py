@@ -4,15 +4,15 @@ from doku_python_library.src.services.token_service import TokenService
 import requests, uuid, json, xmltodict
 from doku_python_library.src.commons.config import Config
 from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
-from doku_python_library.src.model.va.update_va import UpdateVADto
+from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
-from doku_python_library.src.model.va.check_status_va import CheckStatusDto
+from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 import xml.etree.ElementTree as ET
 from doku_python_library.src.model.va.virtual_account_data import VirtualAccountData
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
-from doku_python_library.src.model.va.delete_va_request import DeleteVaRequest
-from doku_python_library.src.model.va.delete_va_response import DeleteVaResponse
+from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
+from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
 
 class VaService:
 
@@ -48,7 +48,7 @@ class VaService:
             print("Failed Parse Response "+str(e))
     
     @staticmethod
-    def do_update_va(request_header: RequestHeaderDto, update_va_request: UpdateVADto, is_production: bool) -> UpdateVAResponse:
+    def do_update_va(request_header: RequestHeaderDto, update_va_request: UpdateVaRequest, is_production: bool) -> UpdateVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.UPDATE_VA
 
@@ -62,7 +62,7 @@ class VaService:
             print("Failed Parse Response "+str(e))
     
     @staticmethod
-    def do_check_status_va(request_header: RequestHeaderDto, check_status_request: CheckStatusDto, is_production: bool) -> CheckStatusVAResponse:
+    def do_check_status_va(request_header: RequestHeaderDto, check_status_request: CheckStatusRequest, is_production: bool) -> CheckStatusVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.CHECK_STATUS_VA
 
@@ -76,7 +76,7 @@ class VaService:
             print("Failed Parse Response "+str(e))
 
     @staticmethod
-    def do_delete_payment_code(request_header: RequestHeaderDto, delete_va_request: DeleteVaRequest, is_production: bool) -> DeleteVaResponse:
+    def do_delete_payment_code(request_header: RequestHeaderDto, delete_va_request: DeleteVARequest, is_production: bool) -> DeleteVAResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DELETE_VA
 
@@ -84,7 +84,7 @@ class VaService:
 
             response = requests.delete(url=url, json=delete_va_request.create_request_body(), headers=headers)
             response_json = response.json()
-            delete_va_response: DeleteVaResponse = DeleteVaResponse(**response_json) 
+            delete_va_response: DeleteVAResponse = DeleteVAResponse(**response_json) 
             return delete_va_response
         except Exception as e:
             print("Failed Parse Response "+str(e))

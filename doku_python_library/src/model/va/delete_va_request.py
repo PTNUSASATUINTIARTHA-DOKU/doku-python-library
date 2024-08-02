@@ -1,10 +1,10 @@
-from doku_python_library.src.model.va.delete_va_additional_info import DeleteVaAdditionalInfo
+from doku_python_library.src.model.va.delete_va_additional_info import DeleteVAAdditionalInfo
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 import re
 
-class DeleteVaRequest:
+class DeleteVARequest:
 
-    def __init__(self, partner_service_id: str, customer_no: str, virtual_acc_no: str, trx_id: str, additional_info: DeleteVaAdditionalInfo) -> None:
+    def __init__(self, partner_service_id: str, customer_no: str, virtual_acc_no: str, trx_id: str, additional_info: DeleteVAAdditionalInfo) -> None:
         self.partner_service_id = partner_service_id
         self.customer_no = customer_no
         self.virtual_acc_no = virtual_acc_no

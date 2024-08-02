@@ -1,5 +1,5 @@
 from doku_python_library.src.model.va.delete_va_additional_info_response import DeleteVaResponseAdditionalInfo
-class DeleteVaResponseVirtualAccountData:
+class DeleteVAResponseVirtualAccountData:
 
     def __init__(self, partnerServiceId: str, customerNo: str, virtualAccountNo: str, trxId: str, additionalInfo: DeleteVaResponseAdditionalInfo) -> None:
         self.partner_service_id = partnerServiceId

@@ -1,4 +1,4 @@
-class DeleteVaAdditionalInfo:
+class DeleteVAAdditionalInfo:
 
     def __init__(self, channel: str) -> None:
         self.channel = channel

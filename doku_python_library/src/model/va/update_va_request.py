@@ -3,7 +3,7 @@ from doku_python_library.src.model.va.update_va_additional_info import UpdateVAA
 import re, datetime
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 
-class UpdateVADto:
+class UpdateVaRequest:
 
     def __init__(self, partnerServiceId: str, customerNo: str, virtualAccountNo: str, 
                  trxId: str, additionalInfo: UpdateVAAdditionalInfo, virtualAccountName: str = None, 

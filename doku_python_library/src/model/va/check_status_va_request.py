@@ -1,6 +1,6 @@
 import re
 
-class CheckStatusDto:
+class CheckStatusRequest:
 
     def __init__(self, partner_service_id: str, customer_no: str, virtual_acc_no: str,
                  virtual_acc_name: str = None, inquiry_request_id: str = None, payment_request_id: str = None,

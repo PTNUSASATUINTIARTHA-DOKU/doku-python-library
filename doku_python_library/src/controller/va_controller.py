@@ -4,12 +4,12 @@ from doku_python_library.src.services.va_service import VaService
 from doku_python_library.src.model.general.request_header_dto import RequestHeaderDto
 from doku_python_library.src.services.token_service import TokenService
 from doku_python_library.src.commons.config import Config
-from doku_python_library.src.model.va.update_va import UpdateVADto
+from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
-from doku_python_library.src.model.va.check_status_va import CheckStatusDto
+from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
-from doku_python_library.src.model.va.delete_va_response import DeleteVaResponse
-from doku_python_library.src.model.va.delete_va_request import DeleteVaRequest
+from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
+from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
 
 class VaController:
     
@@ -36,7 +36,7 @@ class VaController:
         return VaService.creat_va(create_va_request=create_va_request, request_header= request_header, is_production= is_production)
 
     @staticmethod
-    def do_update_va(update_va_request: UpdateVADto, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> UpdateVAResponse:
+    def do_update_va(update_va_request: UpdateVaRequest, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> UpdateVAResponse:
         timestamp: str = TokenService.get_timestamp()
         endpoint: str = Config.UPDATE_VA
         method: str = "PUT"
@@ -60,7 +60,7 @@ class VaController:
         return VaService.do_update_va(request_header= request_header, update_va_request= update_va_request, is_production=is_production)
     
     @staticmethod
-    def do_check_status_va(check_status_request: CheckStatusDto, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> CheckStatusVAResponse:
+    def do_check_status_va(check_status_request: CheckStatusRequest, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> CheckStatusVAResponse:
         timestamp: str = TokenService.get_timestamp()
         endpoint: str = Config.CHECK_STATUS_VA
         method: str = "POST"
@@ -84,7 +84,7 @@ class VaController:
         return VaService.do_check_status_va(request_header= request_header, check_status_request= check_status_request, is_production= is_production)
     
     @staticmethod
-    def do_delete_payment_code(delete_va_request: DeleteVaRequest, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> DeleteVaResponse:
+    def do_delete_payment_code(delete_va_request: DeleteVARequest, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> DeleteVAResponse:
         timestamp: str = TokenService.get_timestamp()
         endpoint: str = Config.DELETE_VA
         method: str = "DELETE"

@@ -6,11 +6,11 @@ from doku_python_library.src.model.va.origin import *
 from doku_python_library.src.model.va.total_amount import *
 from doku_python_library.src.model.va.virtual_account_data import *
 from doku_python_library.src.model.va.virtual_account_config import *
-from doku_python_library.src.model.va.update_va import *
+from doku_python_library.src.model.va.update_va_request import *
 from doku_python_library.src.model.va.update_va_additional_info import *
 from doku_python_library.src.model.va.update_va_config import *
 from doku_python_library.src.model.va.update_va_response import *
-from doku_python_library.src.model.va.check_status_va import *
+from doku_python_library.src.model.va.check_status_va_request import *
 from doku_python_library.src.model.va.check_status_additional_info_response import *
 from doku_python_library.src.model.va.check_status_payment_flag_response import *
 from doku_python_library.src.model.va.check_status_va_data import *

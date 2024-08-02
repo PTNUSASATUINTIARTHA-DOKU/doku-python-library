@@ -4,13 +4,13 @@ from doku_python_library.src.model.token.token_b2b_response import TokenB2BRespo
 from doku_python_library.src.controller.va_controller import VaController
 from doku_python_library.src.model.va.create_va_request import CreateVARequest
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
-from doku_python_library.src.model.va.update_va import UpdateVADto
+from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
-from doku_python_library.src.model.va.check_status_va import CheckStatusDto
+from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 from doku_python_library.src.model.notification.notification_token import NotificationToken
-from doku_python_library.src.model.va.delete_va_request import DeleteVaRequest
-from doku_python_library.src.model.va.delete_va_response import DeleteVaResponse
+from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
+from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
 
 class DokuSNAP :
 
@@ -63,7 +63,7 @@ class DokuSNAP :
         except Exception as e:
             print("• Exception --> "+str(e))
     
-    def update_va(self, update_request: UpdateVADto) -> UpdateVAResponse:
+    def update_va(self, update_request: UpdateVaRequest) -> UpdateVAResponse:
         try:
             update_request.validate_update_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
@@ -80,7 +80,7 @@ class DokuSNAP :
             print("• Exception --> "+str(e)) 
             
     
-    def check_status_va(self, check_status_request: CheckStatusDto) -> CheckStatusVAResponse:
+    def check_status_va(self, check_status_request: CheckStatusRequest) -> CheckStatusVAResponse:
         try:
             check_status_request.validate_check_status_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
@@ -96,7 +96,7 @@ class DokuSNAP :
         except Exception as e:
             print("• Exception --> "+str(e))
     
-    def delete_payment_code(self, delete_va_request: DeleteVaRequest) -> DeleteVaResponse:
+    def delete_payment_code(self, delete_va_request: DeleteVARequest) -> DeleteVAResponse:
         try:
             delete_va_request.validate_delete_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
