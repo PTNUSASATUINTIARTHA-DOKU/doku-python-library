@@ -137,7 +137,7 @@ class VaService:
             "virtualAccountNo": remove_key["PAYMENTCODE"] if remove_key["PAYMENTCODE"] is not None else None,
             "totalAmount": {
                 "value": remove_key["AMOUNT"] if remove_key["AMOUNT"] is not None else None,
-                "currency": remove_key["CURRENCY"] if remove_key["CURRENCY"] is not None else None if remove_key["PURCHASECURRENCY"] is not None else None
+                "currency": "IDR" if remove_key["CURRENCY"] is not None and remove_key["CURRENCY"] == "360" else None if remove_key["PURCHASECURRENCY"] is not None and remove_key["PURCHASECURRENCY"] == "360" else None
             },
             "additionalInfo": {
                 "trxId": remove_key["TRANSIDMERCHANT"] if remove_key["TRANSIDMERCHANT"] is not None else None,
