@@ -1,4 +1,4 @@
-class RequestHeaderDto:
+class RequestHeader:
 
     def __init__(self, x_timestamp: str, x_signature: str, x_partner_id: str, x_external_id: str, channel_id: str, authorization: str):
         self.x_timestamp = x_timestamp

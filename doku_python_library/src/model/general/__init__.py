@@ -1,1 +1,1 @@
-from doku_python_library.src.model.general.request_header_dto import *
+from doku_python_library.src.model.general.request_header import *
