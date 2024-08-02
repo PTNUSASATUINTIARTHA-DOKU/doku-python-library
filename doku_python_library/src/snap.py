@@ -9,6 +9,8 @@ from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 from doku_python_library.src.model.va.check_status_va import CheckStatusDto
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 from doku_python_library.src.model.notification.notification_token import NotificationToken
+from doku_python_library.src.model.va.delete_va_request import DeleteVaRequest
+from doku_python_library.src.model.va.delete_va_response import DeleteVaResponse
 
 class DokuSNAP :
 
@@ -86,6 +88,22 @@ class DokuSNAP :
                 self._get_token()
             return VaController.do_check_status_va(
                 check_status_request= check_status_request,
+                secret_key= self.secret_key,
+                client_id= self.client_id,
+                token_b2b= self.token,
+                is_production= self.is_production
+            )
+        except Exception as e:
+            print("• Exception --> "+str(e))
+    
+    def delete_payment_code(self, delete_va_request: DeleteVaRequest) -> DeleteVaResponse:
+        try:
+            delete_va_request.validate_delete_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            if is_token_invalid:
+                self._get_token()
+            return VaController.do_delete_payment_code(
+                delete_va_request= delete_va_request,
                 secret_key= self.secret_key,
                 client_id= self.client_id,
                 token_b2b= self.token,

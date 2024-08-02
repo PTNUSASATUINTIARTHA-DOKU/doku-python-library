@@ -11,6 +11,8 @@ from doku_python_library.src.model.va.check_status_va_response import CheckStatu
 import xml.etree.ElementTree as ET
 from doku_python_library.src.model.va.virtual_account_data import VirtualAccountData
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
+from doku_python_library.src.model.va.delete_va_request import DeleteVaRequest
+from doku_python_library.src.model.va.delete_va_response import DeleteVaResponse
 
 class VaService:
 
@@ -70,6 +72,20 @@ class VaService:
             response_json = response.json()
             va_response: CheckStatusVAResponse = CheckStatusVAResponse(**response_json) 
             return va_response
+        except Exception as e:
+            print("Failed Parse Response "+str(e))
+
+    @staticmethod
+    def do_delete_payment_code(request_header: RequestHeaderDto, delete_va_request: DeleteVaRequest, is_production: bool) -> DeleteVaResponse:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.DELETE_VA
+
+            headers: RequestHeaderDto = request_header.to_json()
+
+            response = requests.delete(url=url, json=delete_va_request.create_request_body(), headers=headers)
+            response_json = response.json()
+            delete_va_response: DeleteVaResponse = DeleteVaResponse(**response_json) 
+            return delete_va_response
         except Exception as e:
             print("Failed Parse Response "+str(e))
 

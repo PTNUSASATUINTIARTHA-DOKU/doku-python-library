@@ -8,6 +8,8 @@ from doku_python_library.src.model.va.update_va import UpdateVADto
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 from doku_python_library.src.model.va.check_status_va import CheckStatusDto
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
+from doku_python_library.src.model.va.delete_va_response import DeleteVaResponse
+from doku_python_library.src.model.va.delete_va_request import DeleteVaRequest
 
 class VaController:
     
@@ -80,3 +82,27 @@ class VaController:
             signature= signature
         )
         return VaService.do_check_status_va(request_header= request_header, check_status_request= check_status_request, is_production= is_production)
+    
+    @staticmethod
+    def do_delete_payment_code(delete_va_request: DeleteVaRequest, secret_key: str, client_id: str, token_b2b: str, is_production: bool) -> DeleteVaResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DELETE_VA
+        method: str = "DELETE"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method= method,
+            endpoint= endpoint,
+            token_b2b= token_b2b,
+            request= delete_va_request.create_request_body(),
+            timestamp= timestamp,
+            secret_key= secret_key
+        )
+        external_id: str = VaService.generate_external_id()
+        request_header: RequestHeaderDto = VaService.generate_request_header(
+            channel_id= "SDK",
+            client_id= client_id,
+            token_b2b= token_b2b,
+            timestamp= timestamp,
+            external_id= external_id,
+            signature= signature
+        )
+        return VaService.do_delete_payment_code(request_header= request_header, delete_va_request= delete_va_request, is_production= is_production)

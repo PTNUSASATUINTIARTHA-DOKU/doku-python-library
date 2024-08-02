@@ -9,6 +9,7 @@ class Config:
     ACCESS_TOKEN: str = "/authorization/v1/access-token/b2b"
     CREATE_VA: str = "/virtual-accounts/bi-snap-va/v1.1/transfer-va/create-va"
     UPDATE_VA: str = "/virtual-accounts/bi-snap-va/v1.1/transfer-va/update-va"
+    DELETE_VA: str = "/virtual-accounts/bi-snap-va/v1.1/transfer-va/delete-va"
     CHECK_STATUS_VA: str = "/orders/v1.0/transfer-va/status"
     @staticmethod
     def get_base_url(is_production: bool) -> str:
