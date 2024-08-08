@@ -24,7 +24,7 @@ class DokuSNAP :
         self.is_production = is_production
         self.public_key = public_key
         self.issuer = issuer
-        self._get_token()
+        self.get_token()
         self.token_b2b: TokenB2BResponse
         self.token: str
         self.token_expires_in: int
@@ -32,7 +32,7 @@ class DokuSNAP :
         self.secret_key = secret_key
 
         
-    def _get_token(self) -> TokenB2BResponse:
+    def get_token(self) -> TokenB2BResponse:
         try:
             token_b2b_response: TokenB2BResponse = TokenController.getTokenB2B(
             private_key=self.private_key, 
@@ -56,7 +56,7 @@ class DokuSNAP :
             create_va_request.validate_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
-                self._get_token()
+                self.get_token()
             return VaController.create_va(
                 is_production= self.is_production,
                 client_id= self.client_id,
@@ -72,7 +72,7 @@ class DokuSNAP :
             update_request.validate_update_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
-                self._get_token()
+                self.get_token()
             return VaController.do_update_va(
                 update_va_request= update_request,
                 secret_key= self.secret_key,
@@ -89,7 +89,7 @@ class DokuSNAP :
             check_status_request.validate_check_status_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
-                self._get_token()
+                self.get_token()
             return VaController.do_check_status_va(
                 check_status_request= check_status_request,
                 secret_key= self.secret_key,
@@ -105,7 +105,7 @@ class DokuSNAP :
             delete_va_request.validate_delete_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
-                self._get_token()
+                self.get_token()
             return VaController.do_delete_payment_code(
                 delete_va_request= delete_va_request,
                 secret_key= self.secret_key,

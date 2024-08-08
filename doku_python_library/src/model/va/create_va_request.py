@@ -56,10 +56,8 @@ class CreateVARequest:
     
     def validate_va_request(self) -> None:
         self._validate_partner_service_id()
-        if self.customer_no is not None:
-            self._validate_customer_no()
-        if self.virtual_acc_name is not None:
-            self._validate_virtual_acc_name()
+        self._validate_customer_no()
+        self._validate_virtual_acc_name()
         if self.virtual_acc_email is not None:
             self._validate_virtual_acc_email()
         if self.virtual_acc_phone is not None:
@@ -67,7 +65,8 @@ class CreateVARequest:
         self._validate_trx_id()
         self._validate_amount_value()
         self._validate_amount_currency()
-        self._validate_info_channel()
+        if self.additional_info.channel is not None:
+            self._validate_info_channel()
         self._validate_info_reusable()
         self._validate_va_trx_type()
         self._validate_expired_date()
@@ -153,8 +152,8 @@ class CreateVARequest:
     def _validate_amount_value(self) -> None:
         value: str = self.total_amount.value
         pattern = r'^\d{1,16}\.\d{2}$'
-        if not value.isascii():
-            raise Exception("totalAmount.value must be a string. Ensure that totalAmount.value is enclosed in quotes. Example: '11500.00'.")
+        if value is None:
+            raise Exception("totalAmount.value cant be null")
         elif len(value) < 4:
             raise Exception("totalAmount.value must be at least 4 characters long and formatted as 0.00. Ensure that totalAmount.value is at least 4 characters long and in the correct format. Example: '100.00'.")
         elif len(value) > 19:
@@ -174,9 +173,7 @@ class CreateVARequest:
     def _validate_info_channel(self) -> None:
         value: str = self.additional_info.channel  
         va_enum = [e.value for e in VaChannelEnum]
-        if not value.isascii():
-            raise Exception("additionalInfo.channel must be a string. Ensure that additionalInfo.channel is enclosed in quotes. Example: 'VIRTUAL_ACCOUNT_MANDIRI'.")
-        elif len(value) < 1:
+        if len(value) < 1:
             raise Exception("additionalInfo.channel must be at least 1 character long. Ensure that additionalInfo.channel is not empty. Example: 'VIRTUAL_ACCOUNT_MANDIRI'.")
         elif len(value) > 30:
             raise Exception("additionalInfo.channel must be 30 characters or fewer. Ensure that additionalInfo.channel is no longer than 30 characters. Example: 'VIRTUAL_ACCOUNT_MANDIRI'.")
@@ -206,7 +203,9 @@ class CreateVARequest:
         
     def _validate_va_trx_type(self) -> None:
         value: str = self.virtual_acc_trx_type
-        if not value.isascii():
+        if value is None:
+            raise Exception("virtualTrxType cant be null")
+        elif not value.isascii():
             raise Exception("virtualAccountTrxType must be a string. Ensure that virtualAccountTrxType is enclosed in quotes. Example: 'C'.")
         elif len(value) != 1:
             raise Exception("virtualAccountTrxType must be exactly 1 character long. Ensure that virtualAccountTrxType is either 'C' or 'V' or 'O. Example: 'C'.")
