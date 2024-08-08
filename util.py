@@ -7,6 +7,10 @@ from doku_python_library.src.model.va.additional_info_response import Additional
 from doku_python_library.src.services.token_service import TokenService
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 from doku_python_library.src.model.va.virtual_account_config import VirtualAccountConfig
+from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
+from doku_python_library.src.model.va.update_va_additional_info import UpdateVAAdditionalInfo
+from doku_python_library.src.model.va.update_va_config import UpdateVAConfig
+from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 
 class Util:
 
@@ -56,6 +60,30 @@ class Util:
     @staticmethod
     def generate_create_va_response(response_code: str) -> CreateVAResponse:
         return CreateVAResponse(
+            responseCode=response_code,
+            responseMessage="Successful",
+            virtualAccountData=None
+        )
+    
+    @staticmethod
+    def generate_update_va_request() -> UpdateVaRequest:
+        return UpdateVaRequest(
+            partnerServiceId= "    1899",
+            customerNo= "20240715001",
+            virtualAccountName= "Reza Alhadhi",
+            trxId= TokenService.get_timestamp(),
+            virtualAccountNo= "    189920240715001",
+            additionalInfo= UpdateVAAdditionalInfo(
+                channel="VIRTUAL_ACCOUNT_BANK_CIMB", 
+                virtualAccountConfig=UpdateVAConfig(status="ACTIVE")
+                ),
+            totalAmount= TotalAmount(value="15000.00", currency="IDR"),
+            virtualAccountTrxType= "C"
+        )
+
+    @staticmethod
+    def generate_update_va_response(response_code: str) -> CreateVAResponse:
+        return UpdateVAResponse(
             responseCode=response_code,
             responseMessage="Successful",
             virtualAccountData=None
