@@ -385,3 +385,5 @@ class TestUpdateVa(unittest.TestCase):
             request.validate_update_va_request()
         self.assertEqual(str(context.exception.args[0]), "expiredDate must be in ISO-8601 format. Ensure that expiredDate follows the correct format. Example: '2023-01-01T10:55:00+07:00'.")
     
+if __name__ == "__main__":
+    unittest.main()

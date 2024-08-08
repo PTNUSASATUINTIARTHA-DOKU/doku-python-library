@@ -378,7 +378,7 @@ class TestCreateVa(unittest.TestCase):
             request.validate_va_request()
         self.assertEqual(str(context.exception.args[0]), "additionalInfo.channel must be 30 characters or fewer. Ensure that additionalInfo.channel is no longer than 30 characters. Example: 'VIRTUAL_ACCOUNT_MANDIRI'.")
     
-    def test_create_va_channel_length_max(self):
+    def test_create_va_channel_length_enum(self):
         request = Util.generate_create_va_request()
         request.additional_info.channel = "VIRTUAL_ACCOUNT_CUSTOM"
         with self.assertRaises(Exception) as context:
@@ -412,4 +412,6 @@ class TestCreateVa(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             request.validate_va_request()
         self.assertEqual(str(context.exception.args[0]), "expiredDate must be in ISO-8601 format. Ensure that expiredDate follows the correct format. Example: '2023-01-01T10:55:00+07:00'.")
-    
+
+if __name__ == "__main__":
+    unittest.main()

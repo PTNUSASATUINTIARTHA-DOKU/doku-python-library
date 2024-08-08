@@ -11,6 +11,11 @@ from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_additional_info import UpdateVAAdditionalInfo
 from doku_python_library.src.model.va.update_va_config import UpdateVAConfig
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
+from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
+from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
+from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
+from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
+from doku_python_library.src.model.va.delete_va_additional_info import DeleteVAAdditionalInfo
 
 class Util:
 
@@ -82,9 +87,48 @@ class Util:
         )
 
     @staticmethod
-    def generate_update_va_response(response_code: str) -> CreateVAResponse:
+    def generate_update_va_response(response_code: str) -> UpdateVAResponse:
         return UpdateVAResponse(
             responseCode=response_code,
             responseMessage="Successful",
             virtualAccountData=None
         )
+    
+    @staticmethod
+    def generate_check_status_request() -> CheckStatusRequest:
+        return CheckStatusRequest(
+        partner_service_id= "    1899",
+        customer_no="20240715001",
+        virtual_acc_no="    189920240715001",
+        payment_request_id="TEST123",
+        inquiry_request_id="TESTINQUIRY"
+    )
+
+    @staticmethod
+    def generate_check_status_response(response_code: str) -> CheckStatusVAResponse:
+        return CheckStatusVAResponse(
+            responseCode=response_code,
+            responseMessage="Successful",
+            virtualAccountData=None
+        )
+    
+    @staticmethod
+    def generate_delete_va_request() -> DeleteVARequest:
+        return DeleteVARequest(
+            partner_service_id= "    1899",
+            trx_id= TokenService.get_timestamp(),
+            customer_no="20240715001",
+            virtual_acc_no="    189920240715001",
+            additional_info= DeleteVAAdditionalInfo(
+                channel= "VIRTUAL_ACCOUNT_BANK_CIMB"
+            )
+        )
+    
+    @staticmethod
+    def generate_delete_va_response(response_code: str) -> DeleteVAResponse:
+        return DeleteVAResponse(
+            responseCode=response_code,
+            responseMessage="Successful",
+            virtualAccountData=None
+        )
+    
