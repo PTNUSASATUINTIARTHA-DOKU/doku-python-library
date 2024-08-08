@@ -10,12 +10,14 @@ from doku_python_library.src.model.va.check_status_va_request import CheckStatus
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
 from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
+from doku_python_library.src.commons.snap_utils import SnapUtils
+
 
 class VaController:
     
     @staticmethod
     def create_va(is_production: bool, client_id: str, token_b2b: str, create_va_request: CreateVARequest, secret_key: str) -> CreateVAResponse:
-        external_id: str = VaService.generate_external_id()
+        external_id: str = SnapUtils.generate_external_id()
         timestamp: str = TokenService.get_timestamp()
         signature: str = TokenService.generate_symmetric_signature(
             http_method= "POST",
@@ -48,7 +50,7 @@ class VaController:
             timestamp= timestamp,
             secret_key= secret_key
         )
-        external_id: str = VaService.generate_external_id()
+        external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
@@ -72,7 +74,7 @@ class VaController:
             timestamp= timestamp,
             secret_key= secret_key
         )
-        external_id: str = VaService.generate_external_id()
+        external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
@@ -96,7 +98,7 @@ class VaController:
             timestamp= timestamp,
             secret_key= secret_key
         )
-        external_id: str = VaService.generate_external_id()
+        external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = VaService.generate_request_header(
             channel_id= "SDK",
             client_id= client_id,
