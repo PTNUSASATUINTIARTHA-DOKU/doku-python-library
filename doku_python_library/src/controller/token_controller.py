@@ -4,11 +4,14 @@ from doku_python_library.src.model.token.token_b2b_request import TokenB2BReques
 from doku_python_library.src.services.token_service import TokenService
 from flask import request
 from doku_python_library.src.model.notification import NotificationToken
+from doku_python_library.src.commons.snap_utils import SnapUtils
+from doku_python_library.src.model.general.request_header import RequestHeader
+from doku_python_library.src.services.va_service import VaService
 
 class TokenController:
 
     @staticmethod
-    def getTokenB2B(private_key: str, client_id: str, is_production: bool) -> TokenB2BResponse:
+    def get_token_b2b(private_key: str, client_id: str, is_production: bool) -> TokenB2BResponse:
         timestamp = TokenService.get_timestamp()
         signature = TokenService.create_signature(private_key=private_key, text="{client_id}|{date}".format(client_id=client_id, date=timestamp))
         headers: dict = {
@@ -63,3 +66,20 @@ class TokenController:
     def generate_invalid_signature_response() -> NotificationToken:
         timestamp: str = TokenService.get_timestamp()
         return TokenService.generate_invalid_signature(timestamp= timestamp)
+    
+    @staticmethod
+    def do_generate_request_header(private_key: str, client_id: str, token_b2b: str) -> RequestHeader:
+        external_id: str = SnapUtils.generate_external_id()
+        timestamp: str = TokenService.get_timestamp()
+        signature: str = TokenService.create_signature(
+            private_key= private_key,
+            text= "{client_id}|{date}".format(client_id=client_id, date=timestamp)
+        )
+        return VaService.generate_request_header(
+            channel_id="SDK",
+            client_id= client_id,
+            token_b2b=token_b2b,
+            timestamp= timestamp,
+            external_id=external_id,
+            signature=signature
+        )

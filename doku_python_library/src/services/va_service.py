@@ -90,7 +90,7 @@ class VaService:
             print("Failed Parse Response "+str(e))
 
     @staticmethod
-    def snap_v1_converter(snap_format: dict,) -> dict:
+    def direct_inquiry_request_mapping(header: dict, snap_format: dict,) -> dict:
        v1_channel_id = ""
        channel = snap_format["additionalInfo"]["channel"]
        if channel == VaChannelEnum.VIRTUAL_ACCOUNT_BCA.value:
@@ -122,7 +122,7 @@ class VaService:
        elif channel == VaChannelEnum.VIRTUAL_ACCOUNT_BSS.value:
            v1_channel_id = "-"
        v1_form_data: dict = {
-        "MALLID": snap_format["partnerServiceId"],
+        "MALLID": header["x-partner-id"],
         "PAYMENTCHANNEL": v1_channel_id,
         "PAYMENTCODE": snap_format["virtualAccountNo"],
         "STATUSTYPE": "/",
@@ -132,7 +132,7 @@ class VaService:
        return v1_form_data
     
     @staticmethod
-    def v1_snap_converter(v1_data: str) -> dict:
+    def direct_inquiry_response_mapping(v1_data: str) -> dict:
         dict_response = xmltodict.parse(v1_data)
         remove_key = dict_response["INQUIRY_RESPONSE"]
         v1_rc = remove_key["RESPONSECODE"]

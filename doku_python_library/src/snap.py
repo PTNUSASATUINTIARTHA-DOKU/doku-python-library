@@ -34,7 +34,7 @@ class DokuSNAP :
         
     def get_token(self) -> TokenB2BResponse:
         try:
-            token_b2b_response: TokenB2BResponse = TokenController.getTokenB2B(
+            token_b2b_response: TokenB2BResponse = TokenController.get_token_b2b(
             private_key=self.private_key, 
             client_id=self.client_id, 
             is_production=self.is_production
@@ -151,3 +151,36 @@ class DokuSNAP :
     
     def validate_token_and_generate_notification_response(self, header: RequestHeader, request: PaymentNotificationRequest) -> PaymentNotificationResponseBody:
         is_token_valid: bool = self.validate_token_b2b(request_token= header.authorization)
+        return self.generate_notification_response(is_token_valid=is_token_valid, request=request)
+
+    def generate_request_header(self) -> RequestHeader:
+        is_token_invalid: bool = TokenController.is_token_invalid(
+            token_b2b=self.token,
+            token_expires_in=self.token_expires_in,
+            token_generated_timestamp=self.token_generate_timestamp
+        )
+
+        if is_token_invalid:
+            token_b2b_response = TokenController.get_token_b2b(
+                private_key=self.private_key,
+                client_id=self.client_id,
+                is_production=self.is_production
+            )
+            if token_b2b_response is not None:
+                    self._set_token_b2b(token_b2b_response)
+            
+        request_header: RequestHeader = TokenController.do_generate_request_header(
+            private_key=self.private_key,
+            client_id=self.client_id,
+            token_b2b=self.token
+        )
+        return request_header
+    
+    def direct_inquiry_request_mapping(self, header: dict, snap_format: dict) -> dict:
+        return VaController.direct_inquiry_request_mapping(
+            header=header, 
+            snap_format=snap_format
+        )
+    
+    def direct_inquiry_response_mapping(self, v1_data: str) -> dict:
+        return VaController.direct_inquiry_response_mapping(v1_data=v1_data)

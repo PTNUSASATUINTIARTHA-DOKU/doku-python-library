@@ -108,3 +108,12 @@ class VaController:
             signature= signature
         )
         return VaService.do_delete_payment_code(request_header= request_header, delete_va_request= delete_va_request, is_production= is_production)
+    
+    @staticmethod
+    def direct_inquiry_request_mapping(header: dict, snap_format: dict) -> dict:
+        return VaService.direct_inquiry_request_mapping(header=header, snap_format=snap_format)
+    
+
+    @staticmethod
+    def direct_inquiry_response_mapping(v1_data: str) -> dict:
+        return VaService.direct_inquiry_response_mapping(v1_data=v1_data)
