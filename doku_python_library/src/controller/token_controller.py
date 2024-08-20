@@ -60,7 +60,7 @@ class TokenController:
             private_key= private_key,
             text= "{client_id}{timestamp}".format(client_id=client_id, timestamp=timestamp)
         )   
-        return TokenService.compare_signature(request_signature= request_signature, signature= signature)
+        return TokenService.compare_signature(request_signature= request_signature, new_signature= signature)
     
     @staticmethod
     def generate_invalid_signature_response() -> NotificationToken:
