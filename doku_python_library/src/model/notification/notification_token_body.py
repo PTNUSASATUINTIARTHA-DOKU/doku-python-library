@@ -7,7 +7,7 @@ class NotificationTokenBody:
         self.access_token = accessToken
         self.token_type = tokenType
         self.expires_in = expiresIn
-        self.additionalInfo: additionalInfo
+        self.additionalInfo= additionalInfo
     
     def json(self) -> dict:
         return {
