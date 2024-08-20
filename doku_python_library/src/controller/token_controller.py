@@ -58,7 +58,7 @@ class TokenController:
         request_signature: str = request.headers.get("X-SIGNATURE")
         signature: str = TokenService.create_signature(
             private_key= private_key,
-            text= "{client_id}{timestamp}".format(client_id=client_id, timestamp=timestamp)
+            text= "{client_id}|{timestamp}".format(client_id=client_id, timestamp=timestamp)
         )   
         return TokenService.compare_signature(request_signature= request_signature, new_signature= signature)
     
