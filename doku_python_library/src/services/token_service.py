@@ -101,7 +101,7 @@ class TokenService:
             "clientId": client_id
         }
         token = jwt.encode(payload= payload, key=private_key, algorithm='RS256')
-        return token
+        return token.decode('utf-8')
     
     @staticmethod
     def generate_notification_token(token: str, timestamp: str, client_id: str, expires_in: int) -> NotificationToken:
