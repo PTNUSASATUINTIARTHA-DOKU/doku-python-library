@@ -6,3 +6,10 @@ class PaymentNotificationResponseBody:
         self.response_code = responseCode
         self.response_message = responseMessage
         self.virtual_account_data = virtualAccountData
+        
+    def json(self) -> dict:
+        return {
+            "responseCode": self.response_code,
+            "responseMessage": self.response_message,
+            "virtualAccountData": self.virtual_account_data.json()
+        }

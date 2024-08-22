@@ -11,3 +11,13 @@ class NotificationVirtualAccountData:
         self.virtual_acc_name = virtualAccountName
         self.payment_request_id = paymentRequestId
         self.additional_info = additionalInfo
+
+    def json(self) -> dict:
+        return {
+            "partnerServiceId": self.partner_service_id,
+            "customerNo": self.customer_no,
+            "virtualAccountNo": self.virtual_acc_no,
+            "virtualAccountName": self.virtual_acc_name,
+            "paymentRequestId": self.payment_request_id,
+            "additionalInfo": None if self.additional_info is None else self.additional_info.json()
+        }
