@@ -143,7 +143,7 @@ class DokuSNAP :
         try:
             if is_token_valid:
                 if request is not None:
-                    NotificationController.generate_notification_response(request=request)
+                    return NotificationController.generate_notification_response(request=request)
             
             return NotificationController.generate_invalid_token_response(request=request)
         except Exception as e:

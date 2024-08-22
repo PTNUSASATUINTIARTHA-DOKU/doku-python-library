@@ -2,7 +2,7 @@ from doku_python_library.src.model.notification.notification_virtual_account_dat
 
 class PaymentNotificationResponseBody:
 
-    def __init__(self, responseCode: str, responseMessage: str, virtualAccountData: NotificationVirtualAccountData) -> None:
+    def __init__(self, responseCode: str, responseMessage: str, virtualAccountData: NotificationVirtualAccountData = None) -> None:
         self.response_code = responseCode
         self.response_message = responseMessage
         self.virtual_account_data = virtualAccountData
