@@ -11,7 +11,7 @@ from doku_python_library.src.model.va.check_status_va_response import CheckStatu
 from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
 from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
 from doku_python_library.src.commons.snap_utils import SnapUtils
-
+from doku_python_library.src.model.inquiry.inquiry_response_body import InquiryResponseBody
 
 class VaController:
     
@@ -115,5 +115,5 @@ class VaController:
     
 
     @staticmethod
-    def direct_inquiry_response_mapping(v1_data: str) -> dict:
+    def direct_inquiry_response_mapping(v1_data: str) -> InquiryResponseBody:
         return VaService.direct_inquiry_response_mapping(v1_data=v1_data)

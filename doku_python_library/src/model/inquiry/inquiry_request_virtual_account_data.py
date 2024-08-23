@@ -7,7 +7,7 @@ class InquiryRequestVirtualAccountData:
     def __init__(self, partnerServiceId: str, customerNo: str, virtualAccountNo: str,
                  virtualAccountName: str, virtualAccountEmail: str, virtualAccountPhone: str,
                  totalAmount: TotalAmount, virtualAccountTrxType: str, expiredDate: str,
-                 additionalInfo: InquiryRequestAdditionalInfo, inquiryStatus: str, inquiryReason: InquiryReason, inquiryRequestId: str) -> None:
+                 additionalInfo: InquiryRequestAdditionalInfo, inquiryStatus: str, inquiryReason: InquiryReason, inquiryRequestId: str, trxId: str) -> None:
         self.partner_service_id = partnerServiceId
         self.customer_no = customerNo
         self.virtual_acc_no = virtualAccountNo
@@ -21,3 +21,22 @@ class InquiryRequestVirtualAccountData:
         self.inquiry_status = inquiryStatus
         self.inquiry_reason = inquiryReason
         self.inquiry_request_id = inquiryRequestId
+        self.trx_id = trxId
+
+    def json(self) -> dict:
+        return {
+            "partnerServiceId": self.partner_service_id,
+            "customerNo": self.customer_no,
+            "virtualAccountNo": self.virtual_acc_no,
+            "virtualAccountName": self.virtual_acc_name,
+            "virtualAccountEmail": self.virtual_acc_email,
+            "virtualAccountPhone": self.virtual_acc_phone,
+            "totalAmount": self.total_amount.json(),
+            "virtualAccountTrxType": self.virtual_acc_trx_type,
+            "expiredDate": self.expired_date,
+            "additionalInfo": self.additional_info.json(),
+            "inquiryStatus": self.inquiry_status,
+            "inquiryReason": self.inquiry_reason,
+            "inquiryRequestId": self.inquiry_request_id,
+            "trxId": None if self.trx_id is None else self.trx_id
+        }

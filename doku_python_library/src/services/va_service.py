@@ -8,11 +8,15 @@ from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
 from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
-import xml.etree.ElementTree as ET
 from doku_python_library.src.model.va.virtual_account_data import VirtualAccountData
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
 from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
+from doku_python_library.src.model.inquiry.inquiry_response_body import InquiryResponseBody
+from doku_python_library.src.model.inquiry.inquiry_request_virtual_account_data import InquiryRequestVirtualAccountData
+from doku_python_library.src.model.va.total_amount import TotalAmount
+from doku_python_library.src.model.inquiry.inquiry_request_additional_info import InquiryRequestAdditionalInfo
+
 
 class VaService:
 
@@ -132,7 +136,7 @@ class VaService:
        return v1_form_data
     
     @staticmethod
-    def direct_inquiry_response_mapping(v1_data: str) -> dict:
+    def direct_inquiry_response_mapping(v1_data: str) -> InquiryResponseBody:
         dict_response = xmltodict.parse(v1_data)
         remove_key = dict_response["INQUIRY_RESPONSE"]
         v1_rc = remove_key["RESPONSECODE"]
@@ -161,5 +165,31 @@ class VaService:
                 "maxAmount": remove_key["MAXAMOUNT"] if remove_key["MAXAMOUNT"] is not None else None,
             }
         }
-        snap_format["virtualAccountData"] = virtual_account_data
-        return snap_format
+        inquiry_response_body: InquiryResponseBody = InquiryResponseBody(
+            responseCode=snap_format["responseCode"],
+            responseMessage=snap_format["responseMessage"],
+            virtualAccountData= InquiryRequestVirtualAccountData(
+                partnerServiceId= "",
+                customerNo=virtual_account_data["virtualAccountNo"],
+                virtualAccountNo=virtual_account_data["virtualAccountNo"],
+                virtualAccountName=virtual_account_data["virtualAccountName"],
+                virtualAccountEmail=virtual_account_data["virtualAccountEmail"],
+                virtualAccountPhone="",
+                totalAmount=TotalAmount(
+                    value=virtual_account_data["totalAmount"]["value"],
+                    currency=virtual_account_data["totalAmount"]["currency"]
+                ),
+                virtualAccountTrxType="",
+                expiredDate="",
+                inquiryStatus="",
+                inquiryReason="",
+                inquiryRequestId="",
+                additionalInfo=InquiryRequestAdditionalInfo(
+                    channel="",
+                    minAmount=virtual_account_data["additionalInfo"]["minAmont"],
+                    maxAmount=virtual_account_data["additionalInfo"]["maxAmount"],
+                    trxId=virtual_account_data["additionalInfo"]["trxId"] if virtual_account_data["additionalInfo"]["trxId"] is not None else ""
+                )
+            )
+        )
+        return inquiry_response_body
