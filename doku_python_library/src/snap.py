@@ -15,6 +15,9 @@ from doku_python_library.src.model.notification.notification_payment_request imp
 from doku_python_library.src.model.notification.notification_payment_body_response import PaymentNotificationResponseBody
 from doku_python_library.src.model.general.request_header import RequestHeader
 from doku_python_library.src.controller.notification_controler import NotificationController
+from doku_python_library.src.model.direct_debit.account_binding_request import AccountBindingRequest
+from doku_python_library.src.model.direct_debit.account_binding_response import AccountBindingResponse
+from doku_python_library.src.controller.direct_debit_controller import DirectDebitController
 
 class DokuSNAP :
 
@@ -184,3 +187,26 @@ class DokuSNAP :
     
     def direct_inquiry_response_mapping(self, v1_data: str) -> dict:
         return VaController.direct_inquiry_response_mapping(v1_data=v1_data)
+    
+    def do_account_binding(self, request: AccountBindingRequest, device_id: str = None, ip_address: str = None) -> AccountBindingResponse:
+        request.validate_request()
+
+        is_token_invalid: bool = TokenController.is_token_invalid(
+            token_b2b=self.token,
+            token_expires_in=self.token_expires_in,
+            token_generated_timestamp=self.token_generate_timestamp
+        )
+
+        if is_token_invalid:
+            self.get_token()
+        
+        return DirectDebitController.do_account_binding(
+            request=request,
+            secret_key=self.secret_key,
+            client_id=self.client_id,
+            device_id=device_id,
+            ip_address=ip_address,
+            token_b2b=self.token,
+            is_production=self.is_production
+        )
+        
