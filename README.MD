@@ -90,49 +90,66 @@ def inquiry_request() -> dict:
                 prog_language="python",
                 versi_sdk="1.1.0"
             )
-            row = fetch_direct_inquiry(inquiry_id=request_json['inquiryRequestId'])
-            response_body = row[2]
-            if not isinstance(row, str):
-                response: InquiryResponseBody = InquiryResponseBody(
-                    responseCode="2002400",
-                    responseMessage="successful",
-                    virtualAccountData=InquiryRequestVirtualAccountData(
-                        partnerServiceId=None if "partnerServiceId" not in response_body.keys() else response_body["partnerServiceId"],
-                        customerNo=None if "customerNo" not in response_body.keys() else response_body["customerNo"],
-                        virtualAccountNo=None if "virtualAccountNo" not in response_body.keys() else response_body["virtualAccountNo"],
-                        virtualAccountName=None if "virtualAccountName" not in response_body.keys() else response_body["virtualAccountName"],
-                        virtualAccountEmail=None if "virtualAccountEmail" not in response_body.keys() else response_body["virtualAccountEmail"],
-                        virtualAccountPhone=None if "virtualAccountPhone" not in response_body.keys() else response_body["virtualAccountPhone"],
-                        totalAmount=TotalAmount(
-                            value=None if response_body["totalAmount"]["value"] is None else response_body["totalAmount"]["value"],
-                            currency=None if response_body["totalAmount"]["currency"] is None else response_body["totalAmount"]["currency"],
-                        ),
-                        virtualAccountTrxType=None if "virtualAccountTrxType" not in response_body.keys() else response_body["virtualAccountTrxType"],
-                        expiredDate=None if "expiredDate" not in response_body.keys() else response_body["expiredDate"],
-                        additionalInfo=InquiryRequestAdditionalInfo(
-                            channel=None if response_body["additionalInfo"]["channel"] is None else response_body["additionalInfo"]["channel"],
-                            trxId=None if response_body["additionalInfo"]["trxId"] is None else response_body["additionalInfo"]["trxId"],
-                            virtualAccountConfig= VirtualAccountConfig(
-                                reusable_status=None if response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"],
-                                min_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"],
-                                max_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"],
+            row_va = fetch_direct_inquiry_va(virtual_account_no=request_json['virtualAccountNo'])
+            if row_va is not None and not isinstance(row_va, str):
+                db_status = update_status_inquiry(status_va="inquiry", settlement_time=request_json["trxDateInit"], va_number=request_json['virtualAccountNo'])
+                if db_status == 200:
+                    row = fetch_direct_inquiry(inquiry_id=request_json['inquiryRequestId'])
+                    response_body = row[2]
+                    if not isinstance(row, str):
+                        response: InquiryResponseBody = InquiryResponseBody(
+                            responseCode="2002400",
+                            responseMessage="successful",
+                            virtualAccountData=InquiryRequestVirtualAccountData(
+                                partnerServiceId=None if "partnerServiceId" not in response_body.keys() else response_body["partnerServiceId"],
+                                customerNo=None if "customerNo" not in response_body.keys() else response_body["customerNo"],
+                                virtualAccountNo=None if "virtualAccountNo" not in response_body.keys() else response_body["virtualAccountNo"],
+                                virtualAccountName=None if "virtualAccountName" not in response_body.keys() else response_body["virtualAccountName"],
+                                virtualAccountEmail=None if "virtualAccountEmail" not in response_body.keys() else response_body["virtualAccountEmail"],
+                                virtualAccountPhone=None if "virtualAccountPhone" not in response_body.keys() else response_body["virtualAccountPhone"],
+                                totalAmount=TotalAmount(
+                                    value=None if response_body["totalAmount"]["value"] is None else response_body["totalAmount"]["value"],
+                                    currency=None if response_body["totalAmount"]["currency"] is None else response_body["totalAmount"]["currency"],
+                                ),
+                                virtualAccountTrxType=None if "virtualAccountTrxType" not in response_body.keys() else response_body["virtualAccountTrxType"],
+                                expiredDate=None if "expiredDate" not in response_body.keys() else response_body["expiredDate"],
+                                additionalInfo=InquiryRequestAdditionalInfo(
+                                    channel=None if response_body["additionalInfo"]["channel"] is None else response_body["additionalInfo"]["channel"],
+                                    trxId=None if response_body["additionalInfo"]["trxId"] is None else response_body["additionalInfo"]["trxId"],
+                                    virtualAccountConfig= VirtualAccountConfig(
+                                        reusable_status=None if response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"],
+                                        min_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"],
+                                        max_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"],
+                                    )
+                                ),
+                                inquiryReason=InquiryReason(
+                                    english=None if response_body["inquiryReason"]["english"] is None else response_body["inquiryReason"]["english"],
+                                    indonesia=None if response_body["inquiryReason"]["indonesia"] is None else response_body["inquiryReason"]["indonesia"],
+                                ),
+                                inquiryRequestId=None if "inquiryRequestId" not in response_body.keys() else response_body["inquiryRequestId"],
+                                inquiryStatus=None if "inquiryStatus" not in response_body.keys() else response_body["inquiryStatus"],
+                                trxId=None if "trxId" not in response_body.keys() else response_body["trxId"],
                             )
-                        ),
-                        inquiryReason=InquiryReason(
-                            english=None if response_body["inquiryReason"]["english"] is None else response_body["inquiryReason"]["english"],
-                            indonesia=None if response_body["inquiryReason"]["indonesia"] is None else response_body["inquiryReason"]["indonesia"],
-                        ),
-                        inquiryRequestId=None if "inquiryRequestId" not in response_body.keys() else response_body["inquiryRequestId"],
-                        inquiryStatus=None if "inquiryStatus" not in response_body.keys() else response_body["inquiryStatus"],
-                        trxId=None if "trxId" not in response_body.keys() else response_body["trxId"],
-                    )
-                )
-                response = response.json()
-                return json.dumps(response)
+                        )
+                        response = response.json()
+                        response["db_status"] = db_status
+                        return json.dumps(response)
+                    else:
+                        return {
+                            "responseCode": "4012400",
+                            "responseMessage": "Virtual Account Not Found",
+                            "db_status": db_status
+                            }
+                else:
+                    return {
+                            "responseCode": "4012400",
+                            "responseMessage": "Virtual Account Not Found",
+                            "db_status": db_status
+                            }
             else:
                 return {
-                    "responseCode": "4012400",
-                    "responseMessage": "Virtual Account Not Found",
+                        "responseCode": "4012400",
+                        "responseMessage": "Virtual Account Not Found",
                     }
         return {
                 "responseCode": "4010000",
