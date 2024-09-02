@@ -16,6 +16,8 @@ import time
 from doku_python_library.src.model.notification.notification_token import NotificationToken
 from doku_python_library.src.model.notification.notification_token_header import NotificationTokenHeader
 from doku_python_library.src.model.notification.notification_token_body import NotificationTokenBody
+from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
+from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
 
 class TokenService:
 
@@ -140,3 +142,28 @@ class TokenService:
             additionalInfo= None
         )
         return NotificationToken(header= header, body= body)
+    
+    @staticmethod
+    def create_token_b2b2c_request(auth_code: str) -> TokenB2B2CRequest:
+        return TokenB2B2CRequest(
+            grant_type="authorization_code",
+            auth_code=auth_code,
+            refresh_token='',
+        )
+
+    @staticmethod
+    def create_token_b2b2c(request: TokenB2B2CRequest, timestamp: str, signature: str, client_id: str, is_production: bool) -> TokenB2B2CResponse:
+        url: str = Config.get_base_url(is_production=is_production) + Config.ACCESS_TOKEN_B2B2C
+        headers: dict = {
+            "content-type": "application/json",
+            "X-SIGNATURE": signature,
+            "X-TIMESTAMP": timestamp,
+            "X-CLIENT-ID": client_id
+        }
+        response = requests.post(url=url, json=request.create_request_body(), headers=headers)
+        response_json = response.json()
+        token_response: TokenB2B2CResponse = TokenB2BResponse(**response_json)
+        if token_response.response_code.startswith("200"):
+            token_response.generated_timestamp = timestamp
+            token_response.access_token_expiry_time = token_response.access_token_expiry_time - 10
+        return token_response

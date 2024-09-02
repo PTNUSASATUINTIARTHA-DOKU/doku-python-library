@@ -18,6 +18,8 @@ from doku_python_library.src.controller.notification_controler import Notificati
 from doku_python_library.src.model.direct_debit.account_binding_request import AccountBindingRequest
 from doku_python_library.src.model.direct_debit.account_binding_response import AccountBindingResponse
 from doku_python_library.src.controller.direct_debit_controller import DirectDebitController
+from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
+from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
 
 class DokuSNAP :
 
@@ -33,6 +35,8 @@ class DokuSNAP :
         self.token_expires_in: int
         self.token_generate_timestamp: str
         self.secret_key = secret_key
+        self.token_b2b2c_generate_timestamp: str
+        self.token_b2b2c_expires_in: int
 
         
     def get_token(self) -> TokenB2BResponse:
@@ -209,4 +213,22 @@ class DokuSNAP :
             token_b2b=self.token,
             is_production=self.is_production
         )
+    
+    def get_token_b2b2c(self, auth_code: str) -> TokenB2B2CResponse:
+        try:
+            token_b2b2c_response: TokenB2B2CResponse = TokenController.get_token_b2b2c(
+                auth_code=auth_code,
+                private_key=self.private_key,
+                client_id=self.client_id,
+                is_production=self.is_production
+            )
+            if token_b2b2c_response is not None:
+                self._set_token_b2b2c(token_b2b2c_response=token_b2b2c_response)
+            return token_b2b2c_response
+        except Exception as e:
+            print("Error occured when get token b2b2c "+str(e))
+    
+    def _set_token_b2b2c(self, token_b2b2c_response: TokenB2B2CResponse) -> None:
+        self.token_b2b2c_expires_in = token_b2b2c_response.access_token_expiry_time
+        self.token_b2b2c_generate_timestamp = token_b2b2c_response.generated_timestamp
         

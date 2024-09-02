@@ -7,6 +7,8 @@ from doku_python_library.src.model.notification import NotificationToken
 from doku_python_library.src.commons.snap_utils import SnapUtils
 from doku_python_library.src.model.general.request_header import RequestHeader
 from doku_python_library.src.services.va_service import VaService
+from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
+from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
 
 class TokenController:
 
@@ -82,4 +84,23 @@ class TokenController:
             timestamp= timestamp,
             external_id=external_id,
             signature=signature
+        )
+    
+    @staticmethod
+    def get_token_b2b2c(auth_code: str, private_key: str, 
+                        client_id: str, is_production: bool) -> TokenB2B2CResponse:
+        timestamp: str = TokenService.get_timestamp()
+        signature: str = TokenService.create_signature(
+            private_key=private_key,
+            text="{client_id}|{date}".format(client_id=client_id, date=timestamp)
+        )
+        request: TokenB2B2CRequest = TokenService.create_token_b2b2c_request(
+            auth_code=auth_code
+        )
+        return TokenService.create_token_b2b2c(
+            request=request.create_request_body(),
+            timestamp=timestamp,
+            signature=signature,
+            client_id=client_id,
+            is_production=is_production
         )
