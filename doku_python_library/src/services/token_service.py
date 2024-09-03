@@ -84,7 +84,7 @@ class TokenService:
     
     @staticmethod
     def is_token_empty(token: str) -> bool:
-        return token_b2b is None
+        return token is None
     
     @staticmethod
     def validate_token_b2b(token: str, public_key: str) -> dict:
