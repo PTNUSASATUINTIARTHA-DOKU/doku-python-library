@@ -2,3 +2,8 @@ from doku_python_library.src.model.direct_debit.account_binding_request import *
 from doku_python_library.src.model.direct_debit.account_binding_additional_info_request import *
 from doku_python_library.src.model.direct_debit.account_binding_additional_info_response import *
 from doku_python_library.src.model.direct_debit.account_binding_response import *
+from doku_python_library.src.model.direct_debit.payment_request import *
+from doku_python_library.src.model.direct_debit.pay_option_detail import *
+from doku_python_library.src.model.direct_debit.line_items import *
+from doku_python_library.src.model.direct_debit.payment_additional_info_request import *
+from doku_python_library.src.model.direct_debit.payment_response import *

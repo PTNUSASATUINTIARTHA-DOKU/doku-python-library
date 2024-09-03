@@ -83,7 +83,7 @@ class TokenService:
         return expired_date > date_now
     
     @staticmethod
-    def is_token_empty(token_b2b: TokenB2BResponse) -> bool:
+    def is_token_empty(token: str) -> bool:
         return token_b2b is None
     
     @staticmethod

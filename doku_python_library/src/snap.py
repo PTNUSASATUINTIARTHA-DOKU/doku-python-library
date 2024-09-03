@@ -20,6 +20,8 @@ from doku_python_library.src.model.direct_debit.account_binding_response import 
 from doku_python_library.src.controller.direct_debit_controller import DirectDebitController
 from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
 from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
+from doku_python_library.src.model.direct_debit.payment_request import PaymentRequest
+from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
 
 class DokuSNAP :
 
@@ -35,6 +37,7 @@ class DokuSNAP :
         self.token_expires_in: int
         self.token_generate_timestamp: str
         self.secret_key = secret_key
+        self.token_b2b2c: str
         self.token_b2b2c_generate_timestamp: str
         self.token_b2b2c_expires_in: int
 
@@ -61,7 +64,7 @@ class DokuSNAP :
     def create_va(self, create_va_request: CreateVARequest) -> CreateVAResponse:
         try:
             create_va_request.validate_va_request()
-            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
                 self.get_token()
             return VaController.create_va(
@@ -77,7 +80,7 @@ class DokuSNAP :
     def update_va(self, update_request: UpdateVaRequest) -> UpdateVAResponse:
         try:
             update_request.validate_update_va_request()
-            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
                 self.get_token()
             return VaController.do_update_va(
@@ -94,7 +97,7 @@ class DokuSNAP :
     def check_status_va(self, check_status_request: CheckStatusRequest) -> CheckStatusVAResponse:
         try:
             check_status_request.validate_check_status_request()
-            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
                 self.get_token()
             return VaController.do_check_status_va(
@@ -110,7 +113,7 @@ class DokuSNAP :
     def delete_payment_code(self, delete_va_request: DeleteVARequest) -> DeleteVAResponse:
         try:
             delete_va_request.validate_delete_request()
-            is_token_invalid: bool = TokenController.is_token_invalid(self.token_b2b, self.token_expires_in, self.token_generate_timestamp)
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
                 self.get_token()
             return VaController.do_delete_payment_code(
@@ -229,6 +232,27 @@ class DokuSNAP :
             print("Error occured when get token b2b2c "+str(e))
     
     def _set_token_b2b2c(self, token_b2b2c_response: TokenB2B2CResponse) -> None:
+        self.token_b2b2c = token_b2b2c_response.access_token
         self.token_b2b2c_expires_in = token_b2b2c_response.access_token_expiry_time
         self.token_b2b2c_generate_timestamp = token_b2b2c_response.generated_timestamp
-        
+    
+    def do_payment(self, request: PaymentRequest, ip_address: str, auth_code: str) -> PaymentResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
+            if is_token_invalid:
+                self.get_token()
+            is_token_b2b2c_invalid: bool = TokenController.is_token_invalid(self.token_b2b2c, self.token_b2b2c_expires_in, self.token_b2b2c_generate_timestamp)
+            if is_token_b2b2c_invalid:
+                self.get_token_b2b2c(auth_code=auth_code)
+            return DirectDebitController.do_payment_process(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                ip_address=ip_address,
+                token_b2b=self.token,
+                token_b2b2c=self.token_b2b2c,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when process payment "+str(e))

@@ -13,6 +13,8 @@ class Config:
     CHECK_STATUS_VA: str = "/orders/v1.0/transfer-va/status"
     DIRECT_DEBIT_ACCOUNT_BINDING_URL = "/direct-debit/core/v1/registration-account-binding"
     ACCESS_TOKEN_B2B2C = "/authorization/v1/access-token/b2b2c"
+    DIRECT_DEBIT_PAYMENT_URL = "/direct-debit/core/v1/debit/payment-host-to-host"
+
     @staticmethod
     def get_base_url(is_production: bool) -> str:
         return _config_by_name["prod" if is_production else "dev"].BASE_URL
