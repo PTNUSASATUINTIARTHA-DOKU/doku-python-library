@@ -3,6 +3,8 @@ from doku_python_library.src.model.direct_debit.account_binding_request import A
 from doku_python_library.src.model.direct_debit.account_binding_response import AccountBindingResponse
 from doku_python_library.src.model.direct_debit.payment_request import PaymentRequest
 from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
+from doku_python_library.src.model.direct_debit.balance_inquiry_request import BalanceInquiryRequest
+from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
 from doku_python_library.src.commons.config import Config
 import requests
 
@@ -29,5 +31,17 @@ class DirectDebitService:
             response_json = response.json()
             payment_response: PaymentResponse = PaymentResponse(**response_json)
             return payment_response
+        except Exception as e:
+            print("Failed Parse Response "+ str(e))
+    
+    @staticmethod
+    def do_balance_inquiry(request_header: RequestHeader, request: BalanceInquiryRequest, is_production: bool) -> BalanceInquiryRequest:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_BALANCE_INQUIRY_URL
+            headers: dict = request_header.to_json()
+            response = requests.post(url=url, json=request.create_body_request(), headers=headers)
+            response_json = response.json()
+            balance_response: BalanceInquiryResponse = BalanceInquiryResponse(**response_json)
+            return balance_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))

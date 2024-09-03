@@ -7,3 +7,7 @@ from doku_python_library.src.model.direct_debit.pay_option_detail import *
 from doku_python_library.src.model.direct_debit.line_items import *
 from doku_python_library.src.model.direct_debit.payment_additional_info_request import *
 from doku_python_library.src.model.direct_debit.payment_response import *
+from doku_python_library.src.model.direct_debit.account_info import *
+from doku_python_library.src.model.direct_debit.balance_inquiry_additional_info import *
+from doku_python_library.src.model.direct_debit.balance_inquiry_request import *
+from doku_python_library.src.model.direct_debit.balance_inquiry_response import *

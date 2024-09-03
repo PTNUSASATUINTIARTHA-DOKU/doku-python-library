@@ -7,6 +7,8 @@ from doku_python_library.src.model.general.request_header import RequestHeader
 from doku_python_library.src.services.direct_debit_service import DirectDebitService
 from doku_python_library.src.model.direct_debit.payment_request import PaymentRequest
 from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
+from doku_python_library.src.model.direct_debit.balance_inquiry_request import BalanceInquiryRequest
+from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
 
 
 
@@ -67,3 +69,31 @@ class DirectDebitController:
             token_b2b2c=token_b2b2c
         )
         return DirectDebitService.do_payment_process(request_header=request_header, request=request, is_production=is_production)
+    
+    @staticmethod
+    def do_balance_inquiry(request: BalanceInquiryRequest, ip_address: str, token: str, token_b2b2c: str, secret_key: str, client_id: str, is_production: bool) -> BalanceInquiryResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DIRECT_DEBIT_BALANCE_INQUIRY_URL
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method=method,
+            endpoint=endpoint,
+            token_b2b=token,
+            request=request.create_body_request(),
+            timestamp=timestamp,
+            secret_key=secret_key
+        )
+        external_id: str = SnapUtils.generate_external_id()
+        request_header: RequestHeader = SnapUtils.generate_request_header(
+            channel_id="SDK",
+            client_id=client_id,
+            token_b2b=token,
+            external_id=external_id,
+            timestamp=timestamp,
+            signature=signature,
+            ip_address=ip_address,
+            token_b2b2c=token_b2b2c
+        )
+        
+        return DirectDebitService.do_balance_inquiry(request_header=request_header, request=request, is_production=is_production)
+        
