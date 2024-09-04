@@ -15,6 +15,7 @@ class Config:
     ACCESS_TOKEN_B2B2C = "/authorization/v1/access-token/b2b2c"
     DIRECT_DEBIT_PAYMENT_URL = "/direct-debit/core/v1/debit/payment-host-to-host"
     DIRECT_DEBIT_BALANCE_INQUIRY_URL = "/direct-debit/core/v1/balance-inquiry"
+    DIRECT_DEBIT_ACCOUNT_UNBINDING_URL = "/direct-debit/core/v1/registration-account-unbinding"
 
     @staticmethod
     def get_base_url(is_production: bool) -> str:

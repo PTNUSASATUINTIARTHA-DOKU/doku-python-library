@@ -11,3 +11,6 @@ from doku_python_library.src.model.direct_debit.account_info import *
 from doku_python_library.src.model.direct_debit.balance_inquiry_additional_info import *
 from doku_python_library.src.model.direct_debit.balance_inquiry_request import *
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import *
+from doku_python_library.src.model.direct_debit.account_unbinding_request import *
+from doku_python_library.src.model.direct_debit.account_unbinding_additional_info_request import *
+from doku_python_library.src.model.direct_debit.account_binding_response import *

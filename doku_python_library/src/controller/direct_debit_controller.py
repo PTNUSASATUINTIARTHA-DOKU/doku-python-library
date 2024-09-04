@@ -9,7 +9,8 @@ from doku_python_library.src.model.direct_debit.payment_request import PaymentRe
 from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
 from doku_python_library.src.model.direct_debit.balance_inquiry_request import BalanceInquiryRequest
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
-
+from doku_python_library.src.model.direct_debit.account_unbinding_request import AccountUnbindingRequest
+from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
 
 
 class DirectDebitController:
@@ -96,4 +97,29 @@ class DirectDebitController:
         )
         
         return DirectDebitService.do_balance_inquiry(request_header=request_header, request=request, is_production=is_production)
-        
+    
+    @staticmethod
+    def do_account_unbinding(request: AccountUnbindingRequest, secret_key: str, client_id: str,
+                             ip_address: str, token: str, is_production: bool) -> AccountUnbindingResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DIRECT_DEBIT_ACCOUNT_UNBINDING_URL
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method=method,
+            endpoint=endpoint,
+            token_b2b=token,
+            request=request.create_body_request(),
+            timestamp=timestamp,
+            secret_key=secret_key
+        )
+        external_id: str = SnapUtils.generate_external_id()
+        request_header: RequestHeader = SnapUtils.generate_request_header(
+            channel_id="SDK",
+            client_id=client_id,
+            token_b2b=token,
+            timestamp=timestamp,
+            external_id=external_id,
+            signature=signature,
+            ip_address=ip_address
+        )
+        return DirectDebitService.do_account_unbinding_process(request_header=request_header, request=request, is_production=is_production)

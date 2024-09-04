@@ -24,6 +24,9 @@ from doku_python_library.src.model.direct_debit.payment_request import PaymentRe
 from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
 from doku_python_library.src.model.direct_debit.balance_inquiry_request import BalanceInquiryRequest
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
+from doku_python_library.src.model.direct_debit.account_unbinding_request import AccountUnbindingRequest
+from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
+
 
 class DokuSNAP :
 
@@ -279,3 +282,25 @@ class DokuSNAP :
             )
         except Exception as e:
             print("Error occured when balance inquiry "+str(e))
+    
+    def do_account_unbinding(self, request: AccountUnbindingRequest, ip_address: str) -> AccountUnbindingResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(
+                token_b2b=self.token,
+                token_expires_in=self.token_expires_in,
+                token_generated_timestamp=self.token_generate_timestamp
+            )
+
+            if is_token_invalid:
+                self.get_token()
+            return DirectDebitController.do_account_unbinding(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                ip_address=ip_address,
+                token=self.token,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when account unbinding "+str(e))
