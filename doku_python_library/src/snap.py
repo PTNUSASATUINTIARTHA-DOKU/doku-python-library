@@ -204,7 +204,7 @@ class DokuSNAP :
         request.validate_request()
 
         is_token_invalid: bool = TokenController.is_token_invalid(
-            token_b2b=self.token,
+            token=self.token,
             token_expires_in=self.token_expires_in,
             token_generated_timestamp=self.token_generate_timestamp
         )
