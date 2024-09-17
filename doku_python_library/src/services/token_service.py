@@ -3,6 +3,7 @@ import pytz
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.backends import default_backend
 import base64
 from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
 from doku_python_library.src.model.token.token_b2b_request import TokenB2BRequest
@@ -16,6 +17,8 @@ import time
 from doku_python_library.src.model.notification.notification_token import NotificationToken
 from doku_python_library.src.model.notification.notification_token_header import NotificationTokenHeader
 from doku_python_library.src.model.notification.notification_token_body import NotificationTokenBody
+from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
+from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
 
 class TokenService:
 
@@ -81,8 +84,8 @@ class TokenService:
         return expired_date > date_now
     
     @staticmethod
-    def is_token_empty(token_b2b: TokenB2BResponse) -> bool:
-        return token_b2b is None
+    def is_token_empty(token: str) -> bool:
+        return token is None
     
     @staticmethod
     def validate_token_b2b(token: str, public_key: str) -> dict:
@@ -123,8 +126,34 @@ class TokenService:
         return response
     
     @staticmethod
-    def compare_signature(request_signature: str, new_signature: str) -> bool:
-        return request_signature == new_signature
+    def compare_signatures(string_to_sign, signature, string_public_key):
+        try:
+            string_public_key = string_public_key.replace("-----BEGIN PUBLIC KEY-----", "")
+            string_public_key = string_public_key.replace("-----END PUBLIC KEY-----", "")
+            string_public_key = string_public_key.replace("\n", "")
+            
+            missing_padding = len(string_public_key) % 4
+            if missing_padding:
+                string_public_key += '=' * (4 - missing_padding)
+            
+            decoded_public_key = base64.b64decode(string_public_key)
+            public_key = serialization.load_der_public_key(
+                decoded_public_key,
+                backend=default_backend()
+            )
+            decoded_signature = base64.b64decode(signature)
+            
+            public_key.verify(
+                decoded_signature,  
+                string_to_sign.encode("utf-8"),  
+                padding.PKCS1v15(),  
+                hashes.SHA256()  
+            )
+            
+            return True
+        except Exception as e:
+            print(f"Error verifying signature: {str(e)}")
+            return False
     
     @staticmethod
     def generate_invalid_signature(timestamp: str) -> NotificationToken:
@@ -140,3 +169,28 @@ class TokenService:
             additionalInfo= None
         )
         return NotificationToken(header= header, body= body)
+    
+    @staticmethod
+    def create_token_b2b2c_request(auth_code: str) -> TokenB2B2CRequest:
+        return TokenB2B2CRequest(
+            grant_type="authorization_code",
+            auth_code=auth_code,
+            refresh_token='',
+        )
+
+    @staticmethod
+    def create_token_b2b2c(request: TokenB2B2CRequest, timestamp: str, signature: str, client_id: str, is_production: bool) -> TokenB2B2CResponse:
+        url: str = Config.get_base_url(is_production=is_production) + Config.ACCESS_TOKEN_B2B2C
+        headers: dict = {
+            "content-type": "application/json",
+            "X-SIGNATURE": signature,
+            "X-TIMESTAMP": timestamp,
+            "X-CLIENT-ID": client_id
+        }
+        response = requests.post(url=url, json=request.create_request_body(), headers=headers)
+        response_json = response.json()
+        token_response: TokenB2B2CResponse = TokenB2BResponse(**response_json)
+        if token_response.response_code.startswith("200"):
+            token_response.generated_timestamp = timestamp
+            token_response.access_token_expiry_time = token_response.access_token_expiry_time - 10
+        return token_response
