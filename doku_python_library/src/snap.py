@@ -29,7 +29,8 @@ from doku_python_library.src.model.direct_debit.payment_jump_app_request import 
 from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
 from doku_python_library.src.model.direct_debit.card_registration_request import CardRegistrationRequest
 from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
-
+from doku_python_library.src.model.direct_debit.refund_request import RefundRequest
+from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 
 
 class DokuSNAP :
@@ -353,3 +354,24 @@ class DokuSNAP :
             )
         except Exception as e:
             print("Error occured when card registration "+str(e))
+    
+    def do_refund(self, request: RefundRequest, ip_address: str, auth_code: str) -> RefundResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
+            if is_token_invalid:
+                self.get_token()
+            is_token_b2b2c_invalid: bool = TokenController.is_token_invalid(self.token_b2b2c, self.token_b2b2c_expires_in, self.token_b2b2c_generate_timestamp)
+            if is_token_b2b2c_invalid:
+                self.get_token_b2b2c(auth_code=auth_code)
+            return DirectDebitController.do_refund(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                ip_address=ip_address,
+                token_b2b=self.token,
+                token_b2b2c=self.token_b2b2c,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when do refund "+str(e))

@@ -21,3 +21,6 @@ from doku_python_library.src.model.direct_debit.paymet_jump_app_response import 
 from doku_python_library.src.model.direct_debit.card_registration_request import *
 from doku_python_library.src.model.direct_debit.card_registration_additional_info import *
 from doku_python_library.src.model.direct_debit.card_registration_response import *
+from doku_python_library.src.model.direct_debit.refund_request import *
+from doku_python_library.src.model.direct_debit.refund_additional_info import *
+from doku_python_library.src.model.direct_debit.refund_response import *
