@@ -72,7 +72,7 @@ response: CreateVAResponse = payment.create_va(create_va_request= request)
 ```
 
 ##### DIPC
-###### #coming-soon inquiryResponse Function
+###### inquiryResponse Function
 If you use the DIPC feature, you can generate your own paycode and allow your customers to pay without direct communication with DOKU. After customers initiate the payment via the acquirer's channel, DOKU sends an inquiry request to you for validation. This function is applicable for DIPC.
 ```python
 @app.route('/v1.1/transfer-va/inquiry', methods=['POST'])
@@ -90,49 +90,66 @@ def inquiry_request() -> dict:
                 prog_language="python",
                 versi_sdk="1.1.0"
             )
-            row = fetch_direct_inquiry(inquiry_id=request_json['inquiryRequestId'])
-            response_body = row[2]
-            if not isinstance(row, str):
-                response: InquiryResponseBody = InquiryResponseBody(
-                    responseCode="2002400",
-                    responseMessage="successful",
-                    virtualAccountData=InquiryRequestVirtualAccountData(
-                        partnerServiceId=None if "partnerServiceId" not in response_body.keys() else response_body["partnerServiceId"],
-                        customerNo=None if "customerNo" not in response_body.keys() else response_body["customerNo"],
-                        virtualAccountNo=None if "virtualAccountNo" not in response_body.keys() else response_body["virtualAccountNo"],
-                        virtualAccountName=None if "virtualAccountName" not in response_body.keys() else response_body["virtualAccountName"],
-                        virtualAccountEmail=None if "virtualAccountEmail" not in response_body.keys() else response_body["virtualAccountEmail"],
-                        virtualAccountPhone=None if "virtualAccountPhone" not in response_body.keys() else response_body["virtualAccountPhone"],
-                        totalAmount=TotalAmount(
-                            value=None if response_body["totalAmount"]["value"] is None else response_body["totalAmount"]["value"],
-                            currency=None if response_body["totalAmount"]["currency"] is None else response_body["totalAmount"]["currency"],
-                        ),
-                        virtualAccountTrxType=None if "virtualAccountTrxType" not in response_body.keys() else response_body["virtualAccountTrxType"],
-                        expiredDate=None if "expiredDate" not in response_body.keys() else response_body["expiredDate"],
-                        additionalInfo=InquiryRequestAdditionalInfo(
-                            channel=None if response_body["additionalInfo"]["channel"] is None else response_body["additionalInfo"]["channel"],
-                            trxId=None if response_body["additionalInfo"]["trxId"] is None else response_body["additionalInfo"]["trxId"],
-                            virtualAccountConfig= VirtualAccountConfig(
-                                reusable_status=None if response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"],
-                                min_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"],
-                                max_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"],
+            row_va = fetch_direct_inquiry_va(virtual_account_no=request_json['virtualAccountNo'])
+            if row_va is not None and not isinstance(row_va, str):
+                db_status = update_status_inquiry(status_va="inquiry", settlement_time=request_json["trxDateInit"], va_number=request_json['virtualAccountNo'])
+                if db_status == 200:
+                    row = fetch_direct_inquiry(inquiry_id=request_json['inquiryRequestId'])
+                    response_body = row[2]
+                    if not isinstance(row, str):
+                        response: InquiryResponseBody = InquiryResponseBody(
+                            responseCode="2002400",
+                            responseMessage="successful",
+                            virtualAccountData=InquiryRequestVirtualAccountData(
+                                partnerServiceId=None if "partnerServiceId" not in response_body.keys() else response_body["partnerServiceId"],
+                                customerNo=None if "customerNo" not in response_body.keys() else response_body["customerNo"],
+                                virtualAccountNo=None if "virtualAccountNo" not in response_body.keys() else response_body["virtualAccountNo"],
+                                virtualAccountName=None if "virtualAccountName" not in response_body.keys() else response_body["virtualAccountName"],
+                                virtualAccountEmail=None if "virtualAccountEmail" not in response_body.keys() else response_body["virtualAccountEmail"],
+                                virtualAccountPhone=None if "virtualAccountPhone" not in response_body.keys() else response_body["virtualAccountPhone"],
+                                totalAmount=TotalAmount(
+                                    value=None if response_body["totalAmount"]["value"] is None else response_body["totalAmount"]["value"],
+                                    currency=None if response_body["totalAmount"]["currency"] is None else response_body["totalAmount"]["currency"],
+                                ),
+                                virtualAccountTrxType=None if "virtualAccountTrxType" not in response_body.keys() else response_body["virtualAccountTrxType"],
+                                expiredDate=None if "expiredDate" not in response_body.keys() else response_body["expiredDate"],
+                                additionalInfo=InquiryRequestAdditionalInfo(
+                                    channel=None if response_body["additionalInfo"]["channel"] is None else response_body["additionalInfo"]["channel"],
+                                    trxId=None if response_body["additionalInfo"]["trxId"] is None else response_body["additionalInfo"]["trxId"],
+                                    virtualAccountConfig= VirtualAccountConfig(
+                                        reusable_status=None if response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["reusableStatus"],
+                                        min_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["minAmount"],
+                                        max_amount=None if response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"] is None else response_body["additionalInfo"]["virtualAccountConfig"]["maxAmount"],
+                                    )
+                                ),
+                                inquiryReason=InquiryReason(
+                                    english=None if response_body["inquiryReason"]["english"] is None else response_body["inquiryReason"]["english"],
+                                    indonesia=None if response_body["inquiryReason"]["indonesia"] is None else response_body["inquiryReason"]["indonesia"],
+                                ),
+                                inquiryRequestId=None if "inquiryRequestId" not in response_body.keys() else response_body["inquiryRequestId"],
+                                inquiryStatus=None if "inquiryStatus" not in response_body.keys() else response_body["inquiryStatus"],
+                                trxId=None if "trxId" not in response_body.keys() else response_body["trxId"],
                             )
-                        ),
-                        inquiryReason=InquiryReason(
-                            english=None if response_body["inquiryReason"]["english"] is None else response_body["inquiryReason"]["english"],
-                            indonesia=None if response_body["inquiryReason"]["indonesia"] is None else response_body["inquiryReason"]["indonesia"],
-                        ),
-                        inquiryRequestId=None if "inquiryRequestId" not in response_body.keys() else response_body["inquiryRequestId"],
-                        inquiryStatus=None if "inquiryStatus" not in response_body.keys() else response_body["inquiryStatus"],
-                        trxId=None if "trxId" not in response_body.keys() else response_body["trxId"],
-                    )
-                )
-                response = response.json()
-                return json.dumps(response)
+                        )
+                        response = response.json()
+                        response["db_status"] = db_status
+                        return json.dumps(response)
+                    else:
+                        return {
+                            "responseCode": "4012400",
+                            "responseMessage": "Virtual Account Not Found",
+                            "db_status": db_status
+                            }
+                else:
+                    return {
+                            "responseCode": "4012400",
+                            "responseMessage": "Virtual Account Not Found",
+                            "db_status": db_status
+                            }
             else:
                 return {
-                    "responseCode": "4012400",
-                    "responseMessage": "Virtual Account Not Found",
+                        "responseCode": "4012400",
+                        "responseMessage": "Virtual Account Not Found",
                     }
         return {
                 "responseCode": "4010000",
@@ -144,6 +161,68 @@ def inquiry_request() -> dict:
 
 > [!Important!]
 >Before sending the inquiry, DOKU sends a token request. Use the `generateToken` function found in the Handling Payment Notification section.
+
+##### Update VA
+###### UpdateVaRequest Model
+Create the request object to update VA. Specify the acquirer in the request object.
+```python
+update_req: UpdateVaRequest = UpdateVaRequest(
+    partnerServiceId= create_response["partnerServiceId"],
+    customerNo= create_response["customerNo"],
+    virtualAccountName= "Reza Alhadhi",
+    trxId= create_response["trxId"],
+    virtualAccountNo= create_response["virtualAccountNo"],
+    additionalInfo= UpdateVAAdditionalInfo(
+        channel="VIRTUAL_ACCOUNT_BANK_CIMB", 
+        virtualAccountConfig=UpdateVAConfig(status="ACTIVE")
+        ),
+    totalAmount= TotalAmount(value="15000.00", currency="IDR"),
+    virtualAccountTrxType= "C"
+)
+```
+###### update_va Function
+Call the update_va function to update VA. It will return the updated VA.
+```python
+response: UpdateVAResponse = payment.update_va(update_request= update_req)
+```
+
+##### Delete VA
+###### DeleteVaRequest Model
+Create the request object to delete VA. Specify the acquirer in the request object.
+```python
+delete_va: DeleteVARequest = DeleteVARequest(
+    partner_service_id= create_response["partnerServiceId"],
+    customer_no= create_response["customerNo"],
+    trx_id= create_response["trxId"],
+    virtual_acc_no= create_response["virtualAccountNo"],
+    additional_info= DeleteVAAdditionalInfo(
+        channel= update_response["additionalInfo"]["channel"]
+    )
+)
+```
+###### delete_payment_code Function
+Call the delete_payment_code function to delete VA.
+```python
+response: DeleteVAResponse = payment.delete_payment_code(delete_va_request= delete_va)
+```
+
+##### Check Status VA
+###### CheckStatusRequest Model
+Create the request object to check status of your VA. Specify the acquirer in the request object.
+```python
+request: CheckStatusRequest = CheckStatusRequest(
+        partner_service_id= update_response["partnerServiceId"],
+        customer_no= update_response["customerNo"],
+        virtual_acc_no= update_response["virtualAccountNo"],
+    )
+```
+###### check_status_va Function
+Call the check_status_va function to check the status of your VA.
+```python
+check_response: CheckStatusVAResponse = payment.check_status_va(
+    check_status_request= request
+)
+```
 
 ### 3. Handling Payment Notification
 After your customers make a payment, you’ll receive a notification from DOKU to update the payment status on your end. DOKU first sends a token request (as with DIPC), then uses that token to send the payment notification.
