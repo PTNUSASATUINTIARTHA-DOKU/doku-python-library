@@ -13,6 +13,8 @@ from doku_python_library.src.model.direct_debit.account_unbinding_request import
 from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
 from doku_python_library.src.model.direct_debit.payment_jump_app_request import PaymentJumpAppRequest
 from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
+from doku_python_library.src.model.direct_debit.card_registration_request import CardRegistrationRequest
+from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
 
 
 class DirectDebitController:
@@ -82,7 +84,7 @@ class DirectDebitController:
             http_method=method,
             endpoint=endpoint,
             token_b2b=token,
-            request=request.create_body_request(),
+            request=request.create_request_body(),
             timestamp=timestamp,
             secret_key=secret_key
         )
@@ -110,7 +112,7 @@ class DirectDebitController:
             http_method=method,
             endpoint=endpoint,
             token_b2b=token,
-            request=request.create_body_request(),
+            request=request.create_request_body(),
             timestamp=timestamp,
             secret_key=secret_key
         )
@@ -136,7 +138,7 @@ class DirectDebitController:
             http_method=method,
             endpoint=endpoint,
             token_b2b=token_b2b,
-            request=request.create_body_request(),
+            request=request.create_request_body(),
             timestamp=timestamp,
             secret_key=secret_key
         )
@@ -152,3 +154,29 @@ class DirectDebitController:
             device_id=device_id
         )
         return DirectDebitService.do_payment_jump_app_process(request_header=request_header, request=request, is_production=is_production)
+    
+    @staticmethod
+    def do_card_registration(request: CardRegistrationRequest, secret_key: str, client_id: str, 
+                             channel_id: str, token_b2b: str, is_production: bool) -> CardRegistrationResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DIRECT_DEBIT_CARD_REGISTRATION
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method=method,
+            endpoint=endpoint,
+            token_b2b=token_b2b,
+            request=request.create_request_body(),
+            timestamp=timestamp,
+            secret_key=secret_key
+        )
+        external_id: str = SnapUtils.generate_external_id()
+        request_header: RequestHeader = SnapUtils.generate_request_header(
+            channel_id=channel_id,
+            client_id=client_id,
+            token_b2b=token_b2b,
+            external_id=external_id,
+            timestamp=timestamp,
+            signature=signature,
+        )
+
+        return DirectDebitService.do_card_registration_process(request_header=request_header, request=request, is_production=is_production)
