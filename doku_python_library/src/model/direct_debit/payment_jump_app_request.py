@@ -27,7 +27,8 @@ class PaymentJumpAppRequest:
 
     def validate_request(self):
         self._validate_direct_debit_channel()
-        self._validate_point_of_initiation()
+        if self.point_of_initiation is not None:
+            self._validate_point_of_initiation()
         self._validate_url_param()
 
     def _validate_direct_debit_channel(self):
@@ -42,3 +43,5 @@ class PaymentJumpAppRequest:
     def _validate_url_param(self):
         if self.url_param.type.lower() != "pay_return":
             raise Exception("urlParam.type must always be PAY_RETURN")
+        if self.url_param.is_deep_link.lower() not in ["y", "n"]:
+            raise Exception("urlParam.isDeepLink can only Y or N")

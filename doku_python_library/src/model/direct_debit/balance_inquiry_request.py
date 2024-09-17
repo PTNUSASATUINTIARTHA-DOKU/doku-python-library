@@ -6,7 +6,7 @@ class BalanceInquiryRequest:
     def __init__(self, additional_info: BalanceInquiryAdditionalInfo) -> None:
         self.additional_info = additional_info
     
-    def create_body_request(self) -> dict:
+    def create_request_body(self) -> dict:
         return {
             "additionalInfo": self.additional_info.json()
         }

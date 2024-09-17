@@ -27,6 +27,9 @@ from doku_python_library.src.model.direct_debit.account_unbinding_request import
 from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
 from doku_python_library.src.model.direct_debit.payment_jump_app_request import PaymentJumpAppRequest
 from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
+from doku_python_library.src.model.direct_debit.card_registration_request import CardRegistrationRequest
+from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
+
 
 
 class DokuSNAP :
@@ -171,7 +174,7 @@ class DokuSNAP :
 
     def generate_request_header(self) -> RequestHeader:
         is_token_invalid: bool = TokenController.is_token_invalid(
-            token_b2b=self.token,
+            token=self.token,
             token_expires_in=self.token_expires_in,
             token_generated_timestamp=self.token_generate_timestamp
         )
@@ -288,7 +291,7 @@ class DokuSNAP :
         try:
             request.validate_request()
             is_token_invalid: bool = TokenController.is_token_invalid(
-                token_b2b=self.token,
+                token=self.token,
                 token_expires_in=self.token_expires_in,
                 token_generated_timestamp=self.token_generate_timestamp
             )
@@ -310,7 +313,7 @@ class DokuSNAP :
         try:
             request.validate_request()
             is_token_invalid: bool = TokenController.is_token_invalid(
-                token_b2b=self.token,
+                token=self.token,
                 token_expires_in=self.token_expires_in,
                 token_generated_timestamp=self.token_generate_timestamp
             )
@@ -328,3 +331,25 @@ class DokuSNAP :
             )
         except Exception as e:
             print("Error occured when payment jump app "+str(e))
+        
+    def do_card_registration(self, request: CardRegistrationRequest, channel_id: str) -> CardRegistrationResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(
+                token=self.token,
+                token_expires_in=self.token_expires_in,
+                token_generated_timestamp=self.token_generate_timestamp
+            )
+
+            if is_token_invalid:
+                self.get_token()
+            return DirectDebitController.do_card_registration(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                channel_id=channel_id,
+                token_b2b=self.token,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when card registration "+str(e))
