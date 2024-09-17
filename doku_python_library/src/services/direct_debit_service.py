@@ -11,6 +11,8 @@ from doku_python_library.src.model.direct_debit.payment_jump_app_request import 
 from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
 from doku_python_library.src.model.direct_debit.card_registration_request import CardRegistrationRequest
 from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
+from doku_python_library.src.model.direct_debit.refund_request import RefundRequest
+from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 from doku_python_library.src.commons.config import Config
 import requests
 
@@ -86,5 +88,17 @@ class DirectDebitService:
             response_json = response.json()
             card_registration_response: CardRegistrationResponse = CardRegistrationResponse(**response_json)
             return card_registration_response
+        except Exception as e:
+            print("Failed Parse Response "+ str(e))
+    
+    @staticmethod
+    def do_refund_process(request_header: RequestHeader, request: RefundRequest, is_production: bool) -> RefundResponse:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_REFUND
+            headers: dict = request_header.to_json()
+            response = requests.post(url=url, json=request.create_request_body(), headers=headers)
+            response_json = response.json()
+            refund_response: RefundResponse = RefundResponse(**response_json)
+            return refund_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))

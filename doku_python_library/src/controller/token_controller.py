@@ -98,7 +98,7 @@ class TokenController:
             auth_code=auth_code
         )
         return TokenService.create_token_b2b2c(
-            request=request.create_request_body(),
+            request=request,
             timestamp=timestamp,
             signature=signature,
             client_id=client_id,
