@@ -24,3 +24,8 @@ from doku_python_library.src.model.direct_debit.card_registration_response impor
 from doku_python_library.src.model.direct_debit.refund_request import *
 from doku_python_library.src.model.direct_debit.refund_additional_info import *
 from doku_python_library.src.model.direct_debit.refund_response import *
+from doku_python_library.src.model.direct_debit.check_status_additional_info_request import *
+from doku_python_library.src.model.direct_debit.check_status_request import *
+from doku_python_library.src.model.direct_debit.check_status_additional_info_response import *
+from doku_python_library.src.model.direct_debit.check_status_response import *
+from doku_python_library.src.model.direct_debit.refund_history import *

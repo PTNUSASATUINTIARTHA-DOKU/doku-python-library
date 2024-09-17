@@ -17,6 +17,8 @@ from doku_python_library.src.model.direct_debit.card_registration_request import
 from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
 from doku_python_library.src.model.direct_debit.refund_request import RefundRequest
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
+from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
+from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
 
 class DirectDebitController:
 
@@ -184,7 +186,7 @@ class DirectDebitController:
 
     @staticmethod
     def do_refund(request: RefundRequest, secret_key: str, client_id: str, ip_address: str, token_b2b: str, 
-                  token_b2b2c: str, is_production: bool):
+                  token_b2b2c: str, is_production: bool) -> RefundResponse:
         timestamp: str = TokenService.get_timestamp()
         endpoint: str = Config.DIRECT_DEBIT_REFUND
         method: str = "POST"
@@ -213,3 +215,28 @@ class DirectDebitController:
             request=request,
             is_production=is_production
         )
+
+    @staticmethod
+    def do_check_status(request: CheckStatusRequest, secret_key: str, client_id: str, 
+                        token_b2b: str, is_production: bool) -> CheckStatusResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DIRECT_DEBIT_CHECK_STATUS
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method=method,
+            endpoint=endpoint,
+            token_b2b=token_b2b,
+            request=request.create_request_body(),
+            timestamp=timestamp,
+            secret_key=secret_key
+        )
+        external_id: str = SnapUtils.generate_external_id()
+        request_header: RequestHeader = SnapUtils.generate_request_header(
+            channel_id="SDK",
+            client_id=client_id,
+            token_b2b=token_b2b,
+            external_id=external_id,
+            timestamp=timestamp,
+            signature=signature,
+        )
+        return DirectDebitService.do_check_status(request_header=request_header, request=request, is_production=is_production)
