@@ -7,6 +7,8 @@ from doku_python_library.src.model.direct_debit.balance_inquiry_request import B
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
 from doku_python_library.src.model.direct_debit.account_unbinding_request import AccountUnbindingRequest
 from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
+from doku_python_library.src.model.direct_debit.payment_jump_app_request import PaymentJumpAppRequest
+from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
 from doku_python_library.src.commons.config import Config
 import requests
 
@@ -57,5 +59,18 @@ class DirectDebitService:
             response_json = response.json()
             unbinding_response: AccountUnbindingResponse = AccountUnbindingResponse(**response_json)
             return unbinding_response
+        except Exception as e:
+            print("Failed Parse Response "+ str(e))
+
+    
+    @staticmethod
+    def do_payment_jump_app_process(request_header: RequestHeader, request: PaymentJumpAppRequest, is_production: bool) -> PaymentJumpAppResponse:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_PAYMENT_URL
+            headers: dict = request_header.to_json()
+            response = requests.post(url=url, json=request.create_request_body(), headers=headers)
+            response_json = response.json()
+            payment_response: PaymentJumpAppResponse = PaymentJumpAppResponse(**response_json)
+            return payment_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
