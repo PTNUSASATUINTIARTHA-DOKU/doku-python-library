@@ -18,7 +18,6 @@ from doku_python_library.src.controller.notification_controler import Notificati
 from doku_python_library.src.model.direct_debit.account_binding_request import AccountBindingRequest
 from doku_python_library.src.model.direct_debit.account_binding_response import AccountBindingResponse
 from doku_python_library.src.controller.direct_debit_controller import DirectDebitController
-from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
 from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
 from doku_python_library.src.model.direct_debit.payment_request import PaymentRequest
 from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
@@ -26,6 +25,8 @@ from doku_python_library.src.model.direct_debit.balance_inquiry_request import B
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
 from doku_python_library.src.model.direct_debit.account_unbinding_request import AccountUnbindingRequest
 from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
+from doku_python_library.src.model.direct_debit.payment_jump_app_request import PaymentJumpAppRequest
+from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
 
 
 class DokuSNAP :
@@ -304,3 +305,26 @@ class DokuSNAP :
             )
         except Exception as e:
             print("Error occured when account unbinding "+str(e))
+    
+    def do_payment_jump_app(self, request: PaymentJumpAppRequest, device_id: str, ip_address: str) -> PaymentJumpAppResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(
+                token_b2b=self.token,
+                token_expires_in=self.token_expires_in,
+                token_generated_timestamp=self.token_generate_timestamp
+            )
+
+            if is_token_invalid:
+                self.get_token()
+            return DirectDebitController.do_payment_jump_app(
+                request=request,
+                client_id=self.client_id,
+                token_b2b=self.token,
+                secret_key=self.secret_key,
+                device_id=device_id,
+                ip_address=ip_address,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when payment jump app "+str(e))

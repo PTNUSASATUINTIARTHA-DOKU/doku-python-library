@@ -11,6 +11,8 @@ from doku_python_library.src.model.direct_debit.balance_inquiry_request import B
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
 from doku_python_library.src.model.direct_debit.account_unbinding_request import AccountUnbindingRequest
 from doku_python_library.src.model.direct_debit.account_unbinding_response import AccountUnbindingResponse
+from doku_python_library.src.model.direct_debit.payment_jump_app_request import PaymentJumpAppRequest
+from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
 
 
 class DirectDebitController:
@@ -123,3 +125,30 @@ class DirectDebitController:
             ip_address=ip_address
         )
         return DirectDebitService.do_account_unbinding_process(request_header=request_header, request=request, is_production=is_production)
+    
+    @staticmethod
+    def do_payment_jump_app(request: PaymentJumpAppRequest, client_id: str, token_b2b: str, secret_key: str, device_id: str,
+                            ip_address: str, is_production: bool) -> PaymentJumpAppResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DIRECT_DEBIT_PAYMENT_URL
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method=method,
+            endpoint=endpoint,
+            token_b2b=token_b2b,
+            request=request.create_body_request(),
+            timestamp=timestamp,
+            secret_key=secret_key
+        )
+        external_id: str = SnapUtils.generate_external_id()
+        request_header: RequestHeader = SnapUtils.generate_request_header(
+            channel_id="SDK",
+            client_id=client_id,
+            token_b2b=token_b2b,
+            external_id=external_id,
+            timestamp=timestamp,
+            signature=signature,
+            ip_address=ip_address,
+            device_id=device_id
+        )
+        return DirectDebitService.do_payment_jump_app_process(request_header=request_header, request=request, is_production=is_production)
