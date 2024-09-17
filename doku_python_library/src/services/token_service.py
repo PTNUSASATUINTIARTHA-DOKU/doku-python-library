@@ -3,6 +3,7 @@ import pytz
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.backends import default_backend
 import base64
 from doku_python_library.src.model.token.token_b2b_response import TokenB2BResponse
 from doku_python_library.src.model.token.token_b2b_request import TokenB2BRequest
@@ -103,7 +104,7 @@ class TokenService:
             "clientId": client_id
         }
         token = jwt.encode(payload= payload, key=private_key, algorithm='RS256')
-        return token.decode('utf-8')
+        return token
     
     @staticmethod
     def generate_notification_token(token: str, timestamp: str, client_id: str, expires_in: int) -> NotificationToken:
@@ -125,8 +126,34 @@ class TokenService:
         return response
     
     @staticmethod
-    def compare_signature(request_signature: str, new_signature: str) -> bool:
-        return request_signature == new_signature
+    def compare_signatures(string_to_sign, signature, string_public_key):
+        try:
+            string_public_key = string_public_key.replace("-----BEGIN PUBLIC KEY-----", "")
+            string_public_key = string_public_key.replace("-----END PUBLIC KEY-----", "")
+            string_public_key = string_public_key.replace("\n", "")
+            
+            missing_padding = len(string_public_key) % 4
+            if missing_padding:
+                string_public_key += '=' * (4 - missing_padding)
+            
+            decoded_public_key = base64.b64decode(string_public_key)
+            public_key = serialization.load_der_public_key(
+                decoded_public_key,
+                backend=default_backend()
+            )
+            decoded_signature = base64.b64decode(signature)
+            
+            public_key.verify(
+                decoded_signature,  
+                string_to_sign.encode("utf-8"),  
+                padding.PKCS1v15(),  
+                hashes.SHA256()  
+            )
+            
+            return True
+        except Exception as e:
+            print(f"Error verifying signature: {str(e)}")
+            return False
     
     @staticmethod
     def generate_invalid_signature(timestamp: str) -> NotificationToken:

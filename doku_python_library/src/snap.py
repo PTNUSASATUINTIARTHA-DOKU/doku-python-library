@@ -133,8 +133,8 @@ class DokuSNAP :
         
     def validate_signature(self) -> bool:
         return TokenController.validate_signature(
-            private_key= self.private_key,
-            client_id= self.client_id
+            client_id= self.client_id,
+            public_key=self.public_key
         )
     
     def generate_token_b2b(self, is_signature_valid: bool) -> NotificationToken:

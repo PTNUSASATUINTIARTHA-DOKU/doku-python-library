@@ -55,14 +55,14 @@ class TokenController:
         return TokenService.validate_token_b2b(token=token, public_key=public_key) is not None
     
     @staticmethod
-    def validate_signature(private_key: str, client_id: str) -> bool:
+    def validate_signature(client_id: str, public_key: str) -> bool:
         timestamp: str = request.headers.get("X-TIMESTAMP")
         request_signature: str = request.headers.get("X-SIGNATURE")
-        signature: str = TokenService.create_signature(
-            private_key= private_key,
-            text= "{client_id}|{timestamp}".format(client_id=client_id, timestamp=timestamp)
-        )   
-        return TokenService.compare_signature(request_signature= request_signature, new_signature= signature)
+        return TokenService.compare_signatures(
+            string_to_sign="{client_id}|{timestamp}".format(client_id=client_id, timestamp=timestamp),
+            signature=request_signature,
+            string_public_key=public_key
+        )
     
     @staticmethod
     def generate_invalid_signature_response() -> NotificationToken:
