@@ -37,7 +37,8 @@ from doku_python_library.src.model.direct_debit.check_status_response import Che
 
 class DokuSNAP :
 
-    def __init__(self, private_key: str, client_id: str, is_production: bool, public_key: str, issuer: str, secret_key: str) -> None:
+    def __init__(self, private_key: str, client_id: str, is_production: bool, public_key: str, issuer: str, secret_key: str, 
+                 merchant_public_key: str) -> None:
         self.private_key = private_key
         self.client_id = client_id
         self.is_production = is_production
@@ -52,6 +53,7 @@ class DokuSNAP :
         self.token_b2b2c: str
         self.token_b2b2c_generate_timestamp: str
         self.token_b2b2c_expires_in: int
+        self.merchant_public_key = merchant_public_key
 
         
     def get_token(self) -> TokenB2BResponse:
@@ -161,7 +163,7 @@ class DokuSNAP :
         return TokenController.generate_invalid_signature_response()
     
     def validate_token_b2b(self, request_token: str) -> bool:
-        return TokenController.validate_token_b2b(token= request_token, public_key= self.public_key)
+        return TokenController.validate_token_b2b(token= request_token, public_key= self.merchant_public_key)
     
     def validate_signature_and_generate_token(self) -> NotificationToken:
         is_signature_valid: bool = self.validate_signature()
