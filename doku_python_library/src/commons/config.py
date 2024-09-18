@@ -18,6 +18,7 @@ class Config:
     DIRECT_DEBIT_ACCOUNT_UNBINDING_URL = "/direct-debit/core/v1/registration-account-unbinding"
     DIRECT_DEBIT_CARD_REGISTRATION = "/direct-debit/core/v1/registration-card-bind"
     DIRECT_DEBIT_REFUND = "/direct-debit/core/v1/debit/refund"
+    DIRECT_DEBIT_CHECK_STATUS = "/orders/v1.0/debit/status"
 
     @staticmethod
     def get_base_url(is_production: bool) -> str:

@@ -13,6 +13,8 @@ from doku_python_library.src.model.direct_debit.card_registration_request import
 from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
 from doku_python_library.src.model.direct_debit.refund_request import RefundRequest
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
+from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
+from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
 from doku_python_library.src.commons.config import Config
 import requests
 
@@ -100,5 +102,17 @@ class DirectDebitService:
             response_json = response.json()
             refund_response: RefundResponse = RefundResponse(**response_json)
             return refund_response
+        except Exception as e:
+            print("Failed Parse Response "+ str(e))
+    
+    @staticmethod
+    def do_check_status(request_header: RequestHeader, request: CheckStatusRequest, is_production: bool) -> CheckStatusResponse:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_CHECK_STATUS
+            headers: dict = request_header.to_json()
+            response = requests.post(url=url, json=request.create_request_body(), headers=headers)
+            response_json = response.json()
+            status_response: CheckStatusResponse = CheckStatusResponse(**response_json)
+            return status_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))

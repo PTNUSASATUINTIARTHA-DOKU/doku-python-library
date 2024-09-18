@@ -31,6 +31,8 @@ from doku_python_library.src.model.direct_debit.card_registration_request import
 from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
 from doku_python_library.src.model.direct_debit.refund_request import RefundRequest
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
+from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
+from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
 
 
 class DokuSNAP :
@@ -371,6 +373,27 @@ class DokuSNAP :
                 ip_address=ip_address,
                 token_b2b=self.token,
                 token_b2b2c=self.token_b2b2c,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when do refund "+str(e))
+        
+    def do_check_status(self, request: CheckStatusRequest) -> CheckStatusResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(
+                token=self.token,
+                token_expires_in=self.token_expires_in,
+                token_generated_timestamp=self.token_generate_timestamp
+            )
+
+            if is_token_invalid:
+                self.get_token()
+            return DirectDebitController.do_check_status(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                token_b2b=self.token,
                 is_production=self.is_production
             )
         except Exception as e:
