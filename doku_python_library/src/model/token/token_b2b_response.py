@@ -14,3 +14,13 @@ class TokenB2BResponse :
         self.expires_in = expiresIn
         self.additional_info = additionalInfo
         self.generated_timestamp = ''
+    
+    def json(self) -> dict:
+        return {
+            "responseCode": self.response_code,
+            "responseMessage": self.response_message,
+            "accessToken": self.access_token,
+            "tokenType": self.token_type,
+            "expiresIn": self.expires_in,
+            "additionalInfo": self.additional_info
+        }

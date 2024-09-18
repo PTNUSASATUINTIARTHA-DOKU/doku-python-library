@@ -65,7 +65,10 @@ class DokuSNAP :
                 self._set_token_b2b(token_b2b_response)
             return token_b2b_response
         except Exception as e:
-            print("Error occured when get token "+str(e))
+            return TokenB2BResponse(
+                responseCode="5007300",
+                responseMessage=str(e)
+            )
     
     def _set_token_b2b(self, token_b2b_response: TokenB2BResponse) -> None:
         self.token_b2b = token_b2b_response
