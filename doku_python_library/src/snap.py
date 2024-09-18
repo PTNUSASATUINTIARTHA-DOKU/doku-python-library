@@ -90,7 +90,10 @@ class DokuSNAP :
                 secret_key= self.secret_key
             )
         except Exception as e:
-            print("• Exception --> "+str(e))
+            return CreateVAResponse(
+                responseCode="5002700",
+                responseMessage=str(e)
+            )
     
     def update_va(self, update_request: UpdateVaRequest) -> UpdateVAResponse:
         try:
