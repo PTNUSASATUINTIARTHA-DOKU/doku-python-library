@@ -6,7 +6,7 @@ from doku_python_library.src.model.va.create_va_request import CreateVARequest
 from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 from doku_python_library.src.model.va.update_va_request import UpdateVaRequest
 from doku_python_library.src.model.va.update_va_response import UpdateVAResponse
-from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest
+from doku_python_library.src.model.va.check_status_va_request import CheckStatusRequest as va_status
 from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 from doku_python_library.src.model.notification.notification_token import NotificationToken
 from doku_python_library.src.model.va.delete_va_request import DeleteVARequest
@@ -80,6 +80,8 @@ class DokuSNAP :
 
     def create_va(self, create_va_request: CreateVARequest) -> CreateVAResponse:
         try:
+            if self.is_production == False:
+                return create_va_request.check_simulator(is_production=self.is_production)
             create_va_request.validate_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
@@ -99,6 +101,8 @@ class DokuSNAP :
     
     def update_va(self, update_request: UpdateVaRequest) -> UpdateVAResponse:
         try:
+            if self.is_production == False:
+                return update_request.check_simulator(is_production=self.is_production)
             update_request.validate_update_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
@@ -114,8 +118,10 @@ class DokuSNAP :
             print("• Exception --> "+str(e)) 
             
     
-    def check_status_va(self, check_status_request: CheckStatusRequest) -> CheckStatusVAResponse:
+    def check_status_va(self, check_status_request: va_status) -> CheckStatusVAResponse:
         try:
+            if self.is_production == False:
+                return check_status_request.check_simulator(is_production=self.is_production)
             check_status_request.validate_check_status_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
@@ -132,6 +138,8 @@ class DokuSNAP :
     
     def delete_payment_code(self, delete_va_request: DeleteVARequest) -> DeleteVAResponse:
         try:
+            if self.is_production == False:
+                return delete_va_request.check_simulator(is_production=self.is_production)
             delete_va_request.validate_delete_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:

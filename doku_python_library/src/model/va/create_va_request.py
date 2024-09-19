@@ -4,6 +4,7 @@ import re
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 import datetime
 from doku_python_library.src.model.va.origin import Origin
+from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 
 class CreateVARequest:
 
@@ -219,4 +220,7 @@ class CreateVARequest:
         except ValueError:
             raise Exception("expiredDate must be in ISO-8601 format. Ensure that expiredDate follows the correct format. Example: '2023-01-01T10:55:00+07:00'.")
             
-            
+    def check_simulator(self, is_production: bool) -> CreateVAResponse:
+        if is_production == False:
+            if self.trx_id.startswith("111"):
+                return CreateVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")

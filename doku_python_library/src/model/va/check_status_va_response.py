@@ -6,3 +6,12 @@ class CheckStatusVAResponse:
         self.response_code = responseCode
         self.response_message = responseMessage
         self.virtual_account_data = virtualAccountData
+    
+    def json(self) -> dict:
+        response = {
+            "responseCode": self.response_code,
+            "responseMessage": self.response_message
+        }
+        if self.virtual_account_data is not None:
+            response["virtualAccountData"] = self.virtual_account_data
+        return response

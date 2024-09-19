@@ -2,6 +2,7 @@ from doku_python_library.src.model.va.total_amount import TotalAmount
 from doku_python_library.src.model.va.update_va_additional_info import UpdateVAAdditionalInfo
 import re, datetime
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
+from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 
 class UpdateVaRequest:
 
@@ -230,3 +231,8 @@ class UpdateVaRequest:
         if self.expired_date is not None:
             request["expiredDate"] = self.expired_date
         return request
+
+    def check_simulator(self, is_production: bool) -> CreateVAResponse:
+        if is_production == False:
+            if self.trx_id.startswith("111"):
+                return CreateVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")

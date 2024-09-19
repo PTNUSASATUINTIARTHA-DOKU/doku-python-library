@@ -1,6 +1,7 @@
 from doku_python_library.src.model.va.delete_va_additional_info import DeleteVAAdditionalInfo
 from doku_python_library.src.commons.va_channel_enum import VaChannelEnum
 import re
+from doku_python_library.src.model.va.delete_va_response import DeleteVAResponse
 
 class DeleteVARequest:
 
@@ -80,3 +81,8 @@ class DeleteVARequest:
             "additionalInfo": self.additional_info.json()
         }
         return request
+    
+    def check_simulator(self, is_production: bool) -> DeleteVAResponse:
+        if is_production == False:
+            if self.trx_id.startswith("111"):
+                return DeleteVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")

@@ -1,4 +1,5 @@
 import re
+from doku_python_library.src.model.va.check_status_va_response import CheckStatusVAResponse
 
 class CheckStatusRequest:
 
@@ -84,3 +85,8 @@ class CheckStatusRequest:
         if self.additional_info is not None:
             request["additionalInfo"] = self.additional_info
         return request
+    
+    def check_simulator(self, is_production: bool) -> CheckStatusVAResponse:
+        if is_production == False:
+            if self.virtual_acc_no.startswith("111"):
+                return CheckStatusVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
