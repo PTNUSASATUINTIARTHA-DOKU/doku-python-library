@@ -235,4 +235,6 @@ class UpdateVaRequest:
     def check_simulator(self, is_production: bool) -> CreateVAResponse:
         if is_production == False:
             if self.trx_id.startswith("111"):
-                return CreateVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
+                return CreateVAResponse(responseCode="4012801", responseMessage="Access Token Invalid (B2B)")
+            elif self.trx_id.startswith("112"):
+                return CreateVAResponse(responseCode="4012800", responseMessage="Unauthorized . Signature Not Match")
