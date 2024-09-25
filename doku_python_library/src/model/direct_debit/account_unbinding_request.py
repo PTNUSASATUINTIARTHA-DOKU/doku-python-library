@@ -10,7 +10,7 @@ class AccountUnbindingRequest:
     def create_request_body(self) -> dict:
         return {
             "token": self.token,
-            "additionalInfo": self.additional_info
+            "additionalInfo": self.additional_info.json()
         }
 
     def validate_request(self):

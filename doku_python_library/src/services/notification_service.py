@@ -14,7 +14,8 @@ class NotificationService:
                 customerNo=request.customer_no,
                 virtualAccountNo= request.virtual_acc_no,
                 virtualAccountName=request.virtual_acc_name,
-                paymentRequestId=request.payment_request_id
+                paymentRequestId=request.payment_request_id,
+                additionalInfo=request.additional_info
             )
         )
     
