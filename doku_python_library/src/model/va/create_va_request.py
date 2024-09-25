@@ -226,3 +226,5 @@ class CreateVARequest:
                 return CreateVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
             elif self.trx_id.startswith("112"):
                 return CreateVAResponse(responseCode="4012700", responseMessage="Unauthorized . Signature Not Match")
+            else:
+                return None

@@ -88,3 +88,5 @@ class DeleteVARequest:
                 return DeleteVAResponse(responseCode="4013101", responseMessage="Access Token Invalid (B2B)")
             elif self.trx_id.startswith("112"):
                 return DeleteVARequest(responseCode="4013100", responseMessage="Unauthorized . Signature Not Match")
+            else:
+                return None

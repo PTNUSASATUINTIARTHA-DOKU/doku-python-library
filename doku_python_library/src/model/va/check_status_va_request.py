@@ -90,3 +90,5 @@ class CheckStatusRequest:
         if is_production == False:
             if self.virtual_acc_no.startswith("111"):
                 return CheckStatusVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
+            else:
+                return None

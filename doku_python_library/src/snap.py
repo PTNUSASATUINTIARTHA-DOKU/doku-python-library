@@ -81,7 +81,9 @@ class DokuSNAP :
     def create_va(self, create_va_request: CreateVARequest) -> CreateVAResponse:
         try:
             if self.is_production == False:
-                return create_va_request.check_simulator(is_production=self.is_production)
+                resp = create_va_request.check_simulator(is_production=self.is_production)
+                if resp is not None:
+                    return resp
             create_va_request.validate_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
@@ -102,7 +104,9 @@ class DokuSNAP :
     def update_va(self, update_request: UpdateVaRequest) -> UpdateVAResponse:
         try:
             if self.is_production == False:
-                return update_request.check_simulator(is_production=self.is_production)
+                resp = update_request.check_simulator(is_production=self.is_production)
+                if resp is not None:
+                    return resp
             update_request.validate_update_va_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
@@ -121,7 +125,9 @@ class DokuSNAP :
     def check_status_va(self, check_status_request: va_status) -> CheckStatusVAResponse:
         try:
             if self.is_production == False:
-                return check_status_request.check_simulator(is_production=self.is_production)
+                resp = check_status_request.check_simulator(is_production=self.is_production)
+                if resp is not None:
+                    return resp
             check_status_request.validate_check_status_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
@@ -139,7 +145,9 @@ class DokuSNAP :
     def delete_payment_code(self, delete_va_request: DeleteVARequest) -> DeleteVAResponse:
         try:
             if self.is_production == False:
-                return delete_va_request.check_simulator(is_production=self.is_production)
+                resp = delete_va_request.check_simulator(is_production=self.is_production)
+                if resp is not None:
+                    return resp
             delete_va_request.validate_delete_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
             if is_token_invalid:
