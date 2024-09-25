@@ -12,10 +12,10 @@ class PaymentNotificationAdditionalInfo:
 
 class PaymentNotificationRequest:
 
-    def __init__(self, partnerServiceId: str, customerNo: str, virtualAccountNo: str,
-                 virtualAccountName: str, trxId: str, paymentRequestId: str,
-                 paidAmount: TotalAmount, virtualAccountEmail: str, virtualAccountPhone: str, additionalInfo: AdditionalInfo, virtualAccountTrxType: str,
-                 expiredDate: str) -> None:
+    def __init__(self, partnerServiceId: str = None, customerNo: str = None, virtualAccountNo: str = None,
+                 virtualAccountName: str = None, trxId: str = None, paymentRequestId: str = None, trxDateTime: str = None,
+                 paidAmount: TotalAmount = None, virtualAccountEmail: str = None, virtualAccountPhone: str = None, additionalInfo: AdditionalInfo = None, virtualAccountTrxType: str = None,
+                 expiredDate: str = None) -> None:
         self.partner_service_id = partnerServiceId
         self.customer_no = customerNo
         self.virtual_acc_no = virtualAccountNo
@@ -28,3 +28,4 @@ class PaymentNotificationRequest:
         self.additional_info = additionalInfo
         self.virtual_acc_trx_type = virtualAccountTrxType
         self.expired_date = expiredDate
+        self.trx_date_time = trxDateTime
