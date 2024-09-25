@@ -253,7 +253,7 @@ class DokuSNAP :
                 client_id=self.client_id,
                 is_production=self.is_production
             )
-            if token_b2b2c_response is not None:
+            if token_b2b2c_response.response_code == "2007400":
                 self._set_token_b2b2c(token_b2b2c_response=token_b2b2c_response)
             return token_b2b2c_response
         except Exception as e:

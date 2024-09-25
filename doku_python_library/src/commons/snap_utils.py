@@ -2,16 +2,17 @@ import uuid
 from datetime import datetime, timedelta
 import pytz
 from doku_python_library.src.model.general.request_header import RequestHeader
+import time
+import random
+import string
 
 class SnapUtils:
 
     @staticmethod
     def generate_external_id() -> str:
-        now = datetime.now()
-        utc_timezone = pytz.utc
-        utc_time_now = now.astimezone(utc_timezone)
-        date_string = utc_time_now.strftime('%Y-%m-%dT%H:%M:%SZ')
-        return uuid.uuid4().hex + date_string
+        timestamp = int(time.time())
+        random_numeric = ''.join(random.choices(string.digits, k=16))
+        return random_numeric + str(timestamp)
     
     @staticmethod
     def generate_request_header(channel_id: str, client_id: str, 

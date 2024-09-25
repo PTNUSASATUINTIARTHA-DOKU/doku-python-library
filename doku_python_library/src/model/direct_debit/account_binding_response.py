@@ -16,5 +16,5 @@ class AccountBindingResponse:
             "responseMessage": self.response_message if self.response_message is not None else None,
             "referenceNo": self.reference_no if self.reference_no is not None else None,
             "redirectUrl": self.redirect_url if self.redirect_url is not None else None,
-            "additionalInfo": self.additional_info.json() if self.additional_info is not None else None
+            "additionalInfo": self.additional_info if self.additional_info is not None else None
         }

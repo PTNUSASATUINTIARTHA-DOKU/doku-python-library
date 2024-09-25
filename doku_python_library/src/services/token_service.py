@@ -19,6 +19,7 @@ from doku_python_library.src.model.notification.notification_token_header import
 from doku_python_library.src.model.notification.notification_token_body import NotificationTokenBody
 from doku_python_library.src.model.token.token_b2b2c_request import TokenB2B2CRequest
 from doku_python_library.src.model.token.token_b2b2c_response import TokenB2B2CResponse
+import json
 
 class TokenService:
 
@@ -47,7 +48,7 @@ class TokenService:
     @staticmethod
     def generate_symmetric_signature(http_method: str, endpoint: str, token_b2b: str, 
                                      request: dict, timestamp: str, secret_key: str):
-        request_body_minify = str(request)
+        request_body_minify = json.dumps(request, separators=(',', ':'))
         hash_object = hashlib.sha256()
         hash_object.update(request_body_minify.encode('utf-8'))
         data_hex = hash_object.hexdigest()
@@ -175,7 +176,6 @@ class TokenService:
         return TokenB2B2CRequest(
             grant_type="authorization_code",
             auth_code=auth_code,
-            refresh_token='',
         )
 
     @staticmethod
@@ -185,12 +185,12 @@ class TokenService:
             "content-type": "application/json",
             "X-SIGNATURE": signature,
             "X-TIMESTAMP": timestamp,
-            "X-CLIENT-ID": client_id
+            "X-CLIENT-KEY": client_id
         }
         response = requests.post(url=url, json=request.create_request_body(), headers=headers)
         response_json = response.json()
-        token_response: TokenB2B2CResponse = TokenB2BResponse(**response_json)
+        token_response: TokenB2B2CResponse = TokenB2B2CResponse(**response_json)
         if token_response.response_code.startswith("200"):
             token_response.generated_timestamp = timestamp
-            token_response.access_token_expiry_time = token_response.access_token_expiry_time - 10
+            token_response.access_token_expiry_time = token_response.access_token_expiry_time
         return token_response
