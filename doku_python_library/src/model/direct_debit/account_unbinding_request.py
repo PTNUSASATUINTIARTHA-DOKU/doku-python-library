@@ -9,7 +9,7 @@ class AccountUnbindingRequest:
     
     def create_request_body(self) -> dict:
         return {
-            "token": self.token,
+            "tokenId": self.token,
             "additionalInfo": self.additional_info.json()
         }
 
