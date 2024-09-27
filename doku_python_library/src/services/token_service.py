@@ -80,7 +80,7 @@ class TokenService:
     @staticmethod
     def is_token_expired(token_expires_in: int, token_generated_timestamp: str) -> bool:
         generated_time = datetime.strptime(token_generated_timestamp, "%Y-%m-%dT%H:%M:%SZ")
-        expired_date = generated_time + timedelta(seconds=token_expires_in)
+        expired_date = generated_time + timedelta(seconds= token_expires_in if not isinstance(token_expires_in, str) else 890)
         date_now = datetime.strptime(TokenService.get_timestamp(), "%Y-%m-%dT%H:%M:%SZ")
         return expired_date > date_now
     
