@@ -19,6 +19,8 @@ from doku_python_library.src.model.direct_debit.refund_request import RefundRequ
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
 from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
+from doku_python_library.src.model.direct_debit.card_unbinding_request import CardUnbindingRequest
+from doku_python_library.src.model.direct_debit.card_unbinding_response import CardUnbindingResponse
 
 class DirectDebitController:
 
@@ -240,3 +242,29 @@ class DirectDebitController:
             signature=signature,
         )
         return DirectDebitService.do_check_status(request_header=request_header, request=request, is_production=is_production)
+
+    @staticmethod
+    def do_card_unbinding(request: CardUnbindingRequest, secret_key: str, client_id: str,
+                             ip_address: str, token: str, is_production: bool) -> CardUnbindingResponse:
+        timestamp: str = TokenService.get_timestamp()
+        endpoint: str = Config.DIRECT_DEBIT_CARD_UNBINDING_URL
+        method: str = "POST"
+        signature: str = TokenService.generate_symmetric_signature(
+            http_method=method,
+            endpoint=endpoint,
+            token_b2b=token,
+            request=request.create_request_body(),
+            timestamp=timestamp,
+            secret_key=secret_key
+        )
+        external_id: str = SnapUtils.generate_external_id()
+        request_header: RequestHeader = SnapUtils.generate_request_header(
+            channel_id="H2H",
+            client_id=client_id,
+            token_b2b=token,
+            timestamp=timestamp,
+            external_id=external_id,
+            signature=signature,
+            ip_address=ip_address
+        )
+        return DirectDebitService.do_card_unbinding_process(request_header=request_header, request=request, is_production=is_production)

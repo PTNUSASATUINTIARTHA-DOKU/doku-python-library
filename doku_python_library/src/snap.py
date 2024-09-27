@@ -33,6 +33,8 @@ from doku_python_library.src.model.direct_debit.refund_request import RefundRequ
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
 from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
+from doku_python_library.src.model.direct_debit.card_unbinding_request import CardUnbindingRequest
+from doku_python_library.src.model.direct_debit.card_unbinding_response import CardUnbindingResponse
 
 
 class DokuSNAP :
@@ -380,6 +382,28 @@ class DokuSNAP :
             )
         except Exception as e:
             print("Error occured when card registration "+str(e))
+    
+    def do_account_unbinding(self, request: CardUnbindingRequest, ip_address: str) -> CardUnbindingResponse:
+        try:
+            request.validate_request()
+            is_token_invalid: bool = TokenController.is_token_invalid(
+                token=self.token,
+                token_expires_in=self.token_expires_in,
+                token_generated_timestamp=self.token_generate_timestamp
+            )
+
+            if is_token_invalid:
+                self.get_token()
+            return DirectDebitController.do_card_unbinding(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                ip_address=ip_address,
+                token=self.token,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("Error occured when account unbinding "+str(e))
     
     def do_refund(self, request: RefundRequest, ip_address: str, auth_code: str) -> RefundResponse:
         try:
