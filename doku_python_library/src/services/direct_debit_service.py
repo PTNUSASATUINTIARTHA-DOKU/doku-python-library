@@ -11,6 +11,8 @@ from doku_python_library.src.model.direct_debit.payment_jump_app_request import 
 from doku_python_library.src.model.direct_debit.paymet_jump_app_response import PaymentJumpAppResponse
 from doku_python_library.src.model.direct_debit.card_registration_request import CardRegistrationRequest
 from doku_python_library.src.model.direct_debit.card_registration_response import CardRegistrationResponse
+from doku_python_library.src.model.direct_debit.card_unbinding_request import CardUnbindingRequest
+from doku_python_library.src.model.direct_debit.card_unbinding_response import CardUnbindingResponse
 from doku_python_library.src.model.direct_debit.refund_request import RefundRequest
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
@@ -114,5 +116,17 @@ class DirectDebitService:
             response_json = response.json()
             status_response: CheckStatusResponse = CheckStatusResponse(**response_json)
             return status_response
+        except Exception as e:
+            print("Failed Parse Response "+ str(e))
+    
+    @staticmethod
+    def do_card_unbinding_process(request_header: RequestHeader, request: CardUnbindingRequest, is_production: bool) -> CardUnbindingResponse:
+        try:
+            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_ACCOUNT_UNBINDING_URL
+            headers: dict = request_header.to_json()
+            response = requests.post(url=url, json=request.create_request_body(), headers=headers)
+            response_json = response.json()
+            unbinding_response: CardUnbindingResponse = CardUnbindingResponse(**response_json)
+            return unbinding_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))

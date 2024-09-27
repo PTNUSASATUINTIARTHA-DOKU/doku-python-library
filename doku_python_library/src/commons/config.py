@@ -17,6 +17,7 @@ class Config:
     DIRECT_DEBIT_BALANCE_INQUIRY_URL = "/direct-debit/core/v1/balance-inquiry"
     DIRECT_DEBIT_ACCOUNT_UNBINDING_URL = "/direct-debit/core/v1/registration-account-unbinding"
     DIRECT_DEBIT_CARD_REGISTRATION = "/direct-debit/core/v1/registration-card-bind"
+    DIRECT_DEBIT_CARD_UNBINDING_URL= "/direct-debit/core/v1/registration-card-unbind"
     DIRECT_DEBIT_REFUND = "/direct-debit/core/v1/debit/refund"
     DIRECT_DEBIT_CHECK_STATUS = "/orders/v1.0/debit/status"
 
