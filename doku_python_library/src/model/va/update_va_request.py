@@ -37,9 +37,10 @@ class UpdateVaRequest:
         if(self.total_amount.currency is not None):
             self._validate_amount_currency()
         self._validate_info_channel()
-        self._validate_config_status()
-        if self.additional_info.virtual_account_config.max_amount is not None and self.additional_info.virtual_account_config.min_amount is not None:
-            self._validate_config_amount()
+        if self.additional_info.virtual_account_config is not None:
+            self._validate_config_status()
+            if self.additional_info.virtual_account_config.max_amount is not None and self.additional_info.virtual_account_config.min_amount is not None:
+                self._validate_config_amount()
         if self.virtual_acc_trx_type is not None:
             self._validate_va_trx_type()
         if(self.expired_date is not None):

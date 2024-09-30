@@ -121,7 +121,10 @@ class DokuSNAP :
                 is_production= self.is_production
             )
         except Exception as e:
-            print("• Exception --> "+str(e)) 
+            return UpdateVAResponse(
+                responseCode="5002700",
+                responseMessage=str(e)
+            )
             
     
     def check_status_va(self, check_status_request: va_status) -> CheckStatusVAResponse:
