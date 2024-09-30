@@ -145,7 +145,10 @@ class DokuSNAP :
                 is_production= self.is_production
             )
         except Exception as e:
-            print("• Exception --> "+str(e))
+            return CheckStatusVAResponse(
+                responseCode="5002600",
+                responseMessage=str(e)
+            )
     
     def delete_payment_code(self, delete_va_request: DeleteVARequest) -> DeleteVAResponse:
         try:
