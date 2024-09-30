@@ -122,7 +122,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return UpdateVAResponse(
-                responseCode="5002700",
+                responseCode="5002800",
                 responseMessage=str(e)
             )
             
