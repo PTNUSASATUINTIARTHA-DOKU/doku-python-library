@@ -19,7 +19,7 @@ class RequestHeader:
             "X-PARTNER-ID": self.x_partner_id,
             "X-EXTERNAL-ID": self.x_external_id,
             "CHANNEL-ID": self.channel_id,
-            "Authorization": "Bearer "+self.authorization
+            "Authorization": "Bearer "+str(self.authorization)
         }
         if self.device_id is not None:
             headers["X-DEVICE-ID"] = self.device_id

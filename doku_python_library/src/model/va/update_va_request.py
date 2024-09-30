@@ -7,10 +7,9 @@ from doku_python_library.src.model.va.create_va_response import CreateVAResponse
 class UpdateVaRequest:
 
     def __init__(self, partnerServiceId: str, customerNo: str, virtualAccountNo: str, 
-                 trxId: str, additionalInfo: UpdateVAAdditionalInfo, virtualAccountName: str = None, 
-                 virtualAccountEmail: str = None, virtualAccountPhone: str = None,
-                 totalAmount: TotalAmount = None, virtualAccountTrxType: str = None,
-                 expiredDate: str = None):
+                 trxId: str, additionalInfo: UpdateVAAdditionalInfo, totalAmount: TotalAmount, 
+                 virtualAccountName: str = None, virtualAccountEmail: str = None, virtualAccountPhone: str = None, 
+                 virtualAccountTrxType: str = None, expiredDate: str = None):
         self.partner_service_id = partnerServiceId
         self.customer_no = customerNo
         self.virtual_acc_no = virtualAccountNo
@@ -33,11 +32,10 @@ class UpdateVaRequest:
         if(self.virtual_acc_phone is not None):
             self._validate_virtual_acc_phone()
         self._validate_trx_id()
-        if self.total_amount is not None:
-            if(self.total_amount.value is not None):
-                self._validate_amount_value()
-            if(self.total_amount.currency is not None):
-                self._validate_amount_currency()
+        if(self.total_amount.value is not None):
+            self._validate_amount_value()
+        if(self.total_amount.currency is not None):
+            self._validate_amount_currency()
         self._validate_info_channel()
         self._validate_config_status()
         if self.additional_info.virtual_account_config.max_amount is not None and self.additional_info.virtual_account_config.min_amount is not None:
