@@ -142,8 +142,8 @@ class DokuSNAP :
                 is_production= self.is_production
             )
         except Exception as e:
-            return CheckStatusRequest(
-                responseCode="5007300",
+            return CheckStatusVAResponse(
+                responseCode="5002600",
                 responseMessage=str(e)
             )
     
