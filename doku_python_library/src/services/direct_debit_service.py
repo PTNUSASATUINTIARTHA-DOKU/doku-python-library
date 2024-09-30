@@ -26,6 +26,7 @@ class DirectDebitService:
     def do_account_binding_process(request_header: RequestHeader, request: AccountBindingRequest, is_production: bool) -> AccountBindingResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_ACCOUNT_BINDING_URL
+            request_header.validate_account_binding_header(request.additional_info.channel)
             headers: dict = request_header.to_json()
             response = requests.post(url=url, json=request.json(), headers=headers)
             response_json = response.json()
@@ -38,6 +39,7 @@ class DirectDebitService:
     def do_payment_process(request_header: RequestHeader, request: PaymentRequest, is_production: bool) -> PaymentResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_PAYMENT_URL
+            request_header.validate_payment_header(request.additional_info.channel)
             headers: dict = request_header.to_json()
             response = requests.post(url=url, json=request.create_request_body(), headers=headers)
             response_json = response.json()
@@ -50,6 +52,7 @@ class DirectDebitService:
     def do_balance_inquiry(request_header: RequestHeader, request: BalanceInquiryRequest, is_production: bool) -> BalanceInquiryRequest:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_BALANCE_INQUIRY_URL
+            request_header.validate_balance_inquiry_header(channel=request.additional_info.channel)
             headers: dict = request_header.to_json()
             response = requests.post(url=url, json=request.create_request_body(), headers=headers)
             response_json = response.json()
@@ -62,6 +65,7 @@ class DirectDebitService:
     def do_account_unbinding_process(request_header: RequestHeader, request: AccountUnbindingRequest, is_production: bool) -> AccountUnbindingResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_ACCOUNT_UNBINDING_URL
+            request_header.validate_account_unbinding_header(channel=request.additional_info.channel)
             headers: dict = request_header.to_json()
             response = requests.post(url=url, json=request.create_request_body(), headers=headers)
             response_json = response.json()
@@ -99,6 +103,7 @@ class DirectDebitService:
     def do_refund_process(request_header: RequestHeader, request: RefundRequest, is_production: bool) -> RefundResponse:
         try:
             url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_REFUND
+            request_header.validate_refund_header(channel=request.additional_info.channel)
             headers: dict = request_header.to_json()
             response = requests.post(url=url, json=request.create_request_body(), headers=headers)
             response_json = response.json()

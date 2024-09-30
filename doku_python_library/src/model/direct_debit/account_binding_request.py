@@ -25,7 +25,7 @@ class AccountBindingRequest:
         
     def _validate_allo_bank(self):
         if self.additional_info.channel == DirectDebitEnum.DIRECT_DEBIT_ALLO_SNAP.value:
-            self._validate_device_information()
+            self._validate_required_device_information()
             self._validate_os_type()
             self._validate_channel_id()
     
@@ -38,5 +38,5 @@ class AccountBindingRequest:
             raise Exception("osType value can only be ios/android")
     
     def _validate_channel_id(self):
-        if self.additional_info.lower() not in ['app', 'web']:
+        if self.additional_info.channel_id.lower() not in ['app', 'web']:
             raise Exception("channelId value can only be app/web")
