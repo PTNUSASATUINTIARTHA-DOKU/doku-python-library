@@ -88,9 +88,13 @@ class CheckStatusRequest:
     
     def check_simulator(self, is_production: bool) -> CheckStatusVAResponse:
         if is_production == False:
-            if self.virtual_acc_no.startswith("111"):
+            if self.virtual_acc_no.startswith("1113"):
+                return CheckStatusVAResponse(responseCode="2002600", responseMessage="success") 
+            elif self.virtual_acc_no.startswith("111"):
                 return CheckStatusVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
-            elif self.virtual_acc_no.startswith("112"):
-                return CheckStatusVAResponse(responseCode="4012701", responseMessage="Unauthorized . Signature")
+            elif self.virtual_acc_no.startswith("113"):
+                return CheckStatusVAResponse(responseCode="4012702", responseMessage="Invalid Mandatory Field {partnerServiceId}")
+            elif self.virtual_acc_no.startswith("114"):
+                return CheckStatusVAResponse(responseCode="4012701", responseMessage="Invalid Field Format {totalAmount.currency}")
             else:
                 return None
