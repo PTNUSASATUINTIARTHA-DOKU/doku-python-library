@@ -6,3 +6,6 @@ from doku_python_library.src.model.notification.notification_payment_response im
 from doku_python_library.src.model.notification.notification_payment_header_response import *
 from doku_python_library.src.model.notification.notification_payment_body_response import *
 from doku_python_library.src.model.notification.notification_virtual_account_data import *
+from doku_python_library.src.model.notification.notification_payment_direct_debit_request import *
+from doku_python_library.src.model.notification.notification_payment_direct_debit_additional_info import *
+from doku_python_library.src.model.notification.notification_payment_direct_debit_response import *
