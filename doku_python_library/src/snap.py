@@ -162,7 +162,10 @@ class DokuSNAP :
                 is_production= self.is_production
             )
         except Exception as e:
-            print("• Exception --> "+str(e))
+            return DeleteVAResponse(
+                responseCode="5003100",
+                responseMessage=str(e)
+            )
         
     def validate_signature(self) -> bool:
         return TokenController.validate_signature(
