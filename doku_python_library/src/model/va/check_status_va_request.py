@@ -91,10 +91,10 @@ class CheckStatusRequest:
             if self.virtual_acc_no.startswith("1113"):
                 return CheckStatusVAResponse(responseCode="2002600", responseMessage="success") 
             elif self.virtual_acc_no.startswith("111"):
-                return CheckStatusVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
+                return CheckStatusVAResponse(responseCode="4012601", responseMessage="Access Token Invalid (B2B)")
             elif self.virtual_acc_no.startswith("113"):
-                return CheckStatusVAResponse(responseCode="4012702", responseMessage="Invalid Mandatory Field {partnerServiceId}")
+                return CheckStatusVAResponse(responseCode="4012602", responseMessage="Invalid Mandatory Field {partnerServiceId}")
             elif self.virtual_acc_no.startswith("114"):
-                return CheckStatusVAResponse(responseCode="4012701", responseMessage="Invalid Field Format {totalAmount.currency}")
+                return CheckStatusVAResponse(responseCode="4012601", responseMessage="Invalid Field Format {totalAmount.currency}")
             else:
                 return None
