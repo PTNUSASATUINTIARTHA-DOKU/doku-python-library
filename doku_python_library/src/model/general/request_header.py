@@ -28,3 +28,46 @@ class RequestHeader:
         if self.token_b2b2c is not None:
             headers["Authorization-Customer"] = self.token_b2b2c
         return headers
+    
+    def validate_device_id(self):
+        if self.device_id is not None:
+            if len(self.device_id) > 64:
+                raise Exception("X-DEVICE-ID must be 64 characters or fewer. Ensure that X-DEVICE-ID is no longer than 64 characters.")
+
+    def validate_ip_address(self):
+        if self.ip_address is not None:
+            if len(self.ip_address) < 10 or len(self.ip_address) > 15:
+                raise Exception("X-IP-ADDRESS must be in 10 to 15 characters.")
+        
+    def validate_account_binding_header(self, channel: str):
+        if channel == "DIRECT_DEBIT_ALLO_SNAP":
+            self.validate_ip_address()
+            self.validate_device_id()
+    
+    def validate_payment_header(self, channel: str):
+        if channel == "DIRECT_DEBIT_ALLO_SNAP":
+            self.validate_ip_address()
+        elif channel == "EMONEY_DANA_SNAP":
+            self.validate_device_id()
+            self.validate_ip_address()
+        elif channel == "EMONEY_SHOPEE_PAY_SNAP":
+            self.validate_device_id()
+            self.validate_ip_address()
+    
+    def validate_balance_inquiry_header(self, channel: str):
+        if channel == "DIRECT_DEBIT_ALLO_SNAP":
+            self.validate_ip_address()
+    
+    def validate_account_unbinding_header(self, channel: str):
+        if channel == "DIRECT_DEBIT_ALLO_SNAP":
+            self.validate_ip_address()
+    
+    def validate_refund_header(self, channel: str):
+        if channel == "DIRECT_DEBIT_ALLO_SNAP":
+            self.validate_ip_address()
+        elif channel == "EMONEY_DANA_SNAP":
+            self.validate_device_id()
+            self.validate_ip_address()
+        elif channel == "EMONEY_SHOPEE_PAY_SNAP":
+            self.validate_device_id()
+            self.validate_ip_address()

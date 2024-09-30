@@ -234,26 +234,29 @@ class DokuSNAP :
         return VaController.direct_inquiry_response_mapping(v1_data=v1_data)
     
     def do_account_binding(self, request: AccountBindingRequest, device_id: str = None, ip_address: str = None) -> AccountBindingResponse:
-        request.validate_request()
+        try:
+            request.validate_request()
 
-        is_token_invalid: bool = TokenController.is_token_invalid(
-            token=self.token,
-            token_expires_in=self.token_expires_in,
-            token_generated_timestamp=self.token_generate_timestamp
-        )
+            is_token_invalid: bool = TokenController.is_token_invalid(
+                token=self.token,
+                token_expires_in=self.token_expires_in,
+                token_generated_timestamp=self.token_generate_timestamp
+            )
 
-        if is_token_invalid:
-            self.get_token()
-        
-        return DirectDebitController.do_account_binding(
-            request=request,
-            secret_key=self.secret_key,
-            client_id=self.client_id,
-            device_id=device_id,
-            ip_address=ip_address,
-            token_b2b=self.token,
-            is_production=self.is_production
-        )
+            if is_token_invalid:
+                self.get_token()
+            
+            return DirectDebitController.do_account_binding(
+                request=request,
+                secret_key=self.secret_key,
+                client_id=self.client_id,
+                device_id=device_id,
+                ip_address=ip_address,
+                token_b2b=self.token,
+                is_production=self.is_production
+            )
+        except Exception as e:
+            print("• Exception --> "+str(e))
     
     def get_token_b2b2c(self, auth_code: str) -> TokenB2B2CResponse:
         try:
