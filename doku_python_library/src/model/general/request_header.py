@@ -33,11 +33,15 @@ class RequestHeader:
         if self.device_id is not None:
             if len(self.device_id) > 64:
                 raise Exception("X-DEVICE-ID must be 64 characters or fewer. Ensure that X-DEVICE-ID is no longer than 64 characters.")
+        else:
+            raise Exception("X-DEVICE-ID must be 64 characters or fewer. Ensure that X-DEVICE-ID is no longer than 64 characters.")
 
     def validate_ip_address(self):
         if self.ip_address is not None:
             if len(self.ip_address) < 10 or len(self.ip_address) > 15:
                 raise Exception("X-IP-ADDRESS must be in 10 to 15 characters.")
+        else:
+            raise Exception("X-IP-ADDRESS must be in 10 to 15 characters.")
         
     def validate_account_binding_header(self, channel: str):
         if channel == "DIRECT_DEBIT_ALLO_SNAP":
