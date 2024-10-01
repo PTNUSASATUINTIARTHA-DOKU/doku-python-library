@@ -127,7 +127,7 @@ class DirectDebitService:
     @staticmethod
     def do_card_unbinding_process(request_header: RequestHeader, request: CardUnbindingRequest, is_production: bool) -> CardUnbindingResponse:
         try:
-            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_ACCOUNT_UNBINDING_URL
+            url: str = Config.get_base_url(is_production=is_production) + Config.DIRECT_DEBIT_CARD_UNBINDING_URL
             headers: dict = request_header.to_json()
             response = requests.post(url=url, json=request.create_request_body(), headers=headers)
             response_json = response.json()
