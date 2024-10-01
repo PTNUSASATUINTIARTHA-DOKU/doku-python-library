@@ -307,7 +307,10 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when process payment "+str(e))
+            return PaymentResponse(
+                responseCode="5005400",
+                responseMessage=str(e)
+            )
     
     def do_balance_inquiry(self, request: BalanceInquiryRequest, ip_address: str, auth_code: str) -> BalanceInquiryResponse:
         try:
@@ -379,7 +382,10 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when payment jump app "+str(e))
+            return PaymentJumpAppResponse(
+                responseCode="5000500",
+                responseMessage=str(e)
+            )
         
     def do_card_registration(self, request: CardRegistrationRequest, channel_id: str) -> CardRegistrationResponse:
         try:
