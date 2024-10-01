@@ -4,7 +4,7 @@ from doku_python_library.src.commons.direct_debit_enum import DirectDebitEnum
 class CardRegistrationRequest:
 
     def __init__(self, card_data: str, cust_id_merchant: str,
-                additionalInfo: CardRegistrationAdditionalInfo, phone_no: str = None) -> None:
+                additionalInfo: CardRegistrationAdditionalInfo, phone_no: str) -> None:
         self.card_data = card_data
         self.cust_id_merchant = cust_id_merchant
         self.additional_info = additionalInfo
@@ -14,7 +14,7 @@ class CardRegistrationRequest:
         return {
             "cardData": self.card_data,
             "custIdMerchant": self.cust_id_merchant,
-            "phoneNoe": self.phone_no,
+            "phoneNo": self.phone_no,
             "additionalInfo": self.additional_info.json()
         }
     
