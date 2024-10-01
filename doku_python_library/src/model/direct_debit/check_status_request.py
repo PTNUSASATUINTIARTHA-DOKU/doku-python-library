@@ -14,7 +14,7 @@ class CheckStatusRequest:
         self.original_external_id = original_external_id
         self.transcation_date = transaction_date
         self.amount = amount
-        self.merchant_id = self.merchant_id
+        self.merchant_id = merchant_id
         self.sub_merchant_id = sub_merchant_id
         self.external_store_id = external_store_id
         self.additional_info = additional_info
