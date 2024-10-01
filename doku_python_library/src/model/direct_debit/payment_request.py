@@ -21,7 +21,7 @@ class PaymentRequest:
         return {
             "partnerReferenceNo": self.partner_reference_no,
             "amount": self.amount.json(),
-            "additionalInfo": self.additional_info,
+            "additionalInfo": self.additional_info.json(),
             "feeType": self.fee_type
         }
     
