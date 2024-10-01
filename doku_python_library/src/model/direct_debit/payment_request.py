@@ -6,7 +6,7 @@ from doku_python_library.src.commons.direct_debit_enum import DirectDebitEnum
 class PaymentRequest:
 
     def __init__(self, partner_reference_no: str, amount: TotalAmount, 
-                 pay_option_detail: list[PayOptionDetail], additional_info: PaymentAdditionalInfoRequest, fee_type: str = None) -> None:
+                additional_info: PaymentAdditionalInfoRequest, fee_type: str = None, pay_option_detail: list[PayOptionDetail]= None) -> None:
         self.partner_reference_no = partner_reference_no
         self.amount = amount
         self.pay_option_detail = pay_option_detail
