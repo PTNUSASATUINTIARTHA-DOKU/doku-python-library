@@ -188,7 +188,7 @@ class DirectDebitController:
 
     @staticmethod
     def do_refund(request: RefundRequest, secret_key: str, client_id: str, ip_address: str, token_b2b: str, 
-                  token_b2b2c: str, is_production: bool) -> RefundResponse:
+                  token_b2b2c: str, is_production: bool, device_id: str) -> RefundResponse:
         timestamp: str = TokenService.get_timestamp()
         endpoint: str = Config.DIRECT_DEBIT_REFUND
         method: str = "POST"
@@ -210,6 +210,7 @@ class DirectDebitController:
             signature=signature,
             ip_address=ip_address,
             token_b2b2c=token_b2b2c,
+            device_id=device_id
         )
         
         return DirectDebitService.do_refund_process(

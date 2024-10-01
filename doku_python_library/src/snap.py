@@ -328,7 +328,10 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when balance inquiry "+str(e))
+            return BalanceInquiryResponse(
+                responseCode="5001100",
+                responseMessage=str(e)
+            )
     
     def do_account_unbinding(self, request: AccountUnbindingRequest, ip_address: str) -> AccountUnbindingResponse:
         try:
@@ -423,9 +426,12 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when account unbinding "+str(e))
+            return CardUnbindingResponse(
+                responseCode="5000500",
+                responseMessage=str(e)
+            )
     
-    def do_refund(self, request: RefundRequest, ip_address: str, auth_code: str) -> RefundResponse:
+    def do_refund(self, request: RefundRequest, ip_address: str, auth_code: str, device_id: str) -> RefundResponse:
         try:
             request.validate_request()
             is_token_invalid: bool = TokenController.is_token_invalid(self.token, self.token_expires_in, self.token_generate_timestamp)
@@ -441,10 +447,14 @@ class DokuSNAP :
                 ip_address=ip_address,
                 token_b2b=self.token,
                 token_b2b2c=self.token_b2b2c,
-                is_production=self.is_production
+                is_production=self.is_production,
+                device_id=device_id
             )
         except Exception as e:
-            print("Error occured when do refund "+str(e))
+            return RefundResponse(
+                responseCode="5000700",
+                responseMessage=str(e)
+            )
         
     def do_check_status(self, request: CheckStatusRequest) -> CheckStatusResponse:
         try:
@@ -465,7 +475,10 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when do refund "+str(e))
+            return CheckStatusResponse(
+                responseCode="5005500",
+                responseMessage=str(e)
+            )
     
     def direct_debit_payment_notification(self, request_token_b2b: str, request_token_b2b2c: str) -> NotificationPaymentDirectDebitResponse:
         is_token_b2b_valid: bool = self.validate_token_b2b(request_token=request_token_b2b)
