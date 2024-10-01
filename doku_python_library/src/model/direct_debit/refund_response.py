@@ -13,3 +13,15 @@ class RefundResponse:
         self.refund_no = refundNo
         self.partner_refund_no = partnerRefundNo
         self.refund_time = refundTime
+    
+    def json(self) -> dict:
+        return {
+            "responseCode": self.response_code,
+            "responseMessage": self.response_message,
+            "refundAmount": self.refund_amount.json() if self.refund_amount != None else None,
+            "originalPartnerReferenceNo": self.original_partner_reference_no,
+            "originalReferenceNo": self.original_reference_no,
+            "refundNo": self.refund_no,
+            "partnerRefundNo": self.partner_refund_no,
+            "refundTime": self.refund_time
+        }
