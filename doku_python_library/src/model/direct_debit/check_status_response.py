@@ -51,10 +51,10 @@ class CheckStatusResponse:
         response["originalResponseMessage"] = self.original_response_message
         response["sessionId"] = self.session_id
         response["requestID"] = self.request_id
-        response["transAmount"] = self.trans_amount.json()
-        response["feeAmount"] = self.fee_amount.json()
+        response["transAmount"] = self.trans_amount.json() if self.trans_amount != None else None
+        response["feeAmount"] = self.fee_amount.json() if self.fee_amount != None else None
         response["paidTime"] = self.paid_time
-        response["additionalInfo"] = self.additional_info.json()
+        response["additionalInfo"] = self.additional_info.json() if self.additional_info != None else None
         history = []
         if self.refund_history is not None:
             for info in self.refund_history:
