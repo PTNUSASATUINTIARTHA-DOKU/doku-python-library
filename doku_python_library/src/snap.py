@@ -261,7 +261,10 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("• Exception --> "+str(e))
+            return AccountBindingResponse(
+                responseCode="5000700",
+                responseMessage=str(e)
+            )
     
     def get_token_b2b2c(self, auth_code: str) -> TokenB2B2CResponse:
         try:
@@ -275,7 +278,10 @@ class DokuSNAP :
                 self._set_token_b2b2c(token_b2b2c_response=token_b2b2c_response)
             return token_b2b2c_response
         except Exception as e:
-            print("Error occured when get token b2b2c "+str(e))
+            return TokenB2B2CResponse(
+                responseCode="5007400",
+                responseMessage=str(e)
+            )
     
     def _set_token_b2b2c(self, token_b2b2c_response: TokenB2B2CResponse) -> None:
         self.token_b2b2c = token_b2b2c_response.access_token
@@ -344,7 +350,10 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when account unbinding "+str(e))
+            return AccountUnbindingResponse(
+                responseCode="5000500",
+                responseMessage=str(e)
+            )
     
     def do_payment_jump_app(self, request: PaymentJumpAppRequest, device_id: str, ip_address: str) -> PaymentJumpAppResponse:
         try:
@@ -389,9 +398,12 @@ class DokuSNAP :
                 is_production=self.is_production
             )
         except Exception as e:
-            print("Error occured when card registration "+str(e))
+            return CardRegistrationResponse(
+                responseCode="5000700",
+                responseMessage=str(e)
+            )
     
-    def do_account_unbinding(self, request: CardUnbindingRequest, ip_address: str) -> CardUnbindingResponse:
+    def do_card_unbinding(self, request: CardUnbindingRequest, ip_address: str) -> CardUnbindingResponse:
         try:
             request.validate_request()
             is_token_invalid: bool = TokenController.is_token_invalid(
