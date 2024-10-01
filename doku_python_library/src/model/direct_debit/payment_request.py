@@ -14,9 +14,10 @@ class PaymentRequest:
         self.fee_type = fee_type
 
     def create_request_body(self) -> dict:
-        options = []
-        for option in self.pay_option_detail:
-            options.append(option.json())
+        if self.pay_option_detail != None:
+            options = []
+            for option in self.pay_option_detail:
+                options.append(option.json())
         return {
             "partnerReferenceNo": self.partner_reference_no,
             "amount": self.amount.json(),
