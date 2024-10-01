@@ -5,3 +5,10 @@ class CheckStatusAdditionalInfoResponse:
         self.device_id = deviceId
         self.channel = channel
         self.acquirer = acquirer
+    
+    def json(self) -> dict:
+        return {
+            "deviceId": self.device_id,
+            "channel": self.channel,
+            "acquirer": self.acquirer
+        }

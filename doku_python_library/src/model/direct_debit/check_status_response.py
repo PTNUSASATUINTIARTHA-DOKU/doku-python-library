@@ -10,11 +10,11 @@ class CheckStatusResponse:
                  transactionStatusDesc: str = None, originalResponseCode: str = None, originalResponseMessage: str = None,
                  sessionId: str = None, requestID: str = None, refundNo: str = None, partnerRefundNo: str = None,
                  refundAmount: TotalAmount = None, refundStatus: str = None, refundDate: str = None, reason: str = None,
-                 transAmount: TotalAmount = None, feeAmount: str = None, paidTime: str = None) -> None:
+                 transAmount: TotalAmount = None, feeAmount: TotalAmount = None, paidTime: str = None, refundHistory: list[RefundHistory] = None) -> None:
         self.response_code = responseCode
         self.response_message = responseMessage
         self.service_code = serviceCode
-        self.latestTransactionStatus = latestTransactionStatus
+        self.latest_transaction_status = latestTransactionStatus
         self.additional_info = additionalInfo
         self.original_reference_no = originalReferenceNo
         self.original_partner_reference_no = originalPartnerReferenceNo
@@ -34,3 +34,30 @@ class CheckStatusResponse:
         self.trans_amount = transAmount
         self.fee_amount = feeAmount
         self.paid_time = paidTime
+        self.refund_history = refundHistory
+    
+    def json(self) -> dict:
+        response = {}
+        response["responseCode"] = self.response_code
+        response["responseMessage"] = self.response_message
+        response["originalPartnerReferenceNo"] = self.original_partner_reference_no
+        response["originalReferenceNo"] = self.original_reference_no
+        response["approvalCode"] = self.approval_code
+        response["originalExternalId"] = self.original_external_id
+        response["serviceCode"] = self.service_code
+        response["latestTransactionStatus"] = self.latest_transaction_status
+        response["transactionStatusDesc"] = self.transaction_status_desc
+        response["originalResponseCode"] = self.original_response_code
+        response["originalResponseMessage"] = self.original_response_message
+        response["sessionId"] = self.session_id
+        response["requestID"] = self.request_id
+        response["transAmount"] = self.trans_amount.json()
+        response["feeAmount"] = self.fee_amount.json()
+        response["paidTime"] = self.paid_time
+        response["additionalInfo"] = self.additional_info.json()
+        history = []
+        if self.refund_history is not None:
+            for info in self.refund_history:
+                history.append(info.json())
+        response["refundHistory"] = history
+        return response
