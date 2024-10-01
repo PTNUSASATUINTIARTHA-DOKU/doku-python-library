@@ -13,8 +13,9 @@ class PaymentAdditionalInfoRequest:
     
     def json(self) -> dict:
         items = []
-        for item in self.line_items:
-            items.append(item.json())
+        if self.line_items != None:
+            for item in self.line_items:
+                items.append(item.json())
         return {
             "channel": self.channel,
             "remarks": self.remarks,
