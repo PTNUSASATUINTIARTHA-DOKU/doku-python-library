@@ -44,7 +44,7 @@ class AccountBindingRequest:
             raise Exception("additionalInfo.successRegistrationUrl cannot be null. Please provide a additionalInfo.successRegistrationUrl. Example: 'https://www.doku.com'.")
     
     def _validate_failed_registration_url(self):
-        value: str = self.additional_info.success_registration_url
+        value: str = self.additional_info.failed_registration_url
         if value is None:
             raise Exception("additionalInfo.failedRegistrationUrl cannot be null. Please provide a additionalInfo.failedRegistrationUrl. Example: 'https://www.doku.com'.")
 
