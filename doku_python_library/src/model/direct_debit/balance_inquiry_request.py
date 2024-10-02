@@ -14,4 +14,4 @@ class BalanceInquiryRequest:
     def validate_request(self):
         dd_enum = [e.value for e in DirectDebitEnum]
         if self.additional_info.channel not in dd_enum:
-            raise Exception("additionalInfo.channel is not valid. Ensure that additionalInfo.channel is one of the valid channels.") 
+            raise Exception("additionalInfo.channel is not valid. Ensure that additionalInfo.channel is one of the valid channels. Example: 'DIRECT_DEBIT_ALLO_SNAP'.") 
