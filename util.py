@@ -8,9 +8,11 @@ from doku_python_library.src.model.direct_debit.card_unbinding_request import Ca
 from doku_python_library.src.model.direct_debit.card_unbinding_response import CardUnbindingResponse
 from doku_python_library.src.model.direct_debit.balance_inquiry_request import BalanceInquiryRequest, BalanceInquiryAdditionalInfo
 from doku_python_library.src.model.direct_debit.balance_inquiry_response import BalanceInquiryResponse
-from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest, CheckStatusAdditionalInfoRequest
+from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
 from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
 from doku_python_library.src.model.va.total_amount import TotalAmount
+from doku_python_library.src.model.direct_debit.refund_request import RefundRequest, RefundAdditionalInfo
+from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 
 class Util:
 
@@ -113,6 +115,27 @@ class Util:
     @staticmethod
     def generate_check_status_response(response_code: str) -> CheckStatusResponse:
         return CheckStatusResponse(
+            responseCode=response_code,
+            responseMessage="Successful"
+        )
+    
+    @staticmethod
+    def generate_refund_request() -> RefundRequest:
+        return RefundRequest(
+            original_partner_reference_no="sdkpython",
+            refund_amount= TotalAmount(
+                value="1200.00",
+                currency="IDR"
+            ),
+            partner_refund_no="REF1",
+            additional_info=RefundAdditionalInfo(
+                channel="DIRECT_DEBIT_CIMB_SNAP"
+            )
+        )
+    
+    @staticmethod
+    def generate_refund_response(response_code: str) -> RefundResponse:
+        return RefundResponse(
             responseCode=response_code,
             responseMessage="Successful"
         )

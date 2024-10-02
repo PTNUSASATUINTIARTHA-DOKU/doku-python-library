@@ -19,3 +19,10 @@ class TestCheckStatus(unittest.TestCase):
         response = requests.post(Config.get_base_url(is_production=False)+self.check_status_url, json=request.create_request_body())
         mock_data.assert_called_with(Config.get_base_url(is_production=False)+self.check_status_url, json=request.create_request_body())
         self.assertEqual(response.json().response_code, resp_dict.response_code)
+    
+    def test_check_status_service_code_invalid(self):
+        request = Util.generate_check_status_request()
+        request.service_code = "56"
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "serviceCode must be 55.")
