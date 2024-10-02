@@ -13,6 +13,8 @@ from doku_python_library.src.model.direct_debit.check_status_response import Che
 from doku_python_library.src.model.va.total_amount import TotalAmount
 from doku_python_library.src.model.direct_debit.refund_request import RefundRequest, RefundAdditionalInfo
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
+from doku_python_library.src.model.direct_debit.payment_request import PaymentRequest, PaymentAdditionalInfoRequest
+from doku_python_library.src.model.direct_debit.payment_response import PaymentResponse
 
 class Util:
 
@@ -136,6 +138,26 @@ class Util:
     @staticmethod
     def generate_refund_response(response_code: str) -> RefundResponse:
         return RefundResponse(
+            responseCode=response_code,
+            responseMessage="Successful"
+        )
+    
+    @staticmethod
+    def generate_payment_request() -> PaymentRequest:
+        return PaymentRequest(
+            partner_reference_no="sdkpython",
+            amount=TotalAmount(
+                value="1200.00",
+                currency="IDR"
+            ),
+            additional_info=PaymentAdditionalInfoRequest(
+                channel="DIRECT_DEBIT_CIMB_SNAP"
+            )
+        )
+    
+    @staticmethod
+    def generate_payment_response(response_code: str) -> PaymentResponse:
+        return PaymentResponse(
             responseCode=response_code,
             responseMessage="Successful"
         )

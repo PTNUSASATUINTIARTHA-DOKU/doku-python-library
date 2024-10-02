@@ -33,3 +33,31 @@ class TestRefund(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             request.validate_request()
         self.assertEqual(str(context.exception.args[0]), "originalPartnerReferenceNo must be 12 characters or fewer. Ensure that originalPartnerReferenceNo is no longer than 12 characters. Example: 'INV-001'.")
+    
+    def test_refund_refund_amount_value_invalid(self):
+        request = Util.generate_refund_request()
+        request.refund_amount.value = "1234123123412312312"
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "totalAmount.value is an invalid format")
+    
+    def test_refund_refund_amount_currency_invalid(self):
+        request = Util.generate_refund_request()
+        request.refund_amount.currency = "JPY"
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "totalAmount.currency must be 'IDR'. Ensure that totalAmount.currency is 'IDR'. Example: 'IDR'.")
+    
+    def test_refund_partner_refund_no_null(self):
+        request = Util.generate_refund_request()
+        request.partner_refund_no = None
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "partnerRefundNo cannot be null. Please provide a partnerRefundNo. Example: 'INV-0001'.")
+
+    def test_refund_partner_refund_no_max(self):
+        request = Util.generate_refund_request()
+        request.partner_refund_no = "1234567890123"
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "partnerRefundNo must be 12 characters or fewer. Ensure that partnerRefundNo is no longer than 12 characters. Example: 'INV-REF-001'.")
