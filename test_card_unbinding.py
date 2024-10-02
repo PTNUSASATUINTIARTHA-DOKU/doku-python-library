@@ -1,0 +1,35 @@
+from doku_python_library.src.commons.config import Config
+import unittest
+from unittest.mock import patch, Mock
+from util import Util
+import requests
+
+class TestCardRegistration(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.card_unbinding_url = "/direct-debit/core/v1/registration-card-unbind"
+    
+    @patch('requests.post')
+    def test_card_unbinding_success(self, mock_data):
+        mock_resp = Mock()
+        resp_dict = Util.generate_account_unbinding_response("2000500")
+        mock_resp.json.return_value = resp_dict
+        mock_data.return_value = mock_resp
+        request = Util.generate_card_registration_request()
+        response = requests.post(Config.get_base_url(is_production=False)+self.card_unbinding_url, json=request.create_request_body())
+        mock_data.assert_called_with(Config.get_base_url(is_production=False)+self.card_unbinding_url, json=request.create_request_body())
+        self.assertEqual(response.json().response_code, resp_dict.response_code)
+    
+    def test_card_unbinding_invalid_tokenid(self):
+        request = Util.generate_card_unbinding_request()
+        request.token = "eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8weyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8weyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8weyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8weyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8weyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8weyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjkwNTA5ODcsImlzcyI6IkRPS1UiLCJjbGllbnRJZCI6IkJSTi0wMjA1LTE3MjcxNzQ2Mzk4MDEiLCJhY2NvdW50SWQiOiIyZjAzYjY1ODdlZDE5ZmJkYjE5MTJjOTEzNzljMTEwZiJ9.S0kMrOOR8_kur2iU3YbzlMkVtWexM_jziYFY1uaJI3bYdNZ7TnPD1ZYOI-_v4tzQn6on0Rozp00_WdQFMmdoXu9lIBkprEz9e2rN2_tg1tUSXPG6SW5umgf9IV0n1Ro2M5Xfvh4zRFboAU4SvqlSbVM57Vk0LBMTWn8ah0NaBIL40p-UB1UfZ8q5-jyshFszS7S59c21fMA8FXFH_Zz6hjk7HWaAjYPPRmuAkEs3liWYaAoGS_eHL0p_t_IpBlOBsMe6dJhpeDllwole7sptJ1Hckux6mSB4zIKUIrQHZW8F3hTCV1Mx1Hkome7e_6f0VJDsclXbe48xWVtidd2C8w"
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "tokenId must be 2048 characters or fewer. Ensure that tokenId is no longer than 2048 characters. Example: 'eyJhbGciOiJSUzI1NiJ...'.")
+    
+    def test_card_unbinding_channel_invalid(self):
+        request = Util.generate_card_unbinding_request()
+        request.additional_info.channel = None
+        with self.assertRaises(Exception) as context:
+            request.validate_request()
+        self.assertEqual(str(context.exception.args[0]), "additionalInfo.channel is not valid. Ensure that additionalInfo.channel is one of the valid channels. Example: 'DIRECT_DEBIT_ALLO_SNAP'.")

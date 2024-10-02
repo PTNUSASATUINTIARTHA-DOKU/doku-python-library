@@ -1,6 +1,6 @@
 from doku_python_library.src.commons.config import Config
 import unittest
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, Mock
 from util import Util
 import requests
 
