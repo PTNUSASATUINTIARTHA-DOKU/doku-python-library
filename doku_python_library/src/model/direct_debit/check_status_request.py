@@ -34,6 +34,8 @@ class CheckStatusRequest:
         }
 
     def validate_request(self):
+        if self.service_code != "55":
+            raise Exception("serviceCode must be 55.")
         dd_enum = [e.value for e in DirectDebitEnum]
         if self.additional_info.channel not in dd_enum:
             raise Exception("additionalInfo.channel is not valid. Ensure that additionalInfo.channel is one of the valid channels. Example: 'DIRECT_DEBIT_ALLO_SNAP'.")
