@@ -49,7 +49,7 @@ class RefundRequest:
                 raise Exception("originalPartnerReferenceNo must be 64 characters or fewer. Ensure that originalPartnerReferenceNo is no longer than 64 characters. Example: 'INV-001'.")
         elif channel == "DIRECT_DEBIT_CIMB_SNAP" or channel == "DIRECT_DEBIT_BRI_SNAP":
             if len(value) > 12:
-                raise Exception("originalPartnerReferenceNo must be 64 characters or fewer. Ensure that originalPartnerReferenceNo is no longer than 64 characters. Example: 'INV-001'.")
+                raise Exception("originalPartnerReferenceNo must be 12 characters or fewer. Ensure that originalPartnerReferenceNo is no longer than 12 characters. Example: 'INV-001'.")
     
     def _validate_amount_value(self) -> None:
         value: str = self.refund_amount.value
