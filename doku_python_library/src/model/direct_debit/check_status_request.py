@@ -26,11 +26,11 @@ class CheckStatusRequest:
             "originalExternalId": self.original_external_id,
             "serviceCode": self.service_code,
             "transactionDate": self.transcation_date,
-            "amount": self.amount.json(),
+            "amount": self.amount.json() if self.amount is not None else None,
             "merchantId": self.merchant_id,
             "subMerchantId": self.sub_merchant_id,
             "externalStoreId": self.external_store_id,
-            "additionalInfo": self.additional_info.json()
+            "additionalInfo": self.additional_info.json() if self.additional_info is not None else None
         }
 
     def validate_request(self):
