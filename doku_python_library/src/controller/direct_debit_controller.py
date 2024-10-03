@@ -41,7 +41,7 @@ class DirectDebitController:
         )
         external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = SnapUtils.generate_request_header(
-            channel_id="H2H",
+            channel_id="DH",
             client_id=client_id,
             token_b2b=token_b2b,
             timestamp=timestamp,
@@ -69,7 +69,7 @@ class DirectDebitController:
         )
         external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = SnapUtils.generate_request_header(
-            channel_id="SDK",
+            channel_id="DH",
             client_id=client_id,
             token_b2b=token_b2b,
             timestamp=timestamp,
@@ -95,7 +95,7 @@ class DirectDebitController:
         )
         external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = SnapUtils.generate_request_header(
-            channel_id="SDK",
+            channel_id="DH",
             client_id=client_id,
             token_b2b=token,
             external_id=external_id,
@@ -123,7 +123,7 @@ class DirectDebitController:
         )
         external_id: str = SnapUtils.generate_external_id()
         request_header: RequestHeader = SnapUtils.generate_request_header(
-            channel_id="H2H",
+            channel_id="DH",
             client_id=client_id,
             token_b2b=token,
             timestamp=timestamp,
