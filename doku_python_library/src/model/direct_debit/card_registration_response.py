@@ -18,5 +18,5 @@ class CardRegistrationResponse:
         response["referenceNo"] = self.reference_no
         response["redirectUrl"] = self.redirect_url
         if self.additional_info is not None:
-            response["additionalInfo"] = self.additional_info.json()
+            response["additionalInfo"] = self.additional_info
         return response
