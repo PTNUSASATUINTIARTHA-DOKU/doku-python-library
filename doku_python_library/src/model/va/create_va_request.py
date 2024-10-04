@@ -222,13 +222,13 @@ class CreateVARequest:
             
     def check_simulator(self, is_production: bool) -> CreateVAResponse:
         if is_production == False:
-            if self.trx_id.startswith("111") or self.virtual_account_no.startswith("111"):
+            if self.trx_id.startswith("111") or self.virtual_account_no.lstrip().startswith("111"):
                 return CreateVAResponse(responseCode="4012701", responseMessage="Access Token Invalid (B2B)")
-            elif self.trx_id.startswith("112") or self.virtual_account_no.startswith("112"):
+            elif self.trx_id.startswith("112") or self.virtual_account_no.lstrip().startswith("112"):
                 return CreateVAResponse(responseCode="4012700", responseMessage="Unauthorized . Signature Not Match")
-            elif self.trx_id.startswith("113") or self.virtual_account_no.startswith("113"):
+            elif self.trx_id.startswith("113") or self.virtual_account_no.lstrip().startswith("113"):
                 return CreateVAResponse(responseCode="4012702", responseMessage="Invalid Mandatory Field {partnerServiceId}")
-            elif self.trx_id.startswith("114") or self.virtual_account_no.startswith("114"):
+            elif self.trx_id.startswith("114") or self.virtual_account_no.lstrip().startswith("114"):
                 return CreateVAResponse(responseCode="4012701", responseMessage="Invalid Field Format {totalAmount.currency}")
             else:
                 return None

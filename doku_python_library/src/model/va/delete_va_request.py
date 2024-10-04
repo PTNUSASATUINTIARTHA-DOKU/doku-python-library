@@ -84,15 +84,15 @@ class DeleteVARequest:
     
     def check_simulator(self, is_production: bool) -> DeleteVAResponse:
         if is_production == False:
-            if self.trx_id.startswith("111") or self.virtual_acc_no.startswith("111"):
+            if self.trx_id.startswith("111") or self.virtual_acc_no.lstrip().startswith("111"):
                 return DeleteVAResponse(responseCode="4013101", responseMessage="Access Token Invalid (B2B)")
-            elif self.trx_id.startswith("112") or self.virtual_acc_no.startswith("111"):
+            elif self.trx_id.startswith("112") or self.virtual_acc_no.lstrip().startswith("111"):
                 return DeleteVARequest(responseCode="4013100", responseMessage="Unauthorized . Signature Not Match")
             elif self.trx_id.startswith("112"):
                 return DeleteVAResponse(responseCode="4013100", responseMessage="Unauthorized . Signature Not Match")
-            elif self.trx_id.startswith("113") or self.virtual_acc_no.startswith("113"):
+            elif self.trx_id.startswith("113") or self.virtual_acc_no.lstrip().startswith("113"):
                 return DeleteVAResponse(responseCode="4013102", responseMessage="Invalid Mandatory Field {partnerServiceId}")
-            elif self.trx_id.startswith("114") or self.virtual_acc_no.startswith("114"):
+            elif self.trx_id.startswith("114") or self.virtual_acc_no.lstrip().startswith("114"):
                 return DeleteVAResponse(responseCode="4013101", responseMessage="Invalid Field Format {totalAmount.currency}")
             else:
                 return None
