@@ -20,4 +20,4 @@ from doku_python_library.src.model.va.delete_va_additional_info import *
 from doku_python_library.src.model.va.delete_va_response import *
 from doku_python_library.src.model.va.delete_va_additional_info_response import *
 from doku_python_library.src.model.va.delete_va_virtual_acc_data import *
-from doku_python_library.src.model.va.bill_details import *
+from doku_python_library.src.model.va.bill_amount import *

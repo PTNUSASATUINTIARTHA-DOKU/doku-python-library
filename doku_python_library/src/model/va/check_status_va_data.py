@@ -1,6 +1,6 @@
 from doku_python_library.src.model.va.check_status_payment_flag_response import CheckStatusPaymentFlagResponse
 from doku_python_library.src.model.va.total_amount import TotalAmount
-from doku_python_library.src.model.va.bill_details import BillAmount
+from doku_python_library.src.model.va.bill_amount import BillAmount
 
 class CheckStatusVAData:
 
