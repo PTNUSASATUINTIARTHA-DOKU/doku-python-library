@@ -7,12 +7,13 @@ import re
 class PaymentRequest:
 
     def __init__(self, partner_reference_no: str, amount: TotalAmount, 
-                additional_info: PaymentAdditionalInfoRequest, fee_type: str = None, pay_option_detail: list[PayOptionDetail]= None) -> None:
+                additional_info: PaymentAdditionalInfoRequest, charge_token: str = None, fee_type: str = None, pay_option_detail: list[PayOptionDetail]= None) -> None:
         self.partner_reference_no = partner_reference_no
         self.amount = amount
         self.pay_option_detail = pay_option_detail
         self.additional_info = additional_info
         self.fee_type = fee_type
+        self.charge_token = charge_token
 
     def create_request_body(self) -> dict:
         if self.pay_option_detail != None:
@@ -23,7 +24,8 @@ class PaymentRequest:
             "partnerReferenceNo": self.partner_reference_no,
             "amount": self.amount.json(),
             "additionalInfo": self.additional_info.json(),
-            "feeType": self.fee_type
+            "feeType": self.fee_type,
+            "chargeToken": self.charge_token
         }
     
     def validate_request(self):
