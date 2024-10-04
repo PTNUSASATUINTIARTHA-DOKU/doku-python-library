@@ -1,7 +1,7 @@
 
 class AccountUnbindingResponse:
 
-    def __init__(self, responseCode: str, responseMessage: str, referenceNo: str = None) -> None:
+    def __init__(self, responseCode: str, responseMessage: str, referenceNo: str = None, additionalInfoDto = None) -> None:
         self.response_code = responseCode
         self.response_message = responseMessage
         self.reference_no = referenceNo
