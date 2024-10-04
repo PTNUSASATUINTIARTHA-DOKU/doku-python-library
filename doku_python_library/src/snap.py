@@ -486,12 +486,11 @@ class DokuSNAP :
                 responseMessage=str(e)
             )
     
-    def direct_debit_payment_notification(self, request_token_b2b: str, request_token_b2b2c: str) -> NotificationPaymentDirectDebitResponse:
-        is_token_b2b_valid: bool = self.validate_token_b2b(request_token=request_token_b2b)
+    def direct_debit_payment_notification(self, request_token_b2b2c: str) -> NotificationPaymentDirectDebitResponse:
         is_token_b2b2c_valid: bool = self.validate_token_b2b(request_token=request_token_b2b2c)
-        return self.generate_direct_debit_notification(is_token_b2b_valid=is_token_b2b_valid, is_token_b2b2c_valid=is_token_b2b2c_valid)
+        return self.generate_direct_debit_notification(is_token_b2b2c_valid=is_token_b2b2c_valid)
 
-    def generate_direct_debit_notification(self, is_token_b2b_valid: bool, is_token_b2b2c_valid: bool) -> NotificationPaymentDirectDebitResponse:
-        if is_token_b2b_valid and is_token_b2b2c_valid:
+    def generate_direct_debit_notification(self, is_token_b2b2c_valid: bool) -> NotificationPaymentDirectDebitResponse:
+        if is_token_b2b2c_valid:
             return NotificationController.generate_direct_debit_notification_response()
         return NotificationController.generate_direct_debit_invalid_token_response()
