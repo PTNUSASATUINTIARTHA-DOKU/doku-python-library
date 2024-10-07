@@ -34,6 +34,7 @@ class DirectDebitService:
             return account_binding_response
         except Exception as e:
             print("Failed Parse Response "+str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_payment_process(request_header: RequestHeader, request: PaymentRequest, is_production: bool) -> PaymentResponse:
@@ -47,6 +48,7 @@ class DirectDebitService:
             return payment_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_balance_inquiry(request_header: RequestHeader, request: BalanceInquiryRequest, is_production: bool) -> BalanceInquiryRequest:
@@ -60,6 +62,7 @@ class DirectDebitService:
             return balance_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_account_unbinding_process(request_header: RequestHeader, request: AccountUnbindingRequest, is_production: bool) -> AccountUnbindingResponse:
@@ -73,6 +76,7 @@ class DirectDebitService:
             return unbinding_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
 
     
     @staticmethod
@@ -86,6 +90,7 @@ class DirectDebitService:
             return payment_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_card_registration_process(request_header: RequestHeader, request: CardRegistrationRequest, is_production: bool) -> CardRegistrationResponse:
@@ -98,6 +103,7 @@ class DirectDebitService:
             return card_registration_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_refund_process(request_header: RequestHeader, request: RefundRequest, is_production: bool) -> RefundResponse:
@@ -111,6 +117,7 @@ class DirectDebitService:
             return refund_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_check_status(request_header: RequestHeader, request: CheckStatusRequest, is_production: bool) -> CheckStatusResponse:
@@ -123,6 +130,7 @@ class DirectDebitService:
             return status_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
     
     @staticmethod
     def do_card_unbinding_process(request_header: RequestHeader, request: CardUnbindingRequest, is_production: bool) -> CardUnbindingResponse:
@@ -135,3 +143,4 @@ class DirectDebitService:
             return unbinding_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
