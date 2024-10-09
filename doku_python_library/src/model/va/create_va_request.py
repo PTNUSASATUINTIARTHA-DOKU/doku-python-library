@@ -227,7 +227,7 @@ class CreateVARequest:
             elif self.trx_id.startswith("112") or self.virtual_account_no.lstrip().startswith("112"):
                 return CreateVAResponse(responseCode="4012700", responseMessage="Unauthorized . Signature Not Match")
             elif self.trx_id.startswith("113") or self.virtual_account_no.lstrip().startswith("113"):
-                return CreateVAResponse(responseCode="4012702", responseMessage="Invalid Mandatory Field {partnerServiceId}")
+                return CreateVAResponse(responseCode="4012702", responseMessage="Missing Mandatory Field {partnerServiceId}")
             elif self.trx_id.startswith("114") or self.virtual_account_no.lstrip().startswith("114"):
                 return CreateVAResponse(responseCode="4012701", responseMessage="Invalid Field Format {totalAmount.currency}")
             else:

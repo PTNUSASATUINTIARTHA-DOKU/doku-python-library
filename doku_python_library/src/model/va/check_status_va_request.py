@@ -93,7 +93,7 @@ class CheckStatusRequest:
             elif self.virtual_acc_no.lstrip().startswith("111"):
                 return CheckStatusVAResponse(responseCode="4012601", responseMessage="Access Token Invalid (B2B)")
             elif self.virtual_acc_no.lstrip().startswith("113"):
-                return CheckStatusVAResponse(responseCode="4012602", responseMessage="Invalid Mandatory Field {partnerServiceId}")
+                return CheckStatusVAResponse(responseCode="4012602", responseMessage="Missing Mandatory Field {partnerServiceId}")
             elif self.virtual_acc_no.lstrip().startswith("114"):
                 return CheckStatusVAResponse(responseCode="4012601", responseMessage="Invalid Field Format {totalAmount.currency}")
             else:
