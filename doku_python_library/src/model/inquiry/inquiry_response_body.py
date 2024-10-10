@@ -10,5 +10,5 @@ class InquiryResponseBody:
         return {
             "responseCode": self.response_code,
             "responseMessage": self.response_message,
-            "virtualAccountData": self.virtual_account_data.json()
+            "virtualAccountData": self.virtual_account_data.json() if self.virtual_account_data is not None else None
         }
