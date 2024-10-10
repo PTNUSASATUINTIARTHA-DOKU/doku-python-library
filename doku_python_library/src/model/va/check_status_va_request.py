@@ -88,7 +88,7 @@ class CheckStatusRequest:
     
     def check_simulator(self, is_production: bool) -> CheckStatusVAResponse:
         if is_production == False:
-            if self.virtual_acc_no.lstrip().startswith("1113"):
+            if self.virtual_acc_no.lstrip().startswith("1113") or self.virtual_acc_no.lstrip().startswith("1116"):
                 return CheckStatusVAResponse(responseCode="2002600", responseMessage="success") 
             elif self.virtual_acc_no.lstrip().startswith("111"):
                 return CheckStatusVAResponse(responseCode="4012601", responseMessage="Access Token Invalid (B2B)")
