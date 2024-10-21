@@ -1,4 +1,4 @@
-class BankCardDataL:
+class BankCardData:
     
     def __init__(self, bank_card_no: str, bank_card_type: str, expiry_date: str) -> None:
         self.bank_card_no = bank_card_no

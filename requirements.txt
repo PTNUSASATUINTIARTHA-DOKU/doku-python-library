@@ -9,4 +9,5 @@ requests==2.31.0
 urllib3==2.2.1
 pyjwt==1.7.1
 Flask==2.2.2
+pycryptodome==3.21.0
 xmltodict

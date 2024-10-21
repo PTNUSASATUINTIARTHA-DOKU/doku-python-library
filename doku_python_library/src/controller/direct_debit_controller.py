@@ -21,6 +21,8 @@ from doku_python_library.src.model.direct_debit.check_status_request import Chec
 from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
 from doku_python_library.src.model.direct_debit.card_unbinding_request import CardUnbindingRequest
 from doku_python_library.src.model.direct_debit.card_unbinding_response import CardUnbindingResponse
+from doku_python_library.src.model.direct_debit.bank_card_data import BankCardData
+import json
 
 class DirectDebitController:
 
@@ -179,6 +181,11 @@ class DirectDebitController:
     def do_card_registration(request: CardRegistrationRequest, secret_key: str, client_id: str, 
                              channel_id: str, token_b2b: str, is_production: bool) -> CardRegistrationResponse:
         try:
+            if isinstance(request.card_data, BankCardData):
+                card_data_json = json.dumps(request.card_data.json())
+                encrypted_card_data = DirectDebitController.encrypt_card(card_data_json, secret_key)
+                request.card_data = encrypted_card_data
+
             timestamp: str = TokenService.get_timestamp()
             endpoint: str = Config.DIRECT_DEBIT_CARD_REGISTRATION
             method: str = "POST"
@@ -294,5 +301,12 @@ class DirectDebitController:
                 ip_address=ip_address
             )
             return DirectDebitService.do_card_unbinding_process(request_header=request_header, request=request, is_production=is_production)
+        except Exception as e:
+            raise Exception(e)
+        
+    @staticmethod
+    def encrypt_card(input_str: str, secret_key: str) -> str:
+        try:
+            return DirectDebitService.encrypt_card(input_str, secret_key)
         except Exception as e:
             raise Exception(e)

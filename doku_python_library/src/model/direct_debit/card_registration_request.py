@@ -1,9 +1,11 @@
 from doku_python_library.src.model.direct_debit.card_registration_additional_info import CardRegistrationAdditionalInfo
+from doku_python_library.src.model.direct_debit.bank_card_data import BankCardData
 from doku_python_library.src.commons.direct_debit_enum import DirectDebitEnum
+from typing import Union
 
 class CardRegistrationRequest:
 
-    def __init__(self, card_data: str, cust_id_merchant: str,
+    def __init__(self, card_data: Union[str, BankCardData], cust_id_merchant: str,
                 additionalInfo: CardRegistrationAdditionalInfo, phone_no: str) -> None:
         self.card_data = card_data
         self.cust_id_merchant = cust_id_merchant
@@ -12,7 +14,7 @@ class CardRegistrationRequest:
     
     def create_request_body(self) -> dict:
         return {
-            "cardData": self.card_data,
+            "cardData": self.card_data.json() if isinstance(self.card_data, BankCardData) else self.card_data,
             "custIdMerchant": self.cust_id_merchant,
             "phoneNo": self.phone_no,
             "additionalInfo": self.additional_info.json()
