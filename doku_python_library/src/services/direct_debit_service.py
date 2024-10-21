@@ -18,6 +18,9 @@ from doku_python_library.src.model.direct_debit.refund_response import RefundRes
 from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
 from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
 from doku_python_library.src.commons.config import Config
+from Crypto.Cipher import AES
+import base64
+
 import requests
 
 class DirectDebitService:
@@ -143,4 +146,40 @@ class DirectDebitService:
             return unbinding_response
         except Exception as e:
             print("Failed Parse Response "+ str(e))
+            raise Exception(e)
+        
+    @staticmethod
+    def encrypt_card(input_str: str, secret_key: str) -> str:
+        try:
+            secret_key = DirectDebitService.get_secret_key(secret_key)
+            cipher = AES.new(secret_key.encode('utf-8'), AES.MODE_CBC)
+            padded_input = DirectDebitService.pad_pkcs5(input_str.encode('utf-8'), AES.block_size)
+            ciphertext = cipher.encrypt(padded_input)
+            cipher_text_base64 = base64.b64encode(ciphertext).decode('utf-8')
+            iv_base64 = base64.b64encode(cipher.iv).decode('utf-8')
+            return f"{cipher_text_base64}|{iv_base64}"
+        except Exception as e:
+             print("Failed Encrypt Card "+ str(e))
+             raise Exception(e)
+
+    @staticmethod
+    def get_secret_key(secret_key: str) -> str:
+        try:
+            if len(secret_key) > 16:
+                return secret_key[:16]
+            elif len(secret_key) < 16:
+                return secret_key + '-' * (16 - len(secret_key))
+            return secret_key    
+        except Exception as e:
+            print("Failed Get Secret Key "+ str(e))
+            raise Exception(e)
+    
+    @staticmethod
+    def pad_pkcs5(input_bytes: bytes, block_size: int) -> bytes:
+        try:
+            padding_len = block_size - len(input_bytes) % block_size
+            padding = bytes([padding_len]) * padding_len
+            return input_bytes + padding
+        except Exception as e:
+            print("Failed Padpkcs5"+ str(e))
             raise Exception(e)

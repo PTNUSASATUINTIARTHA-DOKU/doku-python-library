@@ -494,3 +494,7 @@ class DokuSNAP :
         if is_token_b2b2c_valid:
             return NotificationController.generate_direct_debit_notification_response()
         return NotificationController.generate_direct_debit_invalid_token_response()
+    
+    @staticmethod
+    def encrypt_card(input_str: str, secret_key: str) -> str:
+        return DirectDebitController.encrypt_card(input_str, secret_key)
