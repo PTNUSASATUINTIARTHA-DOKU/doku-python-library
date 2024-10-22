@@ -3,7 +3,7 @@ class _Production:
     BASE_URL = "https://api.doku.com"
 
 class _Development:
-    BASE_URL = "https://api-sandbox.doku.com"
+    BASE_URL = "https://api-uat.doku.com"
 
 class Config:
     ACCESS_TOKEN: str = "/authorization/v1/access-token/b2b"

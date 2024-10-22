@@ -182,10 +182,8 @@ class DirectDebitController:
                              channel_id: str, token_b2b: str, is_production: bool) -> CardRegistrationResponse:
         try:
             if isinstance(request.card_data, BankCardData):
-                card_data_json = json.dumps(request.card_data.json())
-                encrypted_card_data = DirectDebitController.encrypt_card(card_data_json, secret_key)
+                encrypted_card_data = DirectDebitController.encrypt_card(request.card_data, secret_key)
                 request.card_data = encrypted_card_data
-
             timestamp: str = TokenService.get_timestamp()
             endpoint: str = Config.DIRECT_DEBIT_CARD_REGISTRATION
             method: str = "POST"
@@ -305,8 +303,8 @@ class DirectDebitController:
             raise Exception(e)
         
     @staticmethod
-    def encrypt_card(input_str: str, secret_key: str) -> str:
+    def encrypt_card(bank_card_data: BankCardData, secret_key: str) -> str:
         try:
-            return DirectDebitService.encrypt_card(input_str, secret_key)
+            return DirectDebitService.encrypt_card(bank_card_data, secret_key)
         except Exception as e:
             raise Exception(e)
