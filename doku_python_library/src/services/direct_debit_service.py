@@ -17,9 +17,11 @@ from doku_python_library.src.model.direct_debit.refund_request import RefundRequ
 from doku_python_library.src.model.direct_debit.refund_response import RefundResponse
 from doku_python_library.src.model.direct_debit.check_status_request import CheckStatusRequest
 from doku_python_library.src.model.direct_debit.check_status_response import CheckStatusResponse
+from doku_python_library.src.model.direct_debit.bank_card_data import BankCardData
 from doku_python_library.src.commons.config import Config
 from Crypto.Cipher import AES
 import base64
+import json
 
 import requests
 
@@ -149,11 +151,12 @@ class DirectDebitService:
             raise Exception(e)
         
     @staticmethod
-    def encrypt_card(input_str: str, secret_key: str) -> str:
+    def encrypt_card(bank_card_data: BankCardData, secret_key: str) -> str:
         try:
+            bank_card_data_string = json.dumps(bank_card_data.json(), separators=(',', ':'))
             secret_key = DirectDebitService.get_secret_key(secret_key)
             cipher = AES.new(secret_key.encode('utf-8'), AES.MODE_CBC)
-            padded_input = DirectDebitService.pad_pkcs5(input_str.encode('utf-8'), AES.block_size)
+            padded_input = DirectDebitService.pad_pkcs5(bank_card_data_string.encode('utf-8'), AES.block_size)
             ciphertext = cipher.encrypt(padded_input)
             cipher_text_base64 = base64.b64encode(ciphertext).decode('utf-8')
             iv_base64 = base64.b64encode(cipher.iv).decode('utf-8')

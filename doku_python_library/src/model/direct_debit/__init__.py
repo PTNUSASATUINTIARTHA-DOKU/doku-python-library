@@ -31,3 +31,4 @@ from doku_python_library.src.model.direct_debit.check_status_response import *
 from doku_python_library.src.model.direct_debit.refund_history import *
 from doku_python_library.src.model.direct_debit.card_unbinding_request import *
 from doku_python_library.src.model.direct_debit.card_unbinding_response import *
+from doku_python_library.src.model.direct_debit.bank_card_data import *
