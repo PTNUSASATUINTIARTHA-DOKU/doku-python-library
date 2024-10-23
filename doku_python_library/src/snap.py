@@ -262,7 +262,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return AccountBindingResponse(
-                responseCode="5000700",
+                responseCode="500700",
                 responseMessage=str(e)
             )
     
@@ -357,7 +357,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return AccountUnbindingResponse(
-                responseCode="5000500",
+                responseCode="500500",
                 responseMessage=str(e)
             )
     
@@ -383,7 +383,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return PaymentJumpAppResponse(
-                responseCode="5000500",
+                responseCode="500500",
                 responseMessage=str(e)
             )
         
@@ -408,7 +408,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return CardRegistrationResponse(
-                responseCode="5000700",
+                responseCode="500700",
                 responseMessage=str(e)
             )
     
@@ -433,7 +433,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return CardUnbindingResponse(
-                responseCode="5000500",
+                responseCode="500500",
                 responseMessage=str(e)
             )
     
@@ -458,7 +458,7 @@ class DokuSNAP :
             )
         except Exception as e:
             return RefundResponse(
-                responseCode="5000700",
+                responseCode="500700",
                 responseMessage=str(e)
             )
         
