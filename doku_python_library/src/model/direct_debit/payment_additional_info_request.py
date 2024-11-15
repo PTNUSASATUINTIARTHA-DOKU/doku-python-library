@@ -15,7 +15,7 @@ class PaymentAdditionalInfoRequest:
         items = []
         if self.line_items != None:
             for item in self.line_items:
-                items.append(item.json())
+                items.append(item)
         return {
             "channel": self.channel,
             "remarks": self.remarks,

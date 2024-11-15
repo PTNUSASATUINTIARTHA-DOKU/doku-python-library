@@ -16,17 +16,19 @@ class PaymentRequest:
         self.fee_type = fee_type
 
     def create_request_body(self) -> dict:
-        if self.pay_option_detail != None:
-            options = []
-            for option in self.pay_option_detail:
-                options.append(option.json())
-        return {
+        request = {
             "partnerReferenceNo": self.partner_reference_no,
             "amount": self.amount.json(),
             "additionalInfo": self.additional_info.json(),
             "chargeToken": self.charge_token,
             "feeType": self.fee_type
         }
+        if self.pay_option_detail != None:
+            options = []
+            for option in self.pay_option_detail:
+                options.append(option)
+            request["payOptionDetails"] = options
+        return request
     
     def validate_request(self):
         self._validate_allo_bank()

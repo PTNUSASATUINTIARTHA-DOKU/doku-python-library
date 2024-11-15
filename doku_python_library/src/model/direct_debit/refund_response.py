@@ -18,7 +18,7 @@ class RefundResponse:
         return {
             "responseCode": self.response_code,
             "responseMessage": self.response_message,
-            "refundAmount": self.refund_amount.json() if self.refund_amount != None else None,
+            "refundAmount": self.refund_amount if self.refund_amount != None else None,
             "originalPartnerReferenceNo": self.original_partner_reference_no,
             "originalReferenceNo": self.original_reference_no,
             "refundNo": self.refund_no,

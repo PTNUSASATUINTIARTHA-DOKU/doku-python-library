@@ -15,6 +15,6 @@ class BalanceInquiryResponse:
         infos = []
         if self.account_infos is not None:
             for info in self.account_infos:
-                infos.append(info.json())
+                infos.append(info)
         response["accountInfos"] = infos
         return response
