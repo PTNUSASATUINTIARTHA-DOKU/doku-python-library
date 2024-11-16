@@ -6,9 +6,9 @@ idna==3.7
 pycparser==2.22
 pytz==2024.1
 requests==2.31.0
-urllib3==1.26.14
+urllib3==1.26.19
 pyjwt==1.7.1
 Flask==2.2.2
 pycryptodome==3.21.0
-werkzeug==2.2.2
+werkzeug==3.0.3
 xmltodict
