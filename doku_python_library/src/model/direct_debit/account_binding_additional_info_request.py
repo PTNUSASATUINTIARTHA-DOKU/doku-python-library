@@ -1,3 +1,4 @@
+from doku_python_library.src.model.va.origin import Origin
 class AccountBindingAdditionalInfoRequest:
 
     def __init__(self, channel: str, success_registration_url: str, failed_registration_url: str, 
@@ -31,5 +32,6 @@ class AccountBindingAdditionalInfoRequest:
             "failedRegistrationUrl": self.failed_registration_url,
             "deviceModel": self.device_model,
             "osType": self.os_type,
-            "channelId": self.channel_id
+            "channelId": self.channel_id,
+            "origin": Origin.create_request_body()
         }

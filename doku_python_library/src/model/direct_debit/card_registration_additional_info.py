@@ -1,4 +1,4 @@
-
+from doku_python_library.src.model.va.origin import Origin
 
 class CardRegistrationAdditionalInfo:
 
@@ -26,4 +26,5 @@ class CardRegistrationAdditionalInfo:
             "dateOfBirth": self.date_of_birth,
             "successRegistrationUrl": self.success_registration_url,
             "failedRegistrationUrl": self.failed_registration_url,
+            "origin": Origin.create_request_body()
         }

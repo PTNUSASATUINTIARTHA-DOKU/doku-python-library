@@ -1,4 +1,4 @@
-
+from doku_python_library.src.model.va.origin import Origin
 class CheckStatusAdditionalInfoRequest:
 
     def __init__(self, device_id: str = None, channel: str = None) -> None:
@@ -8,5 +8,6 @@ class CheckStatusAdditionalInfoRequest:
     def json(self) -> dict:
         return {
             "deviceId": self.device_id,
-            "channel": self.channel
+            "channel": self.channel,
+            "origin": Origin.create_request_body()
         }

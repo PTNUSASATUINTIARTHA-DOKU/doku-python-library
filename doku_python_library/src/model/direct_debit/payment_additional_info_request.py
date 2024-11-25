@@ -1,5 +1,5 @@
 from doku_python_library.src.model.direct_debit.line_items import LineItems
-
+from doku_python_library.src.model.va.origin import Origin
 class PaymentAdditionalInfoRequest:
 
     def __init__(self, channel: str = None, remarks: str = None, success_payment_url: str = None,
@@ -22,5 +22,6 @@ class PaymentAdditionalInfoRequest:
             "successPaymentUrl": self.success_payment_url,
             "failedPaymentUrl": self.failed_payment_url,
             "lineItems": items,
-            "paymentType": self.payment_type
+            "paymentType": self.payment_type,
+            "origin": Origin.create_request_body()
         }
