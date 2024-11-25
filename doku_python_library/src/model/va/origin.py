@@ -5,7 +5,7 @@ class Origin:
         return {
             "product": "SDK",
             "source": "python",
-            "sourceVersion": "1.0.0",
+            "sourceVersion": "1.1.63",
             "system": "doku-python-library",
             "apiFormat": "SNAP"
         }

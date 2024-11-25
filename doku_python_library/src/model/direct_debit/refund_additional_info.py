@@ -1,4 +1,4 @@
-
+from doku_python_library.src.model.va.origin import Origin
 class RefundAdditionalInfo:
 
     def __init__(self, channel: str) -> None:
@@ -6,5 +6,6 @@ class RefundAdditionalInfo:
     
     def json(self) -> dict:
         return {
-            "channel": self.channel
+            "channel": self.channel,
+            "origin": Origin.create_request_body()
         }
