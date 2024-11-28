@@ -18,6 +18,7 @@ from doku_python_library.src.model.direct_debit.payment_jump_app_request import 
 from doku_python_library.src.model.direct_debit.payment_jump_app_additional_info import *
 from doku_python_library.src.model.direct_debit.url_param import *
 from doku_python_library.src.model.direct_debit.paymet_jump_app_response import *
+from doku_python_library.src.model.direct_debit.payment_jump_app_additional_info_response import *
 from doku_python_library.src.model.direct_debit.card_registration_request import *
 from doku_python_library.src.model.direct_debit.card_registration_additional_info import *
 from doku_python_library.src.model.direct_debit.card_registration_response import *
