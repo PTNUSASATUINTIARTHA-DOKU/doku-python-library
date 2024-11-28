@@ -33,7 +33,7 @@ class PaymentJumpAppRequest:
         self._validate_direct_debit_channel()
         if self.point_of_initiation is not None:
             self._validate_point_of_initiation()
-        # self._validate_url_param()
+        self._validate_url_param()
 
     def _validate_direct_debit_channel(self):
         dd_enum = [e.value for e in DirectDebitEnum]
@@ -45,7 +45,9 @@ class PaymentJumpAppRequest:
             raise Exception("pointOfInitiation value can only be app/pc/mweb")
 
     def _validate_url_param(self):
-        if self.url_param.type.lower() != "pay_return":
+        all_pay_return = all(obj.type.lower() == "pay_return" for obj in self.url_param)
+        deep_link_valid = all(obj.is_deep_link.lower() in ["y", "n"] for obj in self.url_param)
+        if all_pay_return != True:
             raise Exception("urlParam.type must always be PAY_RETURN")
-        if self.url_param.is_deep_link.lower() not in ["y", "n"]:
+        if deep_link_valid != True:
             raise Exception("urlParam.isDeepLink can only Y or N")
