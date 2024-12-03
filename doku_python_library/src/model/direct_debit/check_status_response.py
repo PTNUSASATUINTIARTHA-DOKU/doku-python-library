@@ -40,24 +40,39 @@ class CheckStatusResponse:
         response = {}
         response["responseCode"] = self.response_code
         response["responseMessage"] = self.response_message
-        response["originalPartnerReferenceNo"] = self.original_partner_reference_no
-        response["originalReferenceNo"] = self.original_reference_no
-        response["approvalCode"] = self.approval_code
-        response["originalExternalId"] = self.original_external_id
-        response["serviceCode"] = self.service_code
-        response["latestTransactionStatus"] = self.latest_transaction_status
-        response["transactionStatusDesc"] = self.transaction_status_desc
-        response["originalResponseCode"] = self.original_response_code
-        response["originalResponseMessage"] = self.original_response_message
-        response["sessionId"] = self.session_id
-        response["requestID"] = self.request_id
-        response["transAmount"] = self.trans_amount.json() if self.trans_amount != None else None
-        response["feeAmount"] = self.fee_amount.json() if self.fee_amount != None else None
-        response["paidTime"] = self.paid_time
-        response["additionalInfo"] = self.additional_info.json() if self.additional_info != None else None
-        history = []
+        if self.original_partner_reference_no is not None:
+            response["originalPartnerReferenceNo"] = self.original_partner_reference_no
+        if self.original_reference_no is not None:
+            response["originalReferenceNo"] = self.original_reference_no
+        if self.approval_code is not None:
+            response["approvalCode"] = self.approval_code
+        if self.original_external_id is not None:
+            response["originalExternalId"] = self.original_external_id
+        if self.service_code is not None:
+            response["serviceCode"] = self.service_code
+        if self.latest_transaction_status is not None:
+            response["latestTransactionStatus"] = self.latest_transaction_status
+        if self.transaction_status_desc is not None:
+            response["transactionStatusDesc"] = self.transaction_status_desc
+        if self.original_response_code is not None: 
+            response["originalResponseCode"] = self.original_response_code
+        if self.original_response_message is not None:
+            response["originalResponseMessage"] = self.original_response_message
+        if self.session_id is not None:
+            response["sessionId"] = self.session_id
+        if self.request_id is not None:
+            response["requestID"] = self.request_id
+        if self.trans_amount is not None:
+            response["transAmount"] = self.trans_amount
+        if self.fee_amount is not None:
+            response["feeAmount"] = self.fee_amount 
+        if self.paid_time is not None:
+            response["paidTime"] = self.paid_time
+        if self.additional_info is not None:
+            response["additionalInfo"] = self.additional_info
         if self.refund_history is not None:
+            history = []
             for info in self.refund_history:
-                history.append(info.json())
-        response["refundHistory"] = history
+                history.append(info)
+            response["refundHistory"] = history
         return response

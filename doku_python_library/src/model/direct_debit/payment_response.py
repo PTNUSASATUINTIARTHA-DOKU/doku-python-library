@@ -9,10 +9,14 @@ class PaymentResponse:
         self.reference_no = referenceNo
     
     def json(self) -> dict:
-        return {
+        response = {
             "responseCode": self.response_code,
             "responseMessage": self.response_message,
-            "webRedirectUrl": self.web_redirect_url,
-            "partnerReferenceNo": self.partner_reference_no,
-            "referenceNo": self.reference_no
         }
+        if self.web_redirect_url is not None:
+            response["webRedirectUrl"] = self.web_redirect_url
+        if self.partner_reference_no is not None:
+            response["partnerReferenceNo"] = self.partner_reference_no
+        if self.reference_no is not None:
+            response["referenceNo"] = self.reference_no
+        return response

@@ -12,9 +12,9 @@ class BalanceInquiryResponse:
             "responseCode": self.response_code,
             "responseMessage": self.response_message
         }
-        infos = []
         if self.account_infos is not None:
+            infos = []
             for info in self.account_infos:
                 infos.append(info)
-        response["accountInfos"] = infos
+            response["accountInfos"] = infos
         return response

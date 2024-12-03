@@ -12,8 +12,7 @@ class PaymentJumpAppResponse:
         self.additional_info = additionalInfo
     
     def json(self) -> dict:
-
-        return {
+        response = {
             "responseCode": self.response_code,
             "responseMessage": self.response_message,
             "webRedirectUrl": self.web_redirect_url,
@@ -21,3 +20,12 @@ class PaymentJumpAppResponse:
             "referenceNo": self.reference_no,
             "additionalInfo": self.additional_info if self.additional_info is not None else None
         }
+        if self.web_redirect_url is not None:
+            response["webRedirectUrl"] = self.web_redirect_url
+        if self.partner_reference_no is not None:
+            response["partnerReferenceNo"] = self.partner_reference_no
+        if self.reference_no is not None:
+            response["referenceNo"] = self.reference_no
+        if self.additional_info is not None:
+            response["additionalInfo"] = self.additional_info
+        return response

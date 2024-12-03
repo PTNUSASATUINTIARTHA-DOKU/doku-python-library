@@ -7,8 +7,10 @@ class AccountUnbindingResponse:
         self.reference_no = referenceNo
     
     def json(self) -> dict:
-        return {
+        response = {
             "responseCode": self.response_code,
             "responseMessage": self.response_message,
-            "referenceNo": self.reference_no
         }
+        if self.reference_no is not None:
+            response["referenceNo"] = self.reference_no
+        return response

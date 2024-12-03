@@ -15,8 +15,10 @@ class CardRegistrationResponse:
         response: dict = {}
         response["responseCode"] = self.response_code
         response["responseMessage"] = self.response_message
-        response["referenceNo"] = self.reference_no
-        response["redirectUrl"] = self.redirect_url
+        if self.reference_no is not None:
+            response["referenceNo"] = self.reference_no
+        if self.redirect_url is not None:
+            response["redirectUrl"] = self.redirect_url
         if self.additional_info is not None:
             response["additionalInfo"] = self.additional_info
         return response

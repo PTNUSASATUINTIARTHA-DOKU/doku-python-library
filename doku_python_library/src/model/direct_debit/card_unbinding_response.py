@@ -8,9 +8,12 @@ class CardUnbindingResponse:
         self.redirect_url = redirectUrl
     
     def json(self) -> dict:
-        return {
+        response = {
             "responseCode": self.response_code,
             "responseMessage": self.response_message,
-            "referenceNo": self.reference_no,
-            "redirectUrl": self.redirect_url
         }
+        if self.reference_no is not None:
+            response["referenceNo"] = self.reference_no
+        if self.redirect_url is not None:
+            response["redirectUrl"] = self.redirect_url
+        return response
