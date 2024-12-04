@@ -31,6 +31,9 @@ class CardRegistrationRequest:
         value: str = self.card_data
         if value is None:
             raise Exception("cardData cannot be null. Please provide cardData. Example: '5cg2G2719+jxU1RfcGmeCyQrLagUaAWJWWhLpmmb'.")
+        if isinstance(self.card_data, BankCardData):
+            if self.card_data.bankCardNo == "" or self.card_data.bankCardType == "" or self.card_data.expiryDate == "":
+                raise Exception("bank card data fields cannot be empty")
 
     def _validate_cust_id_merchant(self):
         value: str = self.cust_id_merchant
