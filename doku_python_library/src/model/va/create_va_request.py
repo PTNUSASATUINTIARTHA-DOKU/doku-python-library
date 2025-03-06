@@ -49,10 +49,9 @@ class CreateVARequest:
             request["virtualAccountPhone"] = self.virtual_acc_phone
         if self.additional_info is not None:
             request["additionalInfo"] = self.additional_info.json()
+            request["additionalInfo"]["origin"] = Origin.create_request_body()
         if self.expired_date is not None:
             request["expiredDate"] = self.expired_date
-
-        request["origin"] = Origin.create_request_body()
         return request
     
     def validate_va_request(self) -> None:
