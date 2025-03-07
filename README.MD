@@ -41,7 +41,7 @@ pip3 install doku_python_library
 
 ### Configuration
 Before using the Doku Snap SDK, you need to initialize it with your credentials:
-1. **Client ID** and **Secret Key**: Retrieve these from the Integration menu in your Doku Dashboard
+1. **Client ID**, **Secret Key** and **DOKU Public Key**: Retrieve these from the Integration menu in your Doku Dashboard
 2. **Private Key** and **Public Key** : Generate your Private Key and Public Key
 
 Merchant privateKey and publiKey
@@ -63,6 +63,7 @@ The encryption model applied to messages involves both asymmetric and symmetric 
 | `clientId`      | The client ID associated with the service.         | ✅           |
 | `secretKey`     | The secret key for the partner service.            | ✅           |
 | `isProduction`  | Set to true for production environment             | ✅           |
+| `dokuPublicKey` | Key that merchants use to verify DOKU request      | ✅           |
 | `issuer`        | Optional issuer for advanced configurations.       | ❌           |
 | `authCode`      | Optional authorization code for advanced use.      | ❌           |
 
@@ -74,9 +75,10 @@ snap: DokuSNAP = DokuSNAP(
     private_key= private_key, 
     client_id="your_client_id", 
     is_production=False,
-    public_key= "your_public_key",
+    public_key= "doku_public_key",
     issuer= "your_issuer_data",
-    secret_key="your_secret_key"
+    secret_key="your_secret_key",
+    merchant_public_key= "your_public_key"
 )
 ```
 
@@ -90,9 +92,10 @@ snap: DokuSNAP = DokuSNAP(
     private_key= private_key, 
     client_id="your_client_id", 
     is_production=False,
-    public_key= "your_public_key",
+    public_key= "doku_public_key",
     issuer= "your_issuer_data",
-    secret_key="your_secret_key"
+    secret_key="your_secret_key",
+    merchant_public_key= "your_public_key"
 )
 ```
 ### Virtual Account
