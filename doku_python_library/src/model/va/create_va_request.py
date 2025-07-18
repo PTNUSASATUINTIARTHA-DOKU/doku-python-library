@@ -21,7 +21,7 @@ class CreateVARequest:
                  virtual_acc_phone: str = None,
                  additional_info: AdditionalInfo = None,
                  expired_date: str = None,
-                 free_text: CheckStatusPaymentFlagResponse = None,
+                 free_texts: list[CheckStatusPaymentFlagResponse] = None,
                  ) -> None:
         self.partner_service_id = partner_service_id
         self.virtual_acc_name = virtual_acc_name
@@ -34,7 +34,7 @@ class CreateVARequest:
         self.expired_date = expired_date
         self.customer_no = customer_no
         self.virtual_account_no = virtual_account_no
-        self.free_text = free_text
+        self.free_texts = free_texts
 
     def create_request_body(self) -> dict:
         request: dict = {
@@ -55,8 +55,11 @@ class CreateVARequest:
             request["additionalInfo"]["origin"] = Origin.create_request_body()
         if self.expired_date is not None:
             request["expiredDate"] = self.expired_date
-        if self.free_text is not None:
-            request["freeText"] = self.free_text
+        freeTexts = []
+        if self.free_texts is not None:
+            for text in self.free_texts:
+                freeTexts.append(text)
+            request["freeTexts"] = freeTexts
         return request
     
     def validate_va_request(self) -> None:
